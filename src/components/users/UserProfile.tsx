@@ -35,6 +35,7 @@ const UserProfile = ({ width, border }: Props) => {
                 width={112}
                 height={112}
                 src={userData.imageUrl!}
+                loading="eager"
                 alt={`${userData.firstName} ${userData.lastName}`}
                 className="rounded-full object-cover aspect-square"
             />
