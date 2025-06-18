@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <ClerkProvider afterSignOutUrl={'/'}>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${poppins.variable} font-serif antialiased`}>
+        <body className={`${poppins.variable} font-sans antialiased`}>
           <AppProvider>
             {children}
           </AppProvider>
