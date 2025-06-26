@@ -22,6 +22,7 @@ interface Props {
 }
 
 const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
+    const [uploading, setUploading] = useState(false)
     const [uploaded, setUploaded] = useState(false)
     const [progress, setProgress] = useState(0);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -71,6 +72,9 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
             return;
         }
 
+        setFiles(Array.from(fileInput.files));
+        setUploading(true);
+
         // Extract the first file from the file input
         const file = fileInput.files[0];
 
@@ -106,10 +110,12 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
             if (uploadResponse.filePath) {
                 setFilePath(uploadResponse.filePath)
                 toast.success("File uploaded successfully!");
-                setUploaded(true)
+                setUploaded(true);
+                setUploading(false);
             };
 
         } catch (error) {
+            setUploading(false);
             // Handle specific error types provided by the ImageKit SDK.
             if (error instanceof ImageKitAbortError) {
                 console.error("Upload aborted:", error.reason);
@@ -146,7 +152,6 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
             />
 
             {!files || files.length === 0 ? (
-                // <div>No files selected</div>
                 <div
                     className="outline-dashed outline-1 outline-slate-500 relative bg-background rounded-lg p-2"
                     onClick={() => {
@@ -182,6 +187,7 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
                                             setFiles(files.filter((f) => f.name !== file.name));
                                             setProgress(0);
                                             setUploaded(false);
+                                            setUploading(false);
                                         }}
                                     >
                                         <Trash2Icon className="stroke-destructive" />
@@ -190,7 +196,7 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
 
                                 <CardContent>
                                     <Image
-                                        className="aspect-video rounded-md"
+                                        className="aspect-video rounded-md object-cover"
                                         src={URL.createObjectURL(file)}
                                         alt={file.name}
                                         height={280}
@@ -209,7 +215,7 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
                                             variant={'outline'}
                                             size={'sm'}
                                         >
-                                            {progress} %
+                                            {Math.floor(progress)} %
                                         </Button>
                                     </span>
                                     <progress
@@ -225,21 +231,21 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
             )}
 
             <Button
-                disabled={progress === 100 || uploaded}
+                disabled={progress === 100 || uploaded || uploading}
                 type="button"
                 variant={'outline'}
                 onClick={handleUpload}
                 className="flex items-center gap-2 cursor-pointer"
             >
-                {progress !== 100 && !uploaded ? (
+                {!uploading && !uploaded ? (
                     <>
                         <CloudUpload className="size-[18px]" />
-                        <p>Uploaded file</p>
+                        <p>Upload file</p>
                     </>
-                ) : progress === 100 && uploaded ? (
+                ) : uploaded ? (
                     <>
                         <CheckCircle className="text-green-600 size-[18px]" />
-                        <p>Upload file</p>
+                        <p>Uploaded file</p>
                     </>
                 ) : (
                     <>

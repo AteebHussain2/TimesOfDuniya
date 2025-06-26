@@ -1,24 +1,31 @@
-'use client'
+'use client';
 
-import { ChartColumn, EditIcon, Globe2Icon, MessageSquareMoreIcon, SaveIcon, TrashIcon } from "lucide-react";
+import { ChartColumn, EditIcon, Globe2Icon, MessageSquareMoreIcon, SaveIcon, SearchIcon, TrashIcon } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useSearchParams } from "next/navigation";
 import PostDeleteDialog from "./PostDeleteDialog";
+import { TypeGetCategories } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { TypeGetAllPosts } from "@/lib/types";
 import { Image } from "@imagekit/next";
 import { formatDate } from "date-fns";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 
 interface Props {
+    categories: TypeGetCategories,
     posts: TypeGetAllPosts,
-};
+}
 
-const PostsWithFilters = ({ posts }: Props) => {
+const PostsTable = ({ categories, posts }: Props) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [showDialog, setShowDialog] = useState(false)
     const [post, setPost] = useState<TypeGetAllPosts[number]>()
+
+    const searchParams = useSearchParams();
+    const selectedCategory = searchParams.get('category') || '';
 
     const filteredPosts = posts.filter((post) =>
         post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -34,14 +41,48 @@ const PostsWithFilters = ({ posts }: Props) => {
                 post={post}
             />
 
-            <div className="w-full border-t border-separate">
-                <Input
-                    placeholder="Search posts..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full max-w-md mb-4"
-                />
+            <div className="w-screen md:w-[calc(100vw-280px)]">
+                <div className="relative border-b border-separate">
+                    <div className="max-w-[20px] w-full max-h-[30px] h-full z-10 absolute top-0 left-0 bg-gradient-to-l from-transparent to-background"></div>
+                    <div className="max-w-[40px] w-full max-h-[30px] h-full z-10 absolute top-0 right-0 bg-gradient-to-r from-transparent to-background"></div>
+                    <div className="px-10 overflow-x-auto hide-scrollbar flex items-center gap-7 text-muted-foreground font-semibold">
+                        <Link
+                            href={`/content`}
+                            className={cn("min-w-[40px] text-center cursor-pointer border-b-3 border-transparent transition-all pb-4",
+                                (selectedCategory === '' || !selectedCategory) ? 'text-primary border-primary' : 'hover:border-muted-foreground'
+                            )}
+                        >
+                            All
+                        </Link>
+                        {categories?.map((category: TypeGetCategories[number]) => (
+                            <Link
+                                key={category.id}
+                                href={`?` + new URLSearchParams(`category=${category.slug}`).toString()}
+                                className={cn("text-center cursor-pointer border-b-3 border-transparent transition-all pb-4",
+                                    selectedCategory === category.slug ? 'text-primary border-primary' : 'hover:border-muted-foreground'
+                                )}
+                            >
+                                {category.name}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </div>
 
+            <div className="w-full mx-8 my-4 flex items-center justify-between">
+                <span className="relative">
+                    <Input
+                        placeholder="Search posts..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full sm:min-w-md pl-10"
+                    />
+
+                    <SearchIcon size={34} className="absolute top-0 left-0 p-2 text-muted-foreground border-r border-separate" />
+                </span>
+            </div>
+
+            <div className="w-full border-t border-separate">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -81,7 +122,7 @@ const PostsWithFilters = ({ posts }: Props) => {
                                                 href={`/${post.id}/${post.slug}`}
                                                 target="_blank"
                                             >
-                                                {post.title}
+                                                <p className="truncate">{post.title}</p>
                                             </Link>
 
                                             <p className="group-hover:hidden text-sm text-muted-foreground truncate transition-all">
@@ -175,4 +216,4 @@ const PostsWithFilters = ({ posts }: Props) => {
     )
 }
 
-export default PostsWithFilters
+export default PostsTable;

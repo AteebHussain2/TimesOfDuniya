@@ -118,35 +118,79 @@
   --error: oklch(0.553 0.013 58.071);
 }
 
+/* body {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+} */
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  img,
+  video {
+    height: auto;
+    max-width: 100%;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+/* Non-critical CSS - Loaded after */
+@layer components {
+  .post-card {
+    @apply bg-card border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+
+  .navbar {
+    @apply sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60;
+  }
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
-}
+/* Utilities for performance */
+@layer utilities {
+  .will-change-transform {
+    will-change: transform;
+  }
 
-*::-webkit-scrollbar {
-  display: none;
-}
+  .contain-layout {
+    contain: layout;
+  }
 
-* {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
+  .contain-paint {
+    contain: paint;
+  }
+
+  .gpu-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
 }

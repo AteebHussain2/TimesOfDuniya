@@ -14,9 +14,40 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Times Of Duniya - Home",
-  description: "A place to find the latest news and updates",
-};
+  title: "Times Of Duniya - Latest News & Updates",
+  description:
+    "Stay updated with the latest news from around the world. Breaking news, politics, technology, sports, and more.",
+  keywords: ["news", "breaking news", "world news", "politics", "technology", "sports"],
+  authors: [{ name: "Times Of Duniya" }],
+  creator: "Times Of Duniya",
+  publisher: "Times Of Duniya",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://timesofduniya.com",
+    title: "Times Of Duniya - Latest News & Updates",
+    description: "Stay updated with the latest news from around the world.",
+    siteName: "Times Of Duniya",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Times Of Duniya - Latest News & Updates",
+    description: "Stay updated with the latest news from around the world.",
+    creator: "@timesofduniya",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  generator: 'v0.dev'
+}
 
 export default function RootLayout({
   children,
@@ -26,7 +57,7 @@ export default function RootLayout({
   return (
     <ClerkProvider afterSignOutUrl={'/'}>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${poppins.variable} font-sans antialiased`}>
+        <body className={`${poppins.variable} antialiased`}>
           <AppProvider>
             {children}
           </AppProvider>

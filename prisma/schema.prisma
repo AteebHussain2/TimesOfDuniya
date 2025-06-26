@@ -48,6 +48,7 @@ model Post {
   updatedAt   DateTime? @updatedAt
 
   views  Int      @default(0)
+  likes  Int      @default(0)
   labels String[] // optional custom keywords
 
   authorId String

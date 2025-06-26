@@ -1,7 +1,6 @@
 import { GetCategories } from "@/actions/dashboard/category/getCategories"
 import { GetAllPosts } from "@/actions/dashboard/posts/getAllPosts";
-import CategoriesHeader from "./_components/CategoriesHeader";
-import PostsWithFilters from "./_components/PostsWithFilters";
+import PostsTable from "./_components/PostsTable";
 
 interface Props {
     searchParams: Promise<{
@@ -21,9 +20,7 @@ const page = async ({ searchParams }: Props) => {
             </h1>
 
             <div className="flex flex-col items-start">
-                <CategoriesHeader categories={categories} />
-
-                <PostsWithFilters posts={posts} />
+                <PostsTable categories={categories} posts={posts} />
             </div>
         </div>
     )
