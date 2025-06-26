@@ -13,7 +13,7 @@ const BreadcrumbHeader = () => {
         <div className='flex items-center flex-start gap-8'>
             <span className='flex items-center gap-1'>
                 <MobileSidebar />
-                <Logo title="Studio" fontSize="text-2xl font-bold" iconSize={16} />
+                <Logo title="Studio" fontSize="text-2xl font-bold" />
             </span>
             <Breadcrumb className='hidden'>
                 <BreadcrumbList>
