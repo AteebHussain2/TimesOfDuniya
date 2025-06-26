@@ -1,6 +1,6 @@
-import type React from "react"
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import type React from "react"
 
 export default function RootLayout({
     children,
