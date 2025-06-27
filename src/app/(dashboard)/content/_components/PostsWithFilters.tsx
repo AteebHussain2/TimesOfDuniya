@@ -164,7 +164,7 @@ const PostsWithFilters = ({ posts }: Props) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    {post.views || 0}
+                                    {post.views.length || 0}
                                 </TableCell>
                             </TableRow>
                         ))}

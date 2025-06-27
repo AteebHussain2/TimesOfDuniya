@@ -1,22 +1,15 @@
-'use client';
-
 import { GetAllPublishedPosts } from "@/actions/site/posts/getAllPublishedPosts";
 import BreakingNewsTicker from "@/components/posts/BreakingNewsTicker";
 import TrendingSidebar from "@/components/posts/TrendingSidebar";
 import { Card, CardContent } from "@/components/ui/card";
 import PostCard from "@/components/posts/PostCard";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export default function HomePage() {
-    // const posts = await GetAllPublishedPosts();
-    const { data: posts } = useQuery({
-        queryFn: GetAllPublishedPosts,
-        queryKey: ['all-published-posts']
-    });
+export default async function HomePage() {
+    const posts = await GetAllPublishedPosts();
 
     if (posts) {
         const featuredPost = posts[0]
@@ -73,11 +66,11 @@ export default function HomePage() {
                                         </Button>
                                     </div>
 
-                                    <PostCard last={categoryPosts.length === 1} post={featuredPost} sideFeatured={true} side={index % 2 === 0 ? 'right' : 'left'} showViews={true} />
+                                    <PostCard last={categoryPosts.length === 1} post={featuredPost} sideFeatured={true} side={index % 2 === 0 ? 'right' : 'left'} showViews={true} showCategory={false} />
 
                                     <div className="md:flex flex-wrap gap-4 space-y-3">
                                         {otherPosts.map((post, index) => (
-                                            <PostCard key={post.id} post={post} last={categoryPosts.length === index + 1} showAuthor={false} />
+                                            <PostCard key={post.id} post={post} last={categoryPosts.length === index + 1} showAuthor={false} showCategory={false} />
                                         ))}
                                     </div>
                                 </section>

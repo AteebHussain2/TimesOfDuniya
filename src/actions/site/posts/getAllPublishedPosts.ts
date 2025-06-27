@@ -17,6 +17,9 @@ export async function GetAllPublishedPosts() {
             author: true,
             category: true,
             tags: true,
+            likes: true,
+            views: true,
+            comments: true,
         }
     })
 }

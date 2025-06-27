@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
 import "./globals.css";
-import AppProvider from "@/components/AppProvider";
-import { ClerkProvider } from "@clerk/nextjs";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next";
+import AppProvider from "@/components/AppProvider";
+import { ClerkProvider } from "@clerk/nextjs";
+import { Poppins } from "next/font/google";
+import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
 const poppins = Poppins({

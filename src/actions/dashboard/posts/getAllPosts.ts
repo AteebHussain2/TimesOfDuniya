@@ -29,6 +29,7 @@ export async function GetAllPosts(category?: string) {
             category: true,
             tags: true,
             author: true,
+            views: true,
         },
     });
 };

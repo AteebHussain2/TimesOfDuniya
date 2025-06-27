@@ -1,6 +1,6 @@
 "use client"
 
-import { SignedIn, SignedOut, SignInButton, UserProfile } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter, usePathname } from "next/navigation";
 import { Search, User, Menu } from "lucide-react";
@@ -13,7 +13,7 @@ import type React from "react";
 import Link from "next/link";
 import Logo from "./Logo";
 
-const categories = ["World", "Pakistan", "Politics", "Business", "Technology", "Sports", "Health", "Entertainment"]
+const categories = ["International", "Pakistan", "Politics", "Business", "Technology", "Sports", "Health", "Entertainment", "Anime"]
 
 export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState("")
@@ -69,7 +69,7 @@ export default function Navbar() {
                             <ThemeToggle />
 
                             <SignedIn>
-                                <UserProfile />
+                                <UserButton />
                             </SignedIn>
                             <SignedOut>
                                 <SignInButton>
@@ -89,7 +89,7 @@ export default function Navbar() {
             </div>
 
             {/* Categories Bar - Desktop */}
-            <div className="hidden md:block md:sticky top-0 z-50 relative bg-background/80">
+            <div className="hidden md:block sticky top-0 z-50 bg-background/80">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-center space-x-1 overflow-x-auto hide-scrollbar">
                         {categories.map((category) => (

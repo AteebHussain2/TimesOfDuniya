@@ -25,41 +25,28 @@ export async function calculateTrendingScore(post: TypeGetAllPublishedPosts[numb
   const timeFactor = Math.max(0.1, 1 - hoursOld / (24 * 7)) // Decay over a week
 
   // Engagement metrics
-  const viewsWeight = post?.views * 0.1
-  const likesWeight = post?.likes * 2
-  const commentsWeight = getCommentCount(post?.id) * 5
+  const viewsWeight = post?.views.length * 0.1
+  const likesWeight = post?.likes.length * 2
+  const commentsWeight = post.comments.length * 5
 
   // Calculate engagement rate (likes + comments per view)
-  const engagementRate = post?.views > 0 ? (post?.likes! + getCommentCount(post?.id)) / post?.views : 0
+  const engagementRate = post?.views.length > 0 ? (post?.likes.length! + post.comments.length) / post?.views.length : 0
   const engagementWeight = engagementRate * 100
 
   return (viewsWeight + likesWeight + commentsWeight + engagementWeight) * timeFactor
-}
-
-// Mock function to get comment count (in real app, this would be from database)
-function getCommentCount(postId: number): number {
-  const commentCounts: Record<string, number> = {
-    "1": 12,
-    "2": 8,
-    "3": 15,
-    "4": 6,
-    "5": 22,
-    "6": 4,
-  }
-  return commentCounts[postId] || 0
 }
 
 // Get trending posts
 export async function getTrendingPosts(limit = 6): Promise<TrendingPost[]> {
   const postsWithScores = posts.map(async (post) => {
     const trendingScore = await calculateTrendingScore(post)
-    const engagementRate = post?.views > 0 ? (post?.likes + getCommentCount(post?.id)) / post?.views : 0
+    const engagementRate = post?.views.length > 0 ? (post?.likes.length + post.comments.length) / post?.views.length : 0
 
     return {
       ...post,
       trendingScore,
       engagementRate,
-      recentViews: Math.floor(post?.views * 0.3), // Simulate recent views
+      recentViews: Math.floor(post?.views.length * 0.3), // Simulate recent views
     } as TrendingPost
   })
 
@@ -163,8 +150,8 @@ export async function getSuggestedForYou(limit = 4): Promise<TypeGetAllPublished
     score += preferredAuthors.get(post?.author.username) || 0
 
     // Boost popular posts slightly
-    score += Math.log(post?.views + 1) * 0.1
-    score += Math.log(post?.likes + 1) * 0.2
+    score += Math.log(post?.views.length + 1) * 0.1
+    score += Math.log(post?.likes.length + 1) * 0.2
 
     return { post, score }
   })
@@ -189,8 +176,8 @@ export async function getPopularThisWeek(limit = 6): Promise<TypeGetAllPublished
       return daysSincePublished <= 7
     })
     .sort((a, b) => {
-      const aEngagement = a.views + a.likes * 2 + getCommentCount(a.id) * 5
-      const bEngagement = b.views + b.likes * 2 + getCommentCount(b.id) * 5
+      const aEngagement = a.views.length + a.likes.length * 2 + a.comments.length * 5
+      const bEngagement = b.views.length + b.likes.length * 2 + b.comments.length * 5
       return bEngagement - aEngagement
     })
     .slice(0, limit)
@@ -200,6 +187,6 @@ export async function getPopularThisWeek(limit = 6): Promise<TypeGetAllPublished
 export async function getCategoryRecommendations(category: string, excludeId?: number, limit = 3): Promise<TypeGetAllPublishedPosts> {
   return posts
     .filter((post) => post?.category?.name.toLowerCase() === category.toLowerCase() && post?.id !== excludeId)
-    .sort((a, b) => b.views - a.views)
+    .sort((a, b) => b.views.length - a.views.length)
     .slice(0, limit)
 }

@@ -22,9 +22,13 @@ model User {
   role      Role    @default(MEMBER)
   imageUrl  String?
 
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  posts       Post[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Comment     Comment[]
+  Like        Like[]
+  View        View[]
+  CommentLike CommentLike[]
 }
 
 enum Role {
@@ -47,17 +51,17 @@ model Post {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
 
-  views  Int      @default(0)
-  likes  Int      @default(0)
-  labels String[] // optional custom keywords
-
   authorId String
   author   User   @relation(fields: [authorId], references: [id])
 
   categoryId Int?
   category   Category? @relation(fields: [categoryId], references: [id])
 
-  tags Tag[] @relation("PostTags")
+  tags     Tag[]     @relation("PostTags")
+  labels   String[]
+  comments Comment[]
+  likes    Like[]
+  views    View[]
 }
 
 model Category {
@@ -75,4 +79,69 @@ model Tag {
   id    Int    @id @default(autoincrement())
   name  String @unique
   posts Post[] @relation("PostTags")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  postId Int
+  post   Post @relation(fields: [postId], references: [id])
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  parentId Int? // For replies
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies  Comment[] @relation("CommentReplies")
+
+  likes CommentLike[]
+}
+
+model CommentLike {
+  id        Int     @id @default(autoincrement())
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([commentId, userId]) // Each user can like a comment only once
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  postId Int
+  post   Post @relation(fields: [postId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([postId, userId]) // Prevent multiple likes from same user
+}
+
+model View {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  postId Int
+  post   Post @relation(fields: [postId], references: [id])
+
+  // Optional user (null for guest/anonymous)
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  // Optional metadata
+  ipAddress String?
+  userAgent String?
+
+  // Prevent duplicate views per user/post (optional)
+  @@unique([postId, userId])
+  @@unique([postId, ipAddress])
 }

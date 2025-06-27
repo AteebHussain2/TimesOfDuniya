@@ -51,7 +51,6 @@ export async function createPost(formData: z.infer<typeof createPostSchema>) {
                 : undefined,
             authorId: userId,
             categoryId: category.id,
-            views: 0,
 
             published: formData.published,
             publishedAt: publishedAt,

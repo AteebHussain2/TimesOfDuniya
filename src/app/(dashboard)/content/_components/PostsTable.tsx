@@ -205,7 +205,7 @@ const PostsTable = ({ categories, posts }: Props) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    {post.views || 0}
+                                    {post.views.length || 0}
                                 </TableCell>
                             </TableRow>
                         ))}

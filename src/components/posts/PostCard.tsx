@@ -1,13 +1,13 @@
+import { Eye, MessageCircle, Clock, HeartIcon } from "lucide-react";
 import { ImageWithSkeleton } from "../loading/image-skeleton";
-import { Eye, MessageCircle, Clock } from "lucide-react";
 import { TypeGetAllPublishedPosts } from "@/lib/types";
 import { Avatar } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card";
 import { Image } from "@imagekit/next";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface PostCardProps {
     post: TypeGetAllPublishedPosts[number],
@@ -15,9 +15,10 @@ interface PostCardProps {
     sideFeatured?: boolean,
     side?: 'left' | 'right' | 'top' | 'bottom',
     showViews?: boolean,
-    showLike?: boolean,
+    showLikes?: boolean,
     showComments?: boolean,
     showAuthor?: boolean,
+    showCategory?: boolean,
     compact?: boolean,
     horizontal?: boolean,
     last?: boolean
@@ -29,9 +30,10 @@ export default function PostCard({
     sideFeatured = false,
     side = 'bottom',
     showViews = false,
-    // showLike = false,
+    showLikes = false,
     showComments = false,
     showAuthor = true,
+    showCategory = true,
     compact = false,
     last = false,
     horizontal = false,
@@ -42,7 +44,7 @@ export default function PostCard({
         return null
     }
 
-    const { id, slug, title, thumbnail, content, summary, category, author, publishedAt, views } = post;
+    const { id, slug, title, thumbnail, content, summary, category, author, publishedAt, views, likes, comments } = post;
 
     // Featured post - large hero style
     if (featured) {
@@ -58,11 +60,13 @@ export default function PostCard({
                             className="group-hover:scale-105 transition-transform duration-300 rounded-md"
                             priority
                         />
-                        <div className="absolute top-4 left-4">
-                            <Badge variant="destructive" className="font-semibold">
-                                {category?.name || "Uncategorized"}
-                            </Badge>
-                        </div>
+                        {showCategory && (
+                            <div className="absolute top-[2px] md:top-4 left-1 md:left-4">
+                                <Badge variant="destructive" className="font-semibold">
+                                    {category?.name || "Uncategorized"}
+                                </Badge>
+                            </div>
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                         <div className="absolute bottom-4 left-4 right-4 text-white">
                             <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 leading-tight line-clamp-2">
@@ -72,28 +76,46 @@ export default function PostCard({
                                 {summary || "No summary available"}
                             </p>
                             <div className="flex items-center text-sm space-x-4">
-                                <div className="flex items-center space-x-2">
-                                    <Avatar className="h-6 w-6 border-2 border-white">
-                                        <Image
-                                            width={144}
-                                            height={144}
-                                            alt={author?.firstName.charAt(0) || "U"}
-                                            src={author?.imageUrl || "/defaultProfilePic.svg"}
-                                            className="aspect-square size-full"
-                                        />
-                                    </Avatar>
-                                    <span className="font-medium">{author?.firstName || 'Unknown'} {author?.lastName || 'Author'}</span>
-                                </div>
+                                {showAuthor && (
+                                    <div className="flex items-center space-x-2">
+                                        <Avatar className="h-6 w-6 border-2 border-white">
+                                            <Image
+                                                width={144}
+                                                height={144}
+                                                alt={author?.firstName.charAt(0) || "U"}
+                                                src={author?.imageUrl || "/defaultProfilePic.svg"}
+                                                className="aspect-square size-full"
+                                            />
+                                        </Avatar>
+                                        <span className="font-medium">{author?.firstName || 'Unknown'} {author?.lastName || 'Author'}</span>
+                                    </div>
+                                )}
                                 <div className="flex items-center space-x-1">
                                     <Clock className="h-4 w-4" size={18} />
                                     <span>
                                         {formatDistanceToNow(publishedAt!, { addSuffix: true })}
                                     </span>
                                 </div>
-                                {showViews && (
-                                    <div className="flex items-center space-x-1">
-                                        <Eye className="h-4 w-4" size={18} />
-                                        <span>{(views / 1000).toFixed(1)}k</span>
+                                {(showComments || showViews || showLikes) && (
+                                    <div className="flex items-center space-x-3">
+                                        {showViews && (
+                                            <div className="flex items-center space-x-1">
+                                                <Eye className="h-4 w-4" size={18} />
+                                                <span>{(views.length / 1000).toFixed(1)}k</span>
+                                            </div>
+                                        )}
+                                        {showLikes && (
+                                            <div className="flex items-center space-x-1">
+                                                <HeartIcon className="h-4 w-4" size={18} />
+                                                <span>{(likes.length / 1000).toFixed(1)}k</span>
+                                            </div>
+                                        )}
+                                        {showComments && (
+                                            <div className="flex items-center space-x-1">
+                                                <MessageCircle className="h-4 w-4" size={18} />
+                                                <span>{(comments.length / 1000).toFixed(1)}k</span>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -127,11 +149,13 @@ export default function PostCard({
                             className="group-hover:scale-105 transition-transform duration-300 rounded-sm"
                             priority
                         />
-                        <div className="absolute top-4 left-4">
-                            <Badge variant="destructive" className="font-semibold rounded-md">
-                                {category?.name || "Uncategorized"}
-                            </Badge>
-                        </div>
+                        {showCategory && (
+                            <div className="absolute top-[2px] md:top-4 left-1 md:left-4">
+                                <Badge variant="destructive" className="font-semibold">
+                                    {category?.name || "Uncategorized"}
+                                </Badge>
+                            </div>
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                     </div>
 
@@ -150,10 +174,26 @@ export default function PostCard({
                                     {formatDistanceToNow(publishedAt!, { addSuffix: true })}
                                 </span>
                             </div>
-                            {showViews && (
-                                <div className="flex items-center space-x-1">
-                                    <Eye className="h-4 w-4" size={18} />
-                                    <span>{(views / 1000).toFixed(1)}k</span>
+                            {(showComments || showViews || showLikes) && (
+                                <div className="flex items-center space-x-3">
+                                    {showViews && (
+                                        <div className="flex items-center space-x-1">
+                                            <Eye className="h-4 w-4" size={18} />
+                                            <span>{(views.length / 1000).toFixed(1)}k</span>
+                                        </div>
+                                    )}
+                                    {showLikes && (
+                                        <div className="flex items-center space-x-1">
+                                            <HeartIcon className="h-4 w-4" size={18} />
+                                            <span>{(views.length / 1000).toFixed(1)}k</span>
+                                        </div>
+                                    )}
+                                    {showComments && (
+                                        <div className="flex items-center space-x-1">
+                                            <MessageCircle className="h-4 w-4" size={18} />
+                                            <span>{(comments.length / 1000).toFixed(1)}k</span>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -195,7 +235,19 @@ export default function PostCard({
                             {showViews && (
                                 <>
                                     <span>•</span>
-                                    <span>{(views / 1000).toFixed(1)}k</span>
+                                    <span>{(views.length / 1000).toFixed(1)}k</span>
+                                </>
+                            )}
+                            {showLikes && (
+                                <>
+                                    <span>•</span>
+                                    <span>{(likes.length / 1000).toFixed(1)}k</span>
+                                </>
+                            )}
+                            {showComments && (
+                                <>
+                                    <span>•</span>
+                                    <span>{(comments.length / 1000).toFixed(1)}k</span>
                                 </>
                             )}
                         </div>
@@ -226,9 +278,11 @@ export default function PostCard({
                                 aspectRatio="square"
                                 className="sm:w-[120px] sm:h-[120px] w-[96px] h-[96px] aspect-square rounded-sm object-cover group-hover:scale-105 transition-transform duration-300"
                             />
-                            <Badge variant="destructive" className="absolute top-1 left-1 text-xs px-1.5 py-0.5 font-medium">
-                                {category?.name || "Uncategorized"}
-                            </Badge>
+                            {showCategory && (
+                                <Badge variant="destructive" className="absolute top-1 left-1 text-xs px-1.5 py-0.5 font-medium">
+                                    {category?.name || "Uncategorized"}
+                                </Badge>
+                            )}
                         </div>
                     </div>
 
@@ -268,18 +322,24 @@ export default function PostCard({
                                 </div>
                             </div>
 
-                            {(showComments || showViews) && (
+                            {(showComments || showViews || showLikes) && (
                                 <div className="flex items-center space-x-3">
                                     {showViews && (
                                         <div className="flex items-center space-x-1">
                                             <Eye className="h-4 w-4" size={18} />
-                                            <span>{(views / 1000).toFixed(1)}k</span>
+                                            <span>{(views.length / 1000).toFixed(1)}k</span>
+                                        </div>
+                                    )}
+                                    {showLikes && (
+                                        <div className="flex items-center space-x-1">
+                                            <HeartIcon className="h-4 w-4" size={18} />
+                                            <span>{(likes.length / 1000).toFixed(1)}k</span>
                                         </div>
                                     )}
                                     {showComments && (
                                         <div className="flex items-center space-x-1">
                                             <MessageCircle className="h-4 w-4" size={18} />
-                                            <span>12</span>
+                                            <span>{(comments.length / 1000).toFixed(1)}k</span>
                                         </div>
                                     )}
                                 </div>
@@ -287,7 +347,7 @@ export default function PostCard({
                         </div>
                     </div>
                 </div>
-            </Link >
+            </Link>
         )
     }
 
@@ -312,9 +372,11 @@ export default function PostCard({
                             aspectRatio="square"
                             className="md:w-[256px] md:h-[120px] w-[96px] h-[96px] aspect-square rounded-sm md:rounded-[2px] object-cover group-hover:scale-105 transition-transform duration-300"
                         />
-                        <Badge variant="destructive" className="absolute top-1 left-1 text-xs px-1.5 py-0.5 font-medium">
-                            {category?.name || "Uncategorized"}
-                        </Badge>
+                        {showCategory && (
+                            <Badge variant="destructive" className="absolute top-1 left-1 text-xs px-1.5 py-0.5 font-medium">
+                                {category?.name || "Uncategorized"}
+                            </Badge>
+                        )}
                     </div>
                 </div>
 
@@ -354,18 +416,24 @@ export default function PostCard({
                             </div>
                         </div>
 
-                        {(showComments || showViews) && (
+                        {(showComments || showViews || showLikes) && (
                             <div className="flex items-center space-x-3">
                                 {showViews && (
                                     <div className="flex items-center space-x-1">
                                         <Eye className="h-4 w-4" size={18} />
-                                        <span>{(views / 1000).toFixed(1)}k</span>
+                                        <span>{(views.length / 1000).toFixed(1)}k</span>
+                                    </div>
+                                )}
+                                {showLikes && (
+                                    <div className="flex items-center space-x-1">
+                                        <HeartIcon className="h-4 w-4" size={18} />
+                                        <span>{(likes.length / 1000).toFixed(1)}k</span>
                                     </div>
                                 )}
                                 {showComments && (
                                     <div className="flex items-center space-x-1">
                                         <MessageCircle className="h-4 w-4" size={18} />
-                                        <span>12</span>
+                                        <span>{(comments.length / 1000).toFixed(1)}k</span>
                                     </div>
                                 )}
                             </div>

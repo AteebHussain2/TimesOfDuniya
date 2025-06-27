@@ -8,22 +8,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import PostCard from "./posts/PostCard";
+import { useQuery } from "@tanstack/react-query";
 
 interface MoreLikeThisProps {
     currentPost: TypeGetAllPublishedPosts[number]
 }
 
 export function MoreLikeThis({ currentPost }: MoreLikeThisProps) {
-    const [similarPosts, setSimilarPosts] = useState<TypeGetAllPublishedPosts>([])
-    const [isLoading, setIsLoading] = useState(true)
-
-    useEffect(() => {
-        setTimeout(async () => {
-            const posts = await getMoreLikeThis(currentPost, 4)
-            setSimilarPosts(posts)
-            setIsLoading(false)
-        }, 300)
-    }, [currentPost])
+    const { data: similarPosts, isPending: isLoading } = useQuery({
+        queryFn: () => getMoreLikeThis(currentPost, 4),
+        queryKey: ['more-like-this', currentPost.id]
+    })
 
     if (isLoading) {
         return (
@@ -32,7 +27,7 @@ export function MoreLikeThis({ currentPost }: MoreLikeThisProps) {
                     <ThumbsUp className="h-6 w-6 mr-2 text-blue-600 dark:text-blue-500" />
                     More like this
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="flex flex-wrap gap-6">
                     {[1, 2, 3, 4].map((i) => (
                         <PostCardSkeleton key={i} />
                     ))}
@@ -41,7 +36,7 @@ export function MoreLikeThis({ currentPost }: MoreLikeThisProps) {
         )
     }
 
-    if (similarPosts.length === 0) return null
+    if (similarPosts?.length === 0) return null
 
     return (
         <div className="mb-12">
@@ -49,9 +44,9 @@ export function MoreLikeThis({ currentPost }: MoreLikeThisProps) {
                 <ThumbsUp className="h-6 w-6 mr-2 text-blue-600 dark:text-blue-500" />
                 More like this
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {similarPosts.map((post) => (
-                    <PostCard key={post.id} post={post} />
+            <div className="flex flex-wrap gap-6">
+                {similarPosts?.map((post) => (
+                    <PostCard key={post.id} post={post} showAuthor={false} showViews={true} last={true} />
                 ))}
             </div>
         </div>
@@ -171,7 +166,7 @@ export function TrendingPosts({ limit = 6, showInSidebar = false }: TrendingPost
                                     <div className="flex items-center text-xs text-muted-foreground space-x-2">
                                         <span>{post.views.toLocaleString()} views</span>
                                         <span>•</span>
-                                        <span>{post.likes} likes</span>
+                                        <span>{post.likes.length} likes</span>
                                     </div>
                                 </a>
                             </div>
@@ -188,7 +183,7 @@ export function TrendingPosts({ limit = 6, showInSidebar = false }: TrendingPost
                 <TrendingUp className="h-6 w-6 mr-2 text-red-600 dark:text-red-500" />
                 Trending now
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="space-y-3">
                 {trendingPosts.map((post, index) => (
                     <div key={post.id} className="relative">
                         <div className="absolute top-3 right-3 z-10">
@@ -196,7 +191,7 @@ export function TrendingPosts({ limit = 6, showInSidebar = false }: TrendingPost
                                 #{index + 1}
                             </Badge>
                         </div>
-                        <PostCard post={post} showViews={true} />
+                        <PostCard post={post} showViews={true} compact={true} last={trendingPosts.length === index + 1} />
                     </div>
                 ))}
             </div>

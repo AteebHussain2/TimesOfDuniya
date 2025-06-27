@@ -8,6 +8,7 @@ import { Role } from "@prisma/client";
 import { Badge } from "../ui/badge"
 import { cn } from "@/lib/utils";
 import Image from "next/image"
+import { useUser } from "@clerk/nextjs";
 
 interface Props {
     width?: number,
@@ -15,9 +16,10 @@ interface Props {
 }
 
 const UserProfile = ({ width, border }: Props) => {
+    const { user } = useUser();
     const { data: userData, isPending } = useQuery({
         queryFn: GetUserDataByUserId,
-        queryKey: ['userData'],
+        queryKey: ['userData', user?.id],
     })
 
     if (isPending || !userData) {

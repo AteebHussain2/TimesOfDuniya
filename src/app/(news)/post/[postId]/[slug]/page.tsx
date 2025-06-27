@@ -1,20 +1,160 @@
-import { GetPostByIdAndSlug } from "@/actions/dashboard/posts/getPostByIdAndSlug"
+import { MoreLikeThis, TrendingPosts } from "@/components/RecommendationSections";
+import { GetPostsByCategory } from "@/actions/site/posts/getPostsByCategory";
+import { GetPostByIdAndSlug } from "@/actions/site/posts/getPostByIdAndSlug";
+import { ImageWithSkeleton } from "@/components/loading/image-skeleton";
+import CommentSection from "@/components/posts/CommentSection";
+import PostEngagement from "@/components/posts/PostEngagement";
+import { Calendar, Eye, Share2 } from "lucide-react";
+import PostCard from "@/components/posts/PostCard";
+import { formatDistanceToNow } from "date-fns";
+import { notFound } from "next/navigation";
+import { Image } from "@imagekit/next";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
     params: Promise<{
         postId: string,
         slug: string
-    }>,
-};
-
-const page = async ({ params }: Props) => {
-    const { postId, slug } = await params;
-    const post = await GetPostByIdAndSlug(Number(postId), slug);
-    return (
-        <pre>
-            {JSON.stringify(post, null, 4)}
-        </pre>
-    )
+    }>
 }
 
-export default page
+export default async function PostPage({ params }: Props) {
+    const { postId, slug } = await params;
+    const post = await GetPostByIdAndSlug(Number(postId), slug);
+    if (!post) {
+        notFound()
+    }
+    const { id, title, thumbnail, content, summary, category, author, publishedAt, views, likes, comments, tags } = post;
+
+    // Safe access to category with fallback
+    const relatedPosts = category?.name ? await GetPostsByCategory(category?.name) : [];
+
+    return (
+        <div className="min-h-screen bg-background">
+            <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Article Header */}
+                <header className="mb-8">
+                    <div className="mb-4">
+                        <Link
+                            href={`/category/${(category?.name || "uncategorized").toLowerCase()}`}
+                            className="inline-block bg-rose-600 text-white px-3 py-1 rounded-full text-sm font-medium hover:bg-rose-700 transition-colors"
+                        >
+                            {category?.name || "Uncategorized"}
+                        </Link>
+                    </div>
+
+                    <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">
+                        {title || "Untitled Post"}
+                    </h1>
+
+                    <div className="flex items-center space-x-6 text-muted-foreground mb-6">
+                        <div className="flex items-center space-x-2">
+                            <Image
+                                src={author.imageUrl || "/placeholder.svg"}
+                                alt={author.username}
+                                width={40}
+                                height={40}
+                                className="rounded-full min-w-[40px] min-h-[40px] object-cover"
+                            />
+                            <Link
+                                href={`/author/${author.username}`}
+                                className="font-medium hover:text-rose-600 transition-colors"
+                            >
+                                {author.firstName} {author.lastName}
+                            </Link>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                            <Calendar className="h-4 w-4" />
+                            <span>
+                                {formatDistanceToNow(publishedAt!, { addSuffix: true })}
+                            </span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                            <Eye className="h-4 w-4" />
+                            <span>{(views.length || 0).toLocaleString()} views</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 mb-8">
+                        <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            <Share2 className="h-4 w-4" />
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </header>
+
+                {/* Article Stats */}
+                <PostEngagement
+                    postId={id}
+                    initialViews={views.length || 0}
+                    initialLikes={likes.length || 0}
+                    initialCommentCount={comments.length || 0}
+                />
+
+                {/* Featured Image */}
+                <div className="mb-8">
+                    <ImageWithSkeleton
+                        src={thumbnail}
+                        alt={title}
+                        fill
+                        aspectRatio="video"
+                        className="rounded-lg overflow-hidden"
+                        priority
+                    />
+                </div>
+
+                {/* Article Content */}
+                <div className="prose prose-lg max-w-none mb-8">
+                    <p className="text-xl text-muted-foreground font-medium mb-6">{summary || "No summary available"}</p>
+                    <div className="text-foreground leading-relaxed">
+                        {(content || "No content available").split("\n").map((paragraph, index) => (
+                            <p key={`paragraph-${index}`} className="mb-4">
+                                {paragraph}
+                            </p>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Recommendation Sections */}
+                <div className="mb-12">
+                    <MoreLikeThis currentPost={post} />
+                    <TrendingPosts limit={4} />
+                </div>
+
+                {/* Tags */}
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-foreground mb-3">Tags</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                            <Badge
+                                key={tag.id}
+                                variant={"secondary"}
+                                className="px-3 py-1 rounded-full text-sm"
+                            >
+                                #{tag.name}
+                            </Badge>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Comment Section */}
+                <CommentSection postId={id} postSlug={slug} />
+            </article>
+
+            {/* Related Posts */}
+            {relatedPosts.length > 0 && (
+                <section className="bg-gray-50 py-12">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-8">Related Posts</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {relatedPosts.map((relatedPost) => (
+                                <PostCard key={relatedPost.id} post={relatedPost} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+        </div >
+    )
+}
