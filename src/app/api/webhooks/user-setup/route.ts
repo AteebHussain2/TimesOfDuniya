@@ -11,6 +11,7 @@ export async function POST(request: Request) {
                     data: {
                         id: data.id,
                         username: data.username,
+                        fullname: `${data.first_name} ${data.last_name}`,
                         firstName: data.first_name,
                         lastName: data.last_name,
                         email: data.email_addresses[0].email_address,
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
                     },
                     data: {
                         username: data.username,
+                        fullname: `${data.first_name} ${data.last_name}`,
                         firstName: data.first_name,
                         lastName: data.last_name,
                         email: data.email_addresses[0].email_address,

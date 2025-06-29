@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 
-export async function GetCommentsByPostId(postId: number) {
+export async function GetCommentsByPostId(postId: number, sortBy?: "asc" | "desc") {
     return await prisma.comment.findMany({
         where: { postId },
         include: {
@@ -10,7 +10,7 @@ export async function GetCommentsByPostId(postId: number) {
             likes: true,
         },
         orderBy: {
-            createdAt: "desc"
+            createdAt: sortBy ?? "desc"
         },
     });
 };

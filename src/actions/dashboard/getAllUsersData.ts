@@ -9,5 +9,9 @@ export async function GetAllUsersData() {
         throw new Error('Unauthorized');
     };
 
-    return await prisma.user.findMany();
+    return await prisma.user.findMany({
+        orderBy: {
+            updatedAt: 'desc',
+        },
+    });
 };

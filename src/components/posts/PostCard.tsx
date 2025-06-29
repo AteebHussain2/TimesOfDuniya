@@ -9,6 +9,20 @@ import { Image } from "@imagekit/next";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
+export enum sides {
+    LEFT = 'left',
+    RIGHT = 'right',
+    TOP = 'top',
+    BOTTOM = 'bottom'
+}
+
+const sideCSS = {
+    'left': 'md:flex-row-reverse items-center flex-col',
+    'right': 'md:flex-row items-center flex-col',
+    'top': 'md:flex-col-reverse flex-col',
+    'bottom': 'flex-col',
+}
+
 interface PostCardProps {
     post: TypeGetAllPublishedPosts[number],
     featured?: boolean,
@@ -101,19 +115,19 @@ export default function PostCard({
                                         {showViews && (
                                             <div className="flex items-center space-x-1">
                                                 <Eye className="h-4 w-4" size={18} />
-                                                <span>{(views.length / 1000).toFixed(1)}k</span>
+                                                <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
                                             </div>
                                         )}
                                         {showLikes && (
                                             <div className="flex items-center space-x-1">
                                                 <HeartIcon className="h-4 w-4" size={18} />
-                                                <span>{(likes.length / 1000).toFixed(1)}k</span>
+                                                <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
                                             </div>
                                         )}
                                         {showComments && (
                                             <div className="flex items-center space-x-1">
                                                 <MessageCircle className="h-4 w-4" size={18} />
-                                                <span>{(comments.length / 1000).toFixed(1)}k</span>
+                                                <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
                                             </div>
                                         )}
                                     </div>
@@ -135,10 +149,7 @@ export default function PostCard({
                 )}
             >
                 <div className={cn("w-full h-full flex overflow-hidden gap-8 transition-all duration-300 border-0 !p-0 !m-0",
-                    side === 'left' && 'md:flex-row-reverse items-center flex-col',
-                    side === 'right' && 'md:flex-row items-center flex-col',
-                    side === 'top' && 'md:flex-col-reverse flex-col',
-                    side === 'bottom' && 'flex-col',
+                    sideCSS[side],
                 )}>
                     <div className="relative overflow-hidden min-w-[90vw] md:min-w-[50vw] aspect-video object-cover rounded-sm">
                         <ImageWithSkeleton
@@ -179,19 +190,19 @@ export default function PostCard({
                                     {showViews && (
                                         <div className="flex items-center space-x-1">
                                             <Eye className="h-4 w-4" size={18} />
-                                            <span>{(views.length / 1000).toFixed(1)}k</span>
+                                            <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
                                         </div>
                                     )}
                                     {showLikes && (
                                         <div className="flex items-center space-x-1">
                                             <HeartIcon className="h-4 w-4" size={18} />
-                                            <span>{(views.length / 1000).toFixed(1)}k</span>
+                                            <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
                                         </div>
                                     )}
                                     {showComments && (
                                         <div className="flex items-center space-x-1">
                                             <MessageCircle className="h-4 w-4" size={18} />
-                                            <span>{(comments.length / 1000).toFixed(1)}k</span>
+                                            <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
                                         </div>
                                     )}
                                 </div>
@@ -235,19 +246,19 @@ export default function PostCard({
                             {showViews && (
                                 <>
                                     <span>•</span>
-                                    <span>{(views.length / 1000).toFixed(1)}k</span>
+                                    <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
                                 </>
                             )}
                             {showLikes && (
                                 <>
                                     <span>•</span>
-                                    <span>{(likes.length / 1000).toFixed(1)}k</span>
+                                    <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
                                 </>
                             )}
                             {showComments && (
                                 <>
                                     <span>•</span>
-                                    <span>{(comments.length / 1000).toFixed(1)}k</span>
+                                    <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
                                 </>
                             )}
                         </div>
@@ -327,19 +338,19 @@ export default function PostCard({
                                     {showViews && (
                                         <div className="flex items-center space-x-1">
                                             <Eye className="h-4 w-4" size={18} />
-                                            <span>{(views.length / 1000).toFixed(1)}k</span>
+                                            <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
                                         </div>
                                     )}
                                     {showLikes && (
                                         <div className="flex items-center space-x-1">
                                             <HeartIcon className="h-4 w-4" size={18} />
-                                            <span>{(likes.length / 1000).toFixed(1)}k</span>
+                                            <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
                                         </div>
                                     )}
                                     {showComments && (
                                         <div className="flex items-center space-x-1">
                                             <MessageCircle className="h-4 w-4" size={18} />
-                                            <span>{(comments.length / 1000).toFixed(1)}k</span>
+                                            <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
                                         </div>
                                     )}
                                 </div>
@@ -356,7 +367,7 @@ export default function PostCard({
         <Link
             href={`/post/${id}/${slug}`}
             className={cn("block group md:max-w-[256px] md:flex-grow basis-[100%] mb-3",
-                last ? '' : 'border-b border-separate'
+                last ? '' : 'border-b border-separate md:border-0'
             )}
         >
             <div className="flex md:flex-col md:gap-2 space-x-4 sm:p-4 py-4">
@@ -421,19 +432,19 @@ export default function PostCard({
                                 {showViews && (
                                     <div className="flex items-center space-x-1">
                                         <Eye className="h-4 w-4" size={18} />
-                                        <span>{(views.length / 1000).toFixed(1)}k</span>
+                                        <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
                                     </div>
                                 )}
                                 {showLikes && (
                                     <div className="flex items-center space-x-1">
                                         <HeartIcon className="h-4 w-4" size={18} />
-                                        <span>{(likes.length / 1000).toFixed(1)}k</span>
+                                        <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
                                     </div>
                                 )}
                                 {showComments && (
                                     <div className="flex items-center space-x-1">
                                         <MessageCircle className="h-4 w-4" size={18} />
-                                        <span>{(comments.length / 1000).toFixed(1)}k</span>
+                                        <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
                                     </div>
                                 )}
                             </div>

@@ -244,7 +244,7 @@ const CommentSkeleton = ({ showReplies, replyCount }: { showReplies?: boolean; r
 
 export default function CommentSection({ postId, postSlug }: CommentSectionProps) {
     const [newComment, setNewComment] = useState("");
-    const [sortBy, setSortBy] = useState("newest");
+    const [sortBy, setSortBy] = useState<'desc' | 'asc'>("desc");
 
     const queryClient = useQueryClient();
 
@@ -265,18 +265,16 @@ export default function CommentSection({ postId, postSlug }: CommentSectionProps
     })
 
     const { data: comments, isPending: isLoading } = useQuery({
-        queryKey: ['comments', postId],
-        queryFn: () => GetCommentsByPostId(Number(postId))
+        queryKey: ['comments', postId, sortBy],
+        queryFn: () => GetCommentsByPostId(Number(postId), sortBy),
     });
 
     const getSortLabel = (sort: string) => {
         switch (sort) {
-            case "newest":
+            case "desc":
                 return "Newest First"
-            case "oldest":
+            case "asc":
                 return "Oldest First"
-            case "most-liked":
-                return "Most Liked"
             default:
                 return "Newest First"
         }
@@ -338,10 +336,10 @@ export default function CommentSection({ postId, postSlug }: CommentSectionProps
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            {["newest", "oldest", "most-liked"].map((option) => (
+                            {["desc", "asc"].map((option) => (
                                 <DropdownMenuItem
                                     key={option}
-                                    onClick={() => setSortBy(option)}
+                                    onClick={() => setSortBy(option as 'asc' | 'desc')}
                                     className={sortBy === option ? "bg-accent" : ""}
                                 >
                                     {getSortLabel(option)}

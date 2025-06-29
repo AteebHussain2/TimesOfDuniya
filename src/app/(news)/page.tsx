@@ -70,7 +70,7 @@ export default async function HomePage() {
 
                                     <div className="md:flex flex-wrap gap-4 space-y-3">
                                         {otherPosts.map((post, index) => (
-                                            <PostCard key={post.id} post={post} last={categoryPosts.length === index + 1} showAuthor={false} showCategory={false} />
+                                            <PostCard key={post.id} post={post} last={otherPosts.length === index + 1} showAuthor={false} showCategory={false} />
                                         ))}
                                     </div>
                                 </section>

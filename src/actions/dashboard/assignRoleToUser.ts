@@ -20,6 +20,9 @@ export async function assignRoleToUser(targetUserId: string, role: string, usern
         throw new Error('Only Admin is allowed to assign roles');
     };
 
-    await prisma.user.update({ where: { id: targetUserId, username }, data: { role: role as Role } });
+    await prisma.user.update({
+        where: { id: targetUserId, username },
+        data: { role: role as Role },
+    });
     revalidatePath('/admin/users');
 }

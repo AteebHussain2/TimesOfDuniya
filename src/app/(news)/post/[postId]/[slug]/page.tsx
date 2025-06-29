@@ -12,6 +12,7 @@ import { Calendar, Eye } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Image } from "@imagekit/next";
 import Link from "next/link";
+import Markdown from "react-markdown";
 
 interface Props {
     params: Promise<{
@@ -104,13 +105,13 @@ export default async function PostPage({ params }: Props) {
                 </div>
 
                 {/* Article Content */}
-                <div className="prose prose-lg max-w-none mb-8">
+                <div className="max-w-none mb-8">
                     <p className="text-xl text-muted-foreground font-medium mb-6">{summary || "No summary available"}</p>
-                    <div className="text-foreground leading-relaxed">
+                    <div className="rich-text-editor">
                         {(content || "No content available").split("\n").map((paragraph, index) => (
-                            <p key={`paragraph-${index}`} className="mb-4">
+                            <Markdown key={`paragraph-${index}`}>
                                 {paragraph}
-                            </p>
+                            </Markdown>
                         ))}
                     </div>
                 </div>

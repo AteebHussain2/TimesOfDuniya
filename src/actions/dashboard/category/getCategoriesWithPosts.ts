@@ -15,6 +15,6 @@ export async function GetCategoriesWithPosts() {
         },
         orderBy: {
             createdAt: 'desc',
-        }
+        },
     });
 };

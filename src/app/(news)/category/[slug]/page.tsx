@@ -28,7 +28,7 @@ export default async function CategoryPage({
 
     if (!categories.includes(slug.toLowerCase())) {
         notFound()
-    }
+    };
 
     const posts = await GetPostsByCategory(slug)
     const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1)
@@ -41,14 +41,16 @@ export default async function CategoryPage({
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-primary mb-4">{categoryName}</h1>
                     <p className="text-lg text-muted-foreground">{description}</p>
+                    <Separator className="mt-4" />
                 </div>
+
 
                 {/* Posts Grid */}
                 {posts.length > 0 ? (
                     <div className="flex flex-wrap gap-6">
                         {posts.map((post, index) => (
                             <React.Fragment key={post.id}>
-                                <PostCard key={post.id} sideFeatured={index % 9 === 0} side={index % 18 !== 0 ? 'left' : 'right'} last={true} post={post} showAuthor={false} />
+                                <PostCard key={post.id} sideFeatured={index % 9 === 0} side={index % 18 !== 0 ? 'left' : 'right'} last post={post} showAuthor={false} showCategory={false} showLikes showViews />
                                 <Separator className={cn(index % 9 !== 0 ? 'hidden' : 'block')} />
                             </React.Fragment>
                         ))}

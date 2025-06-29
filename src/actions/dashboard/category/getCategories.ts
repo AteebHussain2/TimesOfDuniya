@@ -9,5 +9,9 @@ export async function GetCategories() {
         throw new Error('Unauthorized');
     };
 
-    return await prisma.category.findMany();
+    return await prisma.category.findMany({
+        orderBy: {
+            createdAt: 'desc',
+        },
+    });
 }

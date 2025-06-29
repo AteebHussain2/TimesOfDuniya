@@ -16,6 +16,7 @@ datasource db {
 model User {
   id        String  @id @default(cuid())
   username  String  @unique
+  fullname  String
   firstName String
   lastName  String?
   email     String  @unique
@@ -42,7 +43,7 @@ model Post {
   id        Int     @id @default(autoincrement())
   title     String
   thumbnail String
-  slug      String  @unique
+  slug      String
   summary   String?
   content   String
 

@@ -2,26 +2,23 @@
 
 import prisma from "@/lib/prisma";
 
-export async function GetPostsByCategory(slug: string) {
+export async function GetPostsByAuthor(username: string) {
     return await prisma.post.findMany({
         where: {
-            category: {
-                slug: slug,
+            author: {
+                username,
             },
             published: true,
             publishedAt: {
-                not: null,
+                not: null
             },
         },
-        orderBy: {
-            publishedAt: 'desc'
-        },
         include: {
-            tags: true,
-            category: true,
             author: true,
-            views: true,
+            category: true,
+            tags: true,
             likes: true,
+            views: true,
             comments: true,
         },
     });

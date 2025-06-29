@@ -20,6 +20,6 @@ export async function GetAllPublishedPosts() {
             likes: true,
             views: true,
             comments: true,
-        }
-    })
+        },
+    });
 }

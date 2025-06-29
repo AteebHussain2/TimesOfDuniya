@@ -13,7 +13,10 @@ export async function GetFirstPost() {
         include: {
             category: true,
             author: true,
-            tags: true
+            tags: true,
+            likes: true,
+            views: true,
+            comments: true,
         },
-    })
-}
+    });
+};

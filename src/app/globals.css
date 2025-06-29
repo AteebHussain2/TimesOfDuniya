@@ -194,3 +194,52 @@
     backface-visibility: hidden;
   }
 }
+
+/* Code for Rich Text Editor and Markdown */
+.rich-text-editor {
+  @apply text-base leading-relaxed text-primary;
+}
+
+.rich-text-editor h1 {
+  @apply text-3xl font-[900] mb-4;
+}
+
+.rich-text-editor h2 {
+  @apply text-2xl font-extrabold mb-3;
+}
+
+.rich-text-editor h3 {
+  @apply text-xl font-bold mb-2;
+}
+
+.rich-text-editor p {
+  @apply mb-4;
+}
+
+.rich-text-editor ul {
+  @apply list-disc pl-6 space-y-2 mb-4;
+}
+
+.rich-text-editor ol {
+  @apply list-decimal pl-6 space-y-2 mb-4;
+}
+
+.rich-text-editor li {
+  @apply mb-1;
+}
+
+.rich-text-editor a {
+  @apply text-blue-600 underline hover:text-blue-800;
+}
+
+.rich-text-editor blockquote {
+  @apply border-l-4 border-zinc-300 dark:border-zinc-700 pl-4 italic text-zinc-600 mb-4;
+}
+
+.rich-text-editor code {
+  @apply bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-sm font-mono;
+}
+
+.rich-text-editor pre {
+  @apply bg-zinc-100 dark:bg-zinc-800 p-4 rounded overflow-x-auto mb-4 text-sm font-mono;
+}
