@@ -31,7 +31,6 @@ export default function PostEngagement({
     const [likes, setLikes] = useState(initialLikes)
     const [commentCount] = useState(initialCommentCount)
     const [isLiked, setIsLiked] = useState(false)
-    const [hasViewed, setHasViewed] = useState(false)
 
     useEffect(() => {
         const monitorViews = async () => {
@@ -41,7 +40,6 @@ export default function PostEngagement({
             setIsLiked(likeTracker.hasLiked(postId));
 
             const alreadyViewed = viewTracker.hasViewed(postId);
-            setHasViewed(alreadyViewed);
 
             if (!alreadyViewed) {
                 const wasNewView = viewTracker.markAsViewed(postId)
@@ -53,7 +51,7 @@ export default function PostEngagement({
         };
 
         monitorViews();
-    }, [postId]);
+    }, [postId, postSlug]);
 
     const handleLike = async () => {
         const likeTracker = getLikeTracker()

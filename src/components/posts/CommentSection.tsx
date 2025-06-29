@@ -282,7 +282,7 @@ export default function CommentSection({ postId, postSlug }: CommentSectionProps
         }
     }
 
-    const totalComments = comments ? comments.reduce((total, comment) => total + 1, 0) : 0
+    const totalComments = comments ? comments.reduce((total) => total + 1, 0) : 0
 
     if (isLoading) {
         return (

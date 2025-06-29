@@ -18,7 +18,7 @@ export async function calculateTrendingScore(post: TypeGetAllPublishedPosts[numb
     return 0
   };
   const now = new Date()
-  const postDate = new Date(post?.publishedAt!)
+  const postDate = new Date(post?.publishedAt ?? 0)
   const hoursOld = (now.getTime() - postDate.getTime()) / (1000 * 60 * 60)
 
   // Decay factor - newer posts get higher scores
@@ -30,7 +30,7 @@ export async function calculateTrendingScore(post: TypeGetAllPublishedPosts[numb
   const commentsWeight = post.comments.length * 5
 
   // Calculate engagement rate (likes + comments per view)
-  const engagementRate = post?.views.length > 0 ? (post?.likes.length! + post.comments.length) / post?.views.length : 0
+  const engagementRate = post?.views.length > 0 ? (post?.likes.length + post.comments.length) / post?.views.length : 0
   const engagementWeight = engagementRate * 100
 
   return (viewsWeight + likesWeight + commentsWeight + engagementWeight) * timeFactor
@@ -79,7 +79,7 @@ export async function getMoreLikeThis(currentPost: TypeGetAllPublishedPosts[numb
 
       // Recent posts get slight bonus
       const daysDiff =
-        Math.abs(new Date(post?.publishedAt!).getTime() - new Date(currentPost?.publishedAt!).getTime()) /
+        Math.abs(new Date(post?.publishedAt ?? 0).getTime() - new Date(currentPost?.publishedAt ?? 0).getTime()) /
         (1000 * 60 * 60 * 24)
       if (daysDiff < 7) {
         score += 2
@@ -121,7 +121,7 @@ export async function getSuggestedForYou(limit = 4): Promise<TypeGetAllPublished
 
   allInteractedPosts.forEach(({ post, weight }) => {
     // Track category preferences
-    preferredCategories.set(post.category?.name!, (preferredCategories.get(post.category?.name!) || 0) + weight)
+    preferredCategories.set(post.category?.name || '', (preferredCategories.get(post.category?.name || '') || 0) + weight)
 
     // Track tag preferences
     post?.tags.forEach((tag) => {
@@ -139,7 +139,7 @@ export async function getSuggestedForYou(limit = 4): Promise<TypeGetAllPublished
     let score = 0
 
     // Category preference
-    score += preferredCategories.get(post?.category?.name!) || 0
+    score += preferredCategories.get(post?.category?.name || '') || 0
 
     // Tag preferences
     post?.tags.forEach((tag) => {
@@ -172,7 +172,7 @@ export async function getSuggestedForYou(limit = 4): Promise<TypeGetAllPublished
 export async function getPopularThisWeek(limit = 6): Promise<TypeGetAllPublishedPosts> {
   return posts
     .filter((post) => {
-      const daysSincePublished = (Date.now() - new Date(post?.publishedAt!).getTime()) / (1000 * 60 * 60 * 24)
+      const daysSincePublished = (Date.now() - new Date(post?.publishedAt ?? 0).getTime()) / (1000 * 60 * 60 * 24)
       return daysSincePublished <= 7
     })
     .sort((a, b) => {
