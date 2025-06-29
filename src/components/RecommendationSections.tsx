@@ -164,7 +164,7 @@ export function TrendingPosts({ limit = 6, showInSidebar = false }: TrendingPost
                                         {post.title}
                                     </h3>
                                     <div className="flex items-center text-xs text-muted-foreground space-x-2">
-                                        <span>{post.views.toLocaleString()} views</span>
+                                        <span>{post.views.length.toLocaleString()} views</span>
                                         <span>•</span>
                                         <span>{post.likes.length} likes</span>
                                     </div>

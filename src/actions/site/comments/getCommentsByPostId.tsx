@@ -7,7 +7,6 @@ export async function GetCommentsByPostId(postId: number) {
         where: { postId },
         include: {
             author: true,
-            replies: true,
             likes: true,
         },
         orderBy: {

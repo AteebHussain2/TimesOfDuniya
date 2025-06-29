@@ -4,13 +4,14 @@ import { GetPostByIdAndSlug } from "@/actions/site/posts/getPostByIdAndSlug";
 import { ImageWithSkeleton } from "@/components/loading/image-skeleton";
 import CommentSection from "@/components/posts/CommentSection";
 import PostEngagement from "@/components/posts/PostEngagement";
-import { Calendar, Eye, Share2 } from "lucide-react";
+import ShareButton from "@/components/posts/ShareButton";
 import PostCard from "@/components/posts/PostCard";
 import { formatDistanceToNow } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, Eye } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Image } from "@imagekit/next";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 
 interface Props {
     params: Promise<{
@@ -48,7 +49,7 @@ export default async function PostPage({ params }: Props) {
                         {title || "Untitled Post"}
                     </h1>
 
-                    <div className="flex items-center space-x-6 text-muted-foreground mb-6">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:items-center items-start space-x-6 text-muted-foreground mb-6">
                         <div className="flex items-center space-x-2">
                             <Image
                                 src={author.imageUrl || "/placeholder.svg"}
@@ -77,16 +78,14 @@ export default async function PostPage({ params }: Props) {
                     </div>
 
                     <div className="flex items-center space-x-4 mb-8">
-                        <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                            <Share2 className="h-4 w-4" />
-                            <span>Share</span>
-                        </button>
+                        <ShareButton />
                     </div>
                 </header>
 
                 {/* Article Stats */}
                 <PostEngagement
                     postId={id}
+                    postSlug={post.slug}
                     initialViews={views.length || 0}
                     initialLikes={likes.length || 0}
                     initialCommentCount={comments.length || 0}

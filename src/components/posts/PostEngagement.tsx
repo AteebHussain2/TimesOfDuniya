@@ -1,21 +1,27 @@
 "use client"
 
+import { IncrementPostViews } from "@/actions/site/views/increamentPostViews";
 import { getLikeTracker, getViewTracker } from "@/lib/view-tracking";
+import { TogglePostLike } from "@/actions/site/likes/togglePostLike";
 import { Heart, Eye, Share2, MessageCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 interface PostEngagementProps {
     postId: number
+    postSlug: string
     initialViews: number
-initialLikes: number
+    initialLikes: number
     initialCommentCount: number
     showInline?: boolean
 }
 
 export default function PostEngagement({
     postId,
+    postSlug,
     initialViews,
     initialLikes,
     initialCommentCount,
@@ -25,38 +31,42 @@ export default function PostEngagement({
     const [likes, setLikes] = useState(initialLikes)
     const [commentCount] = useState(initialCommentCount)
     const [isLiked, setIsLiked] = useState(false)
-    // const [hasViewed, setHasViewed] = useState(false)
+    const [hasViewed, setHasViewed] = useState(false)
 
     useEffect(() => {
-        const likeTracker = getLikeTracker()
-        const viewTracker = getViewTracker()
+        const monitorViews = async () => {
+            const likeTracker = getLikeTracker();
+            const viewTracker = getViewTracker();
 
-        setIsLiked(likeTracker.hasLiked(postId))
+            setIsLiked(likeTracker.hasLiked(postId));
 
-        const alreadyViewed = viewTracker.hasViewed(postId)
-        // setHasViewed(alreadyViewed)
+            const alreadyViewed = viewTracker.hasViewed(postId);
+            setHasViewed(alreadyViewed);
 
-        if (!alreadyViewed) {
-            const wasNewView = viewTracker.markAsViewed(postId)
-            if (wasNewView) {
-                // incrementPostViews(postId)
-                setViews((prev) => prev + 1)
-            }
-        }
-    }, [postId])
+            if (!alreadyViewed) {
+                const wasNewView = viewTracker.markAsViewed(postId)
+                if (wasNewView) {
+                    await IncrementPostViews(postId, postSlug)
+                    setViews((prev) => prev + 1)
+                };
+            };
+        };
 
-    const handleLike = () => {
+        monitorViews();
+    }, [postId]);
+
+    const handleLike = async () => {
         const likeTracker = getLikeTracker()
         const newLikeState = likeTracker.toggleLike(postId)
 
         setIsLiked(newLikeState)
 
         if (newLikeState) {
+            await TogglePostLike(postId, postSlug, true)
             setLikes((prev) => prev + 1)
-            // togglePostLike(postId, true)
         } else {
             setLikes((prev) => Math.max(0, prev - 1))
-            // togglePostLike(postId, false)
+            await TogglePostLike(postId, postSlug, false)
         }
     }
 
@@ -66,12 +76,14 @@ export default function PostEngagement({
                 await navigator.share({
                     title: "Times Of Duniya Article",
                     url: window.location.href,
-                })
+                });
+                toast.info('Link Copied to Clipboard!', { id: 'toast-copy' });
             } catch (err) {
                 console.log("Error sharing:", err)
             }
         } else {
-            navigator.clipboard.writeText(window.location.href)
+            navigator.clipboard.writeText(window.location.href);
+            toast.info('Link Copied to Clipboard!', { id: 'toast-copy' });
         }
     }
 
@@ -100,22 +112,40 @@ export default function PostEngagement({
                 <div className="flex items-center space-x-6">
                     <div className="flex items-center space-x-2 text-muted-foreground">
                         <Eye className="h-5 w-5" />
-                        <span className="text-sm font-medium">{views.toLocaleString()} Views</span>
+                        <span className="text-sm font-medium sm:hidden">{views.toLocaleString()}</span>
+                        <span className="text-sm font-medium hidden sm:block">{views.toLocaleString()} Views</span>
                     </div>
 
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleLike}
-                        className={`${isLiked ? "text-rose-600 hover:text-rose-700" : ""}`}
-                    >
-                        <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />
-                        {likes.toLocaleString()} Likes
-                    </Button>
+                    <SignedIn>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleLike}
+                            className={`${isLiked ? "text-rose-600 hover:text-rose-700" : ""}`}
+                        >
+                            <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />
+                            <span className="sm:hidden">{likes.toLocaleString()}</span>
+                            <span className="hidden sm:block">{likes.toLocaleString()} Likes</span>
+                        </Button>
+                    </SignedIn>
+                    <SignedOut>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleLike}
+                            disabled={true}
+                            className={`${isLiked ? "text-rose-600 hover:text-rose-700" : ""}`}
+                        >
+                            <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />
+                            <span className="sm:hidden">{likes.toLocaleString()}</span>
+                            <span className="hidden sm:block">{likes.toLocaleString()} Likes</span>
+                        </Button>
+                    </SignedOut>
 
                     <div className="flex items-center space-x-2 text-muted-foreground">
                         <MessageCircle className="h-5 w-5" />
-                        <span className="text-sm font-medium">{commentCount} Comments</span>
+                        <span className="text-sm font-medium sm:hidden">{commentCount}</span>
+                        <span className="text-sm font-medium hidden sm:block">{commentCount} Comments</span>
                     </div>
                 </div>
 

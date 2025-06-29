@@ -4,11 +4,11 @@ import { GetUserDataByUserId } from "@/actions/dashboard/getUserDataByUserId"
 import UserProfileSkeleton from "./UserProfileSkeleton";
 import { userRoleColor } from "@/lib/users/userRole";
 import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@clerk/nextjs";
 import { Role } from "@prisma/client";
 import { Badge } from "../ui/badge"
 import { cn } from "@/lib/utils";
 import Image from "next/image"
-import { useUser } from "@clerk/nextjs";
 
 interface Props {
     width?: number,

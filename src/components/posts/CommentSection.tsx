@@ -1,18 +1,18 @@
 "use client"
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { GetCommentsByPostId } from "@/actions/site/comments/getCommentsByPostId";
 import { MessageCircle, Heart, Reply, Send, ArrowUpDown, Loader2Icon } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { GetCommentsByPostId } from "@/actions/site/comments/getCommentsByPostId";
 import { GetUserDataByUserId } from "@/actions/dashboard/getUserDataByUserId";
-import { TypeGetCommentByPostId, TypeGetUserDataByUserId } from "@/lib/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ToggleCommentLike } from "@/actions/site/likes/toggleCommentLike";
+import { userRoleColor, UserRoles } from "@/lib/users/userRole";
 import { AddComment } from "@/actions/site/comments/addComment";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { AddReply } from "@/actions/site/comments/addReply";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { userRoleColor, UserRoles } from "@/lib/users/userRole";
+import { TypeGetCommentByPostId } from "@/lib/types";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -41,15 +41,15 @@ interface ReplyProps {
 }
 
 interface CommentItemProps {
-    comment: TypeGetCommentByPostId[number];
+    comment: TypeGetCommentByPostId[number],
     reply?: ReplyProps,
-    depth?: number
-    postId: number
-    postSlug: string
-    user: TypeGetUserDataByUserId
+    depth?: number,
+    postId: number,
+    postSlug: string,
+    userId: string,
 }
 
-function CommentItem({ comment, depth = 0, postId, postSlug, user }: CommentItemProps) {
+function CommentItem({ comment, depth = 0, postId, postSlug, userId }: CommentItemProps) {
     const [showReplyForm, setShowReplyForm] = useState(false)
     const [replyContent, setReplyContent] = useState("")
 
@@ -85,44 +85,48 @@ function CommentItem({ comment, depth = 0, postId, postSlug, user }: CommentItem
         setShowReplyForm(false);
     };
 
-    const isLiked = comment.likes.some(like => like.userId === user?.id)
-    const maxDepth = 3
+    const isLiked = comment.likes.some(like => like.userId === userId)
+    const maxDepth = 0
 
     return (
         <div className={`${depth > 0 ? "ml-8 border-l-2 border-muted pl-4" : ""}`}>
-            <Card className="mb-4 !p-0">
-                <CardContent className="p-4">
-                    <div className="flex items-start space-x-3 mb-3">
-                        <Avatar className="h-8 w-8 border-2 border-white">
-                            <Image
-                                width={144}
-                                height={144}
-                                alt={comment.author?.firstName.charAt(0) || "U"}
-                                src={comment.author?.imageUrl || "/defaultProfilePic.svg"}
-                                className="aspect-square size-full object-cover"
-                            />
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center space-x-2 mb-1">
+            <div className="mb-4 p-4">
+                <div className="flex items-start space-x-3 mb-3">
+                    <Avatar className="h-8 w-8 border-2 border-white">
+                        <Image
+                            width={144}
+                            height={144}
+                            alt={comment.author?.firstName.charAt(0) || "U"}
+                            src={comment.author?.imageUrl || "/defaultProfilePic.svg"}
+                            className="aspect-square size-full object-cover"
+                        />
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                        <div className="flex flex-col items-start space-x-2 mb-1">
+                            <div className="flex items-center space-x-2">
                                 <h4 className="font-semibold text-sm">{comment.author.firstName} {comment.author.lastName}</h4>
-                                {user?.role !== UserRoles.MEMBER && (
+                                {comment.author?.role !== UserRoles.MEMBER && (
                                     <Badge
                                         variant={'secondary'}
                                         className={cn("text-[0.6rem] pb-[3px] font-semibold border-0",
-                                            userRoleColor[user?.role as Role]
+                                            userRoleColor[comment.author?.role as Role]
                                         )}>
-                                        {user?.role}
+                                        {comment.author?.role}
                                     </Badge>
                                 )}
+                            </div>
+                            <div className="flex items-center space-x-2">
                                 <span className="text-muted-foreground text-xs">@{comment.author.username}</span>
                                 <span className="text-muted-foreground text-xs">•</span>
                                 <span className="text-muted-foreground text-xs">{formatDistanceToNow(comment.createdAt, { addSuffix: true })}</span>
                             </div>
-                            <p className="text-sm leading-relaxed">{comment.content}</p>
                         </div>
+                        <p className="text-sm leading-relaxed">{comment.content}</p>
                     </div>
+                </div>
 
-                    <div className="flex items-center space-x-4 ml-12">
+                <div className="flex items-center space-x-4 ml-12">
+                    <SignedIn>
                         <Button
                             variant="ghost"
                             size="sm"
@@ -133,82 +137,78 @@ function CommentItem({ comment, depth = 0, postId, postSlug, user }: CommentItem
                             <Heart className={`h-4 w-4 mr-1 ${isLiked ? "fill-current" : ""}`} />
                             <span className="text-xs">{comment.likes.length}</span>
                         </Button>
+                    </SignedIn>
+                    <SignedOut>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            disabled={true || isLiking}
+                            onClick={() => toggleLike(comment.id)}
+                            className={`h-8 px-2 ${isLiked ? "text-rose-600 hover:text-rose-700" : ""}`}
+                        >
+                            <Heart className={`h-4 w-4 mr-1 ${isLiked ? "fill-current" : ""}`} />
+                            <span className="text-xs">{comment.likes.length}</span>
+                        </Button>
+                    </SignedOut>
 
-                        {depth < maxDepth && (
-                            <Button variant="ghost" size="sm" onClick={() => setShowReplyForm(!showReplyForm)} className="h-8 px-2">
-                                <Reply className="h-4 w-4 mr-1" />
-                                <span className="text-xs">Reply</span>
-                            </Button>
-                        )}
-                    </div>
+                    {depth < maxDepth && (
+                        <Button variant="ghost" size="sm" onClick={() => setShowReplyForm(!showReplyForm)} className="h-8 px-2">
+                            <Reply className="h-4 w-4 mr-1" />
+                            <span className="text-xs">Reply</span>
+                        </Button>
+                    )}
+                </div>
 
-                    {showReplyForm && (
-                        <>
-                            <SignedIn>
-                                <form onSubmit={handleReplySubmit} className="mt-4 ml-12">
-                                    <div className="flex space-x-3">
-                                        <Avatar className="h-8 w-8 border-2 border-white">
-                                            <Image
-                                                width={144}
-                                                height={144}
-                                                alt={comment.author?.firstName.charAt(0) || "U"}
-                                                src={comment.author?.imageUrl || "/defaultProfilePic.svg"}
-                                                className="aspect-square size-full object-cover"
-                                            />
-                                        </Avatar>
-                                        <div className="flex-1">
-                                            <Textarea
-                                                value={replyContent}
-                                                onChange={(e) => setReplyContent(e.target.value)}
-                                                placeholder={`Reply to @${comment.author.username}...`}
-                                                className="resize-none"
-                                                rows={2}
-                                            />
-                                            <div className="flex justify-end space-x-2 mt-2">
-                                                <Button type="button" variant="ghost" size="sm" onClick={() => setShowReplyForm(false)}>
-                                                    Cancel
-                                                </Button>
-                                                <Button type="submit" size="sm" disabled={!replyContent.trim() || isReplying}>
-                                                    {isReplying ? (
-                                                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
-                                                    ) : (
-                                                        <Send className="h-3 w-3 mr-1" />
-                                                    )}
-                                                    {isReplying ? "Posting..." : "Reply"}
-                                                </Button>
-                                            </div>
+                {showReplyForm && (
+                    <>
+                        <SignedIn>
+                            <form onSubmit={handleReplySubmit} className="mt-4 ml-12">
+                                <div className="flex space-x-3">
+                                    <Avatar className="h-8 w-8 border-2 border-white">
+                                        <Image
+                                            width={144}
+                                            height={144}
+                                            alt={comment.author?.firstName.charAt(0) || "U"}
+                                            src={comment.author?.imageUrl || "/defaultProfilePic.svg"}
+                                            className="aspect-square size-full object-cover"
+                                        />
+                                    </Avatar>
+                                    <div className="flex-1">
+                                        <Textarea
+                                            value={replyContent}
+                                            onChange={(e) => setReplyContent(e.target.value)}
+                                            placeholder={`Reply to @${comment.author.username}...`}
+                                            className="resize-none"
+                                            rows={2}
+                                        />
+                                        <div className="flex justify-end space-x-2 mt-2">
+                                            <Button type="button" variant="ghost" size="sm" onClick={() => setShowReplyForm(false)}>
+                                                Cancel
+                                            </Button>
+                                            <Button type="submit" size="sm" disabled={!replyContent.trim() || isReplying}>
+                                                {isReplying ? (
+                                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
+                                                ) : (
+                                                    <Send className="h-3 w-3 mr-1" />
+                                                )}
+                                                {isReplying ? "Posting..." : "Reply"}
+                                            </Button>
                                         </div>
                                     </div>
-                                </form>
-                            </SignedIn>
-                            <SignedOut>
-                                <div
-                                    onClick={() => toast.error("You must be signed in to reply.")}
-                                    className="mt-4 ml-12 cursor-not-allowed opacity-60"
-                                >
-                                    <Textarea disabled placeholder="Sign in to reply..." />
                                 </div>
-                            </SignedOut>
-                        </>
-                    )}
-                </CardContent>
-            </Card>
-
-            {comment.replies.length > 0 && (
-                <div className="space-y-2">
-                    {comment.replies.map((reply) => (
-                        <CommentItem
-                            key={reply.id}
-                            reply={reply}
-                            depth={depth + 1}
-                            postId={postId}
-                            postSlug={postSlug}
-                            comment={comment}
-                            user={user}
-                        />
-                    ))}
-                </div>
-            )}
+                            </form>
+                        </SignedIn>
+                        <SignedOut>
+                            <div
+                                onClick={() => toast.error("You must be signed in to reply.")}
+                                className="mt-4 ml-12 cursor-not-allowed opacity-60"
+                            >
+                                <Textarea disabled placeholder="Sign in to reply..." />
+                            </div>
+                        </SignedOut>
+                    </>
+                )}
+            </div>
         </div>
     )
 }
@@ -282,7 +282,7 @@ export default function CommentSection({ postId, postSlug }: CommentSectionProps
         }
     }
 
-    const totalComments = comments ? comments.reduce((total, comment) => total + 1 + comment.replies.length, 0) : 0
+    const totalComments = comments ? comments.reduce((total, comment) => total + 1, 0) : 0
 
     if (isLoading) {
         return (
@@ -412,7 +412,7 @@ export default function CommentSection({ postId, postSlug }: CommentSectionProps
                 <div className="space-y-4">
                     {comments && comments.length > 0 ? (
                         comments.map((comment) => (
-                            <CommentItem key={comment.id} comment={comment} postId={postId} postSlug={postSlug} user={userData ?? null} />
+                            <CommentItem key={comment.id} comment={comment} postId={postId} postSlug={postSlug} userId={userData?.id || ''} />
                         ))
                     ) : (
                         <div className="text-center py-8">

@@ -15,7 +15,6 @@ export async function AddReply(postId: number, postSlug: string, parentId: numbe
             postId,
             content,
             authorId: userId,
-            parentId,
         },
     });
 

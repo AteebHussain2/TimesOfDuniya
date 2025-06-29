@@ -55,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider afterSignOutUrl={'/'}>
+    <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${poppins.variable} antialiased`}>
           <AppProvider>

@@ -93,10 +93,6 @@ model Comment {
   authorId String
   author   User   @relation(fields: [authorId], references: [id])
 
-  parentId Int? // For replies
-  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
-  replies  Comment[] @relation("CommentReplies")
-
   likes CommentLike[]
 }
 
