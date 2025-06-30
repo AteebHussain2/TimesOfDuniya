@@ -281,7 +281,7 @@ export default function EditPostForm({ slug, postId }: { slug: string, postId: n
 
                             <Button
                                 type="button"
-                                disabled={!isDirty || isSubmitting || updatePostMutation.isPending}
+                                disabled={(!isDirty && published) || isSubmitting || updatePostMutation.isPending}
                                 className="max-w-[calc(50%-8px)] w-full cursor-pointer flex items-center gap-2"
                                 onClick={() => {
                                     form.handleSubmit((values) => onSubmit({ ...values, published: true }))();
@@ -320,7 +320,7 @@ export default function EditPostForm({ slug, postId }: { slug: string, postId: n
                         {title || "Your title will be shown here..."}
                     </h2>
 
-                    <div className="prose max-w-none">
+                    <div className="rich-text-editor">
                         <Markdown>
                             {content || ""}
                         </Markdown>

@@ -53,10 +53,10 @@ model Post {
   updatedAt   DateTime? @updatedAt
 
   authorId String
-  author   User   @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   categoryId Int?
-  category   Category? @relation(fields: [categoryId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   tags     Tag[]     @relation("PostTags")
   labels   String[]
@@ -89,20 +89,20 @@ model Comment {
   updatedAt DateTime @updatedAt
 
   postId Int
-  post   Post @relation(fields: [postId], references: [id])
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   authorId String
-  author   User   @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   likes CommentLike[]
 }
 
 model CommentLike {
   id        Int     @id @default(autoincrement())
-  comment   Comment @relation(fields: [commentId], references: [id])
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId Int
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   createdAt DateTime @default(now())
@@ -115,10 +115,10 @@ model Like {
   createdAt DateTime @default(now())
 
   postId Int
-  post   Post @relation(fields: [postId], references: [id])
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([postId, userId]) // Prevent multiple likes from same user
 }
@@ -128,11 +128,11 @@ model View {
   createdAt DateTime @default(now())
 
   postId Int
-  post   Post @relation(fields: [postId], references: [id])
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   // Optional user (null for guest/anonymous)
   userId String?
-  user   User?   @relation(fields: [userId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Optional metadata
   ipAddress String?

@@ -12,9 +12,10 @@ import { toast } from 'sonner';
 interface Props {
     open: boolean,
     setOpen: (open: boolean) => void,
+    setValueInForm?: (value: string) => void,
 }
 
-const CreateCategoryDialog = ({ open, setOpen }: Props) => {
+const CreateCategoryDialog = ({ open, setOpen, setValueInForm }: Props) => {
     const queryClient = useQueryClient();
     const [name, setName] = useState('');
     const [desc, setDesc] = useState('');
@@ -24,6 +25,7 @@ const CreateCategoryDialog = ({ open, setOpen }: Props) => {
         onSuccess: () => {
             toast.success(`Successfully created category`, { id: 'create-category' });
             queryClient.invalidateQueries({ queryKey: ['categories', { type: 'form' }] });
+            setValueInForm?.(name);
             setName('');
             setDesc('');
             setOpen(false);

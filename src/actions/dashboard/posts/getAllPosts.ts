@@ -5,7 +5,7 @@ import { UserRoles } from "@/lib/users/userRole";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 
-export async function GetAllPosts(category?: string) {
+export async function GetAllPosts() {
     const { userId } = await auth();
     if (!userId) {
         throw new Error('Unauthorized');
@@ -16,12 +16,24 @@ export async function GetAllPosts(category?: string) {
         throw new Error('You are not allowed to view posts');
     };
 
-    return await prisma.post.findMany({
-        where: {
-            category: {
-                slug: category,
+    if (role === UserRoles.EDITOR) {
+        return await prisma.post.findMany({
+            where: {
+                authorId: userId,
             },
-        },
+            orderBy: {
+                updatedAt: 'desc',
+            },
+            include: {
+                category: true,
+                tags: true,
+                author: true,
+                views: true,
+            },
+        });
+    }
+
+    return await prisma.post.findMany({
         orderBy: {
             updatedAt: 'desc',
         },

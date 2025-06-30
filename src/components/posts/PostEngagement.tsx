@@ -4,8 +4,8 @@ import { IncrementPostViews } from "@/actions/site/views/increamentPostViews";
 import { getLikeTracker, getViewTracker } from "@/lib/view-tracking";
 import { TogglePostLike } from "@/actions/site/likes/togglePostLike";
 import { Heart, Eye, Share2, MessageCircle } from "lucide-react";
+import ReactCountUpWrapper from "../ReactCountUpWrapper";
 import { Separator } from "@/components/ui/separator";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -90,15 +90,15 @@ export default function PostEngagement({
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                 <div className="flex items-center space-x-1">
                     <Eye className="h-4 w-4" />
-                    <span>{views.toLocaleString()}</span>
+                    <ReactCountUpWrapper value={views} />
                 </div>
                 <div className="flex items-center space-x-1">
                     <Heart className={`h-4 w-4 ${isLiked ? "fill-current text-rose-600" : ""}`} />
-                    <span>{likes.toLocaleString()}</span>
+                    <ReactCountUpWrapper value={likes} />
                 </div>
                 <div className="flex items-center space-x-1">
                     <MessageCircle className="h-4 w-4" />
-                    <span>{commentCount}</span>
+                    <ReactCountUpWrapper value={commentCount} />
                 </div>
             </div>
         )
@@ -110,40 +110,28 @@ export default function PostEngagement({
                 <div className="flex items-center space-x-6">
                     <div className="flex items-center space-x-2 text-muted-foreground">
                         <Eye className="h-5 w-5" />
-                        <span className="text-sm font-medium sm:hidden">{views.toLocaleString()}</span>
-                        <span className="text-sm font-medium hidden sm:block">{views.toLocaleString()} Views</span>
+                        <ReactCountUpWrapper value={views} />
+                        {/* <span className="text-sm font-medium sm:hidden">{views.toLocaleString()}</span> */}
+                        {/* <span className="text-sm font-medium hidden sm:block">{views.toLocaleString()} Views</span> */}
                     </div>
 
-                    <SignedIn>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleLike}
-                            className={`${isLiked ? "text-rose-600 hover:text-rose-700" : ""}`}
-                        >
-                            <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />
-                            <span className="sm:hidden">{likes.toLocaleString()}</span>
-                            <span className="hidden sm:block">{likes.toLocaleString()} Likes</span>
-                        </Button>
-                    </SignedIn>
-                    <SignedOut>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleLike}
-                            disabled={true}
-                            className={`${isLiked ? "text-rose-600 hover:text-rose-700" : ""}`}
-                        >
-                            <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />
-                            <span className="sm:hidden">{likes.toLocaleString()}</span>
-                            <span className="hidden sm:block">{likes.toLocaleString()} Likes</span>
-                        </Button>
-                    </SignedOut>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleLike}
+                        className={`${isLiked ? "text-rose-600 hover:text-rose-700" : ""}`}
+                    >
+                        <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />
+                        <ReactCountUpWrapper value={likes} />
+                        {/* <span className="sm:hidden">{likes.toLocaleString()}</span>
+                        <span className="hidden sm:block">{likes.toLocaleString()} Likes</span> */}
+                    </Button>
 
                     <div className="flex items-center space-x-2 text-muted-foreground">
                         <MessageCircle className="h-5 w-5" />
-                        <span className="text-sm font-medium sm:hidden">{commentCount}</span>
-                        <span className="text-sm font-medium hidden sm:block">{commentCount} Comments</span>
+                        <ReactCountUpWrapper value={commentCount} />
+                        {/* <span className="text-sm font-medium sm:hidden">{commentCount}</span>
+                        <span className="text-sm font-medium hidden sm:block">{commentCount} Comments</span> */}
                     </div>
                 </div>
 

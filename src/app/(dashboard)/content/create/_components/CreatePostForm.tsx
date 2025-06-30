@@ -38,7 +38,7 @@ export default function CreatePostForm() {
             "thumbnail": "/ImagePlaceholder_50naaAnD0.png",
             "title": "",
             "content": "",
-            "category": "",
+            "category": String(categories?.[0]?.id ?? 0),
             "tags": [],
             "summary": "",
             "published": false,
@@ -153,7 +153,7 @@ export default function CreatePostForm() {
                                                     {categories?.map((category: TypeGetCategories[number]) => (
                                                         <SelectItem
                                                             key={category.id}
-                                                            value={category.slug}
+                                                            value={String(category.id)}
                                                         >
                                                             {category.name}
                                                         </SelectItem>
@@ -284,7 +284,7 @@ export default function CreatePostForm() {
                         {form.watch('title') || "Your title will be shown here..."}
                     </h2>
 
-                    <div className="prose max-w-none">
+                    <div className="rich-text-editor">
                         <Markdown>
                             {form.watch('content') || ""}
                         </Markdown>

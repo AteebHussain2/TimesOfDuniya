@@ -1,95 +1,61 @@
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { getRoleColor, getRoleIcon, UserRoles } from "@/lib/users/userRole";
 import { GetAllUsersData } from "@/actions/dashboard/getAllUsersData";
-import UserFunctions from "@/components/users/UserFunctions";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { userRoleColor } from "@/lib/users/userRole";
-import { TypeGetAllUsersData } from "@/lib/types";
+import UserManagement from "./_components/UserManagement";
+import UserProfile from "@/components/users/UserProfile";
+import { ShieldAlertIcon } from "lucide-react";
+import { getRole } from "@/lib/users/getRole";
 import { Badge } from "@/components/ui/badge";
-import { Role } from "@prisma/client";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
-const page = async () => {
+const UsersPage = async () => {
+    const role = await getRole();
     const users = await GetAllUsersData();
+
     return (
         <div className="max-w-screen min-w-screen md:max-w-[calc(100vw-280px)] md:min-w-[calc(100vw-280px)] flex flex-col items-start gap-8 py-4">
-            <h1 className="text-3xl text-primary font-semibold px-6">
-                Manage Users
-            </h1>
+            <h1 className="text-3xl text-primary font-semibold px-6">Manage Users</h1>
 
-            <Separator />
+            {role !== UserRoles.EDITOR ? (
+                <UserManagement users={users} />
+            ) : (
+                <div className="flex flex-col items-center justify-center min-h-[70vh] w-full">
+                    <Card>
+                        <CardHeader className="flex items-center justify-center">
+                            <CardTitle className="flex items-center gap-2 text-destructive text-[1.35rem] font-semibold">
+                                <ShieldAlertIcon size={30} />
+                                Unauthorized Access
+                            </CardTitle>
+                        </CardHeader>
 
-            <div className="w-full px-6">
-                TODO: Search wrt username, email
-            </div>
-
-            <Separator />
-
-            <div className="w-full px-2 sm:px-8 flex flex-col flex-1 gap-4">
-                {users.map((user: TypeGetAllUsersData[number], index: number) => (
-                    <Card key={index} className="!py-4">
                         <CardContent>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <Image
-                                        width={56}
-                                        height={56}
-                                        src={user.imageUrl!}
-                                        alt={`${user.firstName} ${user.lastName}`}
-                                        className="rounded-full object-cover aspect-square !size-[42px] sm:!size-[56px]"
-                                    />
-
-                                    <span className="flex flex-col items-start">
-                                        <span className="flex items-center gap-2">
-                                            <h3 className="font-semibold">
-                                                {user.firstName!} {user.lastName}
-                                            </h3>
-                                            <Badge
-                                                variant={'outline'}
-                                                className={cn("rounded-full text-[0.6rem] pb-[3px] flex sm:hidden",
-                                                    userRoleColor[user.role as Role]
-                                                )}>
-                                                {user.role}
-                                            </Badge>
-                                        </span>
-
-                                        <h3 className="text-sm font-normal text-muted-foreground">
-                                            @{user.username}
-                                        </h3>
-                                        <h3 className="text-sm text-muted-foreground flex lg:hidden">
-                                            {user.email}
-                                        </h3>
-                                    </span>
-                                </div>
-
-                                <h3 className="text-sm text-muted-foreground hidden lg:flex">
-                                    {user.email}
-                                </h3>
-
-                                <h3 className="text-sm text-muted-foreground hidden lg:flex">
-                                    Joined: {user.createdAt.toLocaleDateString()}
-                                </h3>
-
-                                <Badge
-                                    variant={'outline'}
-                                    className={cn("rounded-full text-[0.6rem] pb-[3px] hidden sm:flex",
-                                        userRoleColor[user.role as Role]
-                                    )}>
-                                    {user.role}
-                                </Badge>
-
-                                <UserFunctions
-                                    username={user.username}
-                                    userId={user.id}
-                                />
-                            </div>
+                            <UserProfile width={400} border={true} />
                         </CardContent>
+
+                        <CardFooter>
+                            <span className="flex flex-col items-start gap-1 text-muted-foreground text-sm">
+                                <span className="flex items-center gap-2">
+                                    <p>
+                                        Your current role is:
+                                    </p>
+                                    <Badge
+                                        variant="outline"
+                                        className={cn("rounded-full text-xs pb-[3px] flex", getRoleColor(role))}
+                                    >
+                                        {getRoleIcon(role)}
+                                        {role}
+                                    </Badge>
+                                </span>
+                                <p>
+                                    You are not authorized to access this page.
+                                </p>
+                            </span>
+                        </CardFooter>
                     </Card>
-                ))}
-            </div>
+                </div>
+            )}
         </div>
+    )
+}
 
-    );
-};
-
-export default page;
+export default UsersPage;

@@ -1,7 +1,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { GetAllPosts } from '@/actions/dashboard/posts/getAllPosts';
 import { DeletePost } from '@/actions/dashboard/posts/deletePost';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -15,11 +15,13 @@ interface Props {
 const PostDeleteDialog = ({ open, setOpen, post }: Props) => {
     const [text, setText] = useState('');
 
+    const queryClient = useQueryClient();
     const DeletePostMutation = useMutation({
         mutationFn: ({ slug, id }: { slug: string, id: number }) => DeletePost(slug, id),
         onSuccess: () => {
             toast.success(`Post successfully deleted!`, { id: 'delete-post' });
             setText('');
+            queryClient.invalidateQueries({queryKey: ['posts']});
         },
         onError: (error) => {
             toast.error(`${error}`, { id: 'delete-post' });

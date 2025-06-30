@@ -26,11 +26,6 @@ export async function UpdatePost({ id, slug, formData }: Props) {
         throw new Error('You are not allowed to create posts');
     };
 
-    const category = await prisma.category.findUnique({ where: { slug: formData.category } });
-    if (!category) {
-        throw new Error('Category not found');
-    }
-
     const newSlug = formData.title
         .toLowerCase()
         .replace(/\s/g, '-')
@@ -60,8 +55,7 @@ export async function UpdatePost({ id, slug, formData }: Props) {
                     }))
                 }
                 : undefined,
-            categoryId: category.id,
-
+            categoryId: Number(formData.category),
             published: formData.published,
             publishedAt: publishedAt,
             updatedAt: new Date()

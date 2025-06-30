@@ -1,11 +1,10 @@
 'use client';
 
 import { GetUserDataByUserId } from "@/actions/dashboard/getUserDataByUserId"
+import { getRoleColor, getRoleIcon } from "@/lib/users/userRole";
 import UserProfileSkeleton from "./UserProfileSkeleton";
-import { userRoleColor } from "@/lib/users/userRole";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@clerk/nextjs";
-import { Role } from "@prisma/client";
 import { Badge } from "../ui/badge"
 import { cn } from "@/lib/utils";
 import Image from "next/image"
@@ -44,13 +43,13 @@ const UserProfile = ({ width, border }: Props) => {
             <span className="flex flex-col items-center gap-1">
                 <span className="flex items-center gap-2 justify-center">
                     <h3 className="font-semibold">
-                        {userData.firstName} {userData.lastName}
+                        {userData.fullname}
                     </h3>
                     <Badge
-                        variant={'outline'}
-                        className={cn("rounded-full text-[0.6rem] pb-[3px]",
-                            userRoleColor[userData.role as Role]
-                        )}>
+                        variant="outline"
+                        className={cn("rounded-full text-xs pb-[3px] flex", getRoleColor(userData.role))}
+                    >
+                        {getRoleIcon(userData.role)}
                         {userData.role}
                     </Badge>
                 </span>

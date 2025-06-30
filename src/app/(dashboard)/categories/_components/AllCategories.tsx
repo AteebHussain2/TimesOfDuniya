@@ -1,42 +1,113 @@
-'use client'
+"use client";
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { UpdateCategory } from "@/actions/dashboard/category/updateCategory";
 import { DeleteCategory } from "@/actions/dashboard/category/deleteCategory";
+import { UpdateCategory } from "@/actions/dashboard/category/updateCategory";
+import { EditIcon, TrashIcon, FolderOpen, FileText } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { TypeGetCategoriesWithPosts } from "@/lib/types";
-import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
-import { EditIcon, TrashIcon } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 
 interface Props {
-    categories: TypeGetCategoriesWithPosts,
+    categories: TypeGetCategoriesWithPosts
+    viewMode?: "table" | "grid"
 }
 
-const AllCategories = ({ categories }: Props) => {
+const AllCategories = ({ categories, viewMode = "table" }: Props) => {
     const [selectedCategory, setSelectedCategory] = useState<TypeGetCategoriesWithPosts[number]>()
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [showDialog, setShowDialog] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+    const [showEditDialog, setShowEditDialog] = useState(false)
+
+    if (viewMode === "grid") {
+        return (
+            <>
+                <CategoryDeleteDialog open={showDeleteDialog} setOpen={setShowDeleteDialog} category={selectedCategory} />
+
+                <CategoryEditDialog open={showEditDialog} setOpen={setShowEditDialog} category={selectedCategory} />
+
+                <div className="px-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {categories.map((category) => (
+                            <Card key={category.id} className="group hover:shadow-md transition-shadow">
+                                <CardContent className="p-6">
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 bg-primary/10 rounded-lg">
+                                                <FolderOpen className="h-5 w-5 text-primary" />
+                                            </div>
+                                            <div>
+                                                <Link
+                                                    href={`/content?category=${category.slug}`}
+                                                    target="_blank"
+                                                    className="font-semibold hover:underline"
+                                                >
+                                                    {category.name}
+                                                </Link>
+                                                <p className="text-sm text-muted-foreground">/{category.slug}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setSelectedCategory(category)
+                                                    setShowEditDialog(true)
+                                                }}
+                                            >
+                                                <EditIcon size={16} className="text-primary" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setSelectedCategory(category)
+                                                    setShowDeleteDialog(true)
+                                                }}
+                                            >
+                                                <TrashIcon size={16} className="text-destructive" />
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                                        {category.description || "No description available."}
+                                    </p>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <FileText className="h-4 w-4 text-muted-foreground" />
+                                            <span className="text-sm text-muted-foreground">{category.posts.length} posts</span>
+                                        </div>
+
+                                        <Badge variant={category.posts.length > 0 ? "default" : "secondary"} className="text-xs">
+                                            {category.posts.length > 0 ? "Active" : "Empty"}
+                                        </Badge>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            </>
+        )
+    }
 
     return (
         <>
-            <CategoryDeleteDialog
-                open={showDialog}
-                setOpen={setShowDialog}
-                category={selectedCategory}
-            />
+            <CategoryDeleteDialog open={showDeleteDialog} setOpen={setShowDeleteDialog} category={selectedCategory} />
 
-            <CategoryEditDialog
-                open={showDeleteDialog}
-                setOpen={setShowDeleteDialog}
-                category={selectedCategory}
-            />
+            <CategoryEditDialog open={showEditDialog} setOpen={setShowEditDialog} category={selectedCategory} />
 
             <div className="w-full border-t border-separate">
                 <Table>
@@ -46,15 +117,14 @@ const AllCategories = ({ categories }: Props) => {
                             <TableHead className="!text-sm !text-muted-foreground">Category</TableHead>
                             <TableHead className="w-[128px] text-left !text-sm !text-muted-foreground">Slug</TableHead>
                             <TableHead className="w-[64px] text-left !text-sm !text-muted-foreground">Posts</TableHead>
+                            <TableHead className="w-[80px] text-left !text-sm !text-muted-foreground">Status</TableHead>
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
-                        {categories.map((category: TypeGetCategoriesWithPosts[number], index: number) => (
+                        {categories.map((category, index) => (
                             <TableRow key={category.id} className="group h-[82px]">
-                                <TableCell className="border-r border-separate text-muted-foreground">
-                                    {index + 1}.
-                                </TableCell>
+                                <TableCell className="border-r border-separate text-muted-foreground">{index + 1}.</TableCell>
 
                                 <TableCell>
                                     <div className="flex items-center justify-between gap-2 overflow-hidden">
@@ -68,17 +138,17 @@ const AllCategories = ({ categories }: Props) => {
                                             </Link>
 
                                             <p className="text-sm text-muted-foreground truncate transition-all">
-                                                {category?.description || 'No description available.'}
+                                                {category?.description || "No description available."}
                                             </p>
                                         </span>
 
                                         <div className="hidden group-hover:flex items-center gap-2 transition-all pt-[4px]">
                                             <Button
                                                 variant={"ghost"}
-                                                size={'sm'}
+                                                size={"sm"}
                                                 onClick={() => {
                                                     setSelectedCategory(category)
-                                                    setShowDeleteDialog(true)
+                                                    setShowEditDialog(true)
                                                 }}
                                             >
                                                 <EditIcon size={16} className="size-[16px] stroke-primary" />
@@ -86,10 +156,10 @@ const AllCategories = ({ categories }: Props) => {
 
                                             <Button
                                                 variant={"ghost"}
-                                                size={'sm'}
+                                                size={"sm"}
                                                 onClick={() => {
                                                     setSelectedCategory(category)
-                                                    setShowDialog(true)
+                                                    setShowDeleteDialog(true)
                                                 }}
                                             >
                                                 <TrashIcon size={16} className="size-[16px] stroke-destructive" />
@@ -99,17 +169,26 @@ const AllCategories = ({ categories }: Props) => {
                                 </TableCell>
 
                                 <TableCell>
-                                    {category.slug}
+                                    <code className="text-xs bg-muted px-2 py-1 rounded">{category.slug}</code>
                                 </TableCell>
 
                                 <TableCell>
-                                    {category.posts.length || 0}
+                                    <div className="flex items-center gap-2">
+                                        <FileText className="h-4 w-4 text-muted-foreground" />
+                                        <span>{category.posts.length}</span>
+                                    </div>
+                                </TableCell>
+
+                                <TableCell>
+                                    <Badge variant={category.posts.length > 0 ? "default" : "secondary"} className="text-xs">
+                                        {category.posts.length > 0 ? "Active" : "Empty"}
+                                    </Badge>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
-                </Table >
-            </div >
+                </Table>
+            </div>
         </>
     )
 }
@@ -126,7 +205,7 @@ const CategoryDeleteDialog = ({ open, setOpen, category }: DeleteProps) => {
     const [text, setText] = useState('');
 
     const DeleteCategoryMutation = useMutation({
-        mutationFn: ({ slug, id, posts }: { slug: string, id: number, posts: number }) => DeleteCategory(slug, id, posts),
+        mutationFn: ({ slug, id }: { slug: string, id: number }) => DeleteCategory(slug, id),
         onSuccess: () => {
             toast.success(`Category successfully deleted!`, { id: 'update-category' });
             setText('');
@@ -176,7 +255,7 @@ const CategoryDeleteDialog = ({ open, setOpen, category }: DeleteProps) => {
                                 return;
                             };
                             toast.loading(`Deleting category...`, { id: 'update-category' });
-                            DeleteCategoryMutation.mutate({ slug: category?.slug, id: category?.id, posts: category?.posts.length || 0 });
+                            DeleteCategoryMutation.mutate({ slug: category?.slug, id: category?.id });
                         }}
                     >
                         Delete

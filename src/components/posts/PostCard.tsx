@@ -1,5 +1,6 @@
 import { Eye, MessageCircle, Clock, HeartIcon } from "lucide-react";
 import { ImageWithSkeleton } from "../loading/image-skeleton";
+import ReactCountUpWrapper from "../ReactCountUpWrapper";
 import { TypeGetAllPublishedPosts } from "@/lib/types";
 import { Avatar } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
@@ -9,14 +10,7 @@ import { Image } from "@imagekit/next";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export enum sides {
-    LEFT = 'left',
-    RIGHT = 'right',
-    TOP = 'top',
-    BOTTOM = 'bottom'
-}
-
-const sideCSS = {
+const sides = {
     'left': 'md:flex-row-reverse items-center flex-col',
     'right': 'md:flex-row items-center flex-col',
     'top': 'md:flex-col-reverse flex-col',
@@ -59,6 +53,7 @@ export default function PostCard({
     }
 
     const { id, slug, title, thumbnail, content, summary, category, author, publishedAt, views, likes, comments } = post;
+    const formatedTime = formatDistanceToNow(publishedAt!, { addSuffix: true })
 
     // Featured post - large hero style
     if (featured) {
@@ -98,16 +93,16 @@ export default function PostCard({
                                                 height={144}
                                                 alt={author?.firstName.charAt(0) || "U"}
                                                 src={author?.imageUrl || "/defaultProfilePic.svg"}
-                                                className="aspect-square size-full"
+                                                className="aspect-square size-full object-cover"
                                             />
                                         </Avatar>
-                                        <span className="font-medium">{author?.firstName || 'Unknown'} {author?.lastName || 'Author'}</span>
+                                        <span className="font-medium">{author?.fullname || 'Unknown Author'}</span>
                                     </div>
                                 )}
                                 <div className="flex items-center space-x-1">
                                     <Clock className="h-4 w-4" size={18} />
                                     <span>
-                                        {formatDistanceToNow(publishedAt!, { addSuffix: true })}
+                                        {formatedTime}
                                     </span>
                                 </div>
                                 {(showComments || showViews || showLikes) && (
@@ -115,19 +110,22 @@ export default function PostCard({
                                         {showViews && (
                                             <div className="flex items-center space-x-1">
                                                 <Eye className="h-4 w-4" size={18} />
-                                                <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
+                                                <ReactCountUpWrapper value={views.length} />
+                                                {/* <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span> */}
                                             </div>
                                         )}
                                         {showLikes && (
                                             <div className="flex items-center space-x-1">
                                                 <HeartIcon className="h-4 w-4" size={18} />
-                                                <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
+                                                <ReactCountUpWrapper value={likes.length} />
+                                                {/* <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span> */}
                                             </div>
                                         )}
                                         {showComments && (
                                             <div className="flex items-center space-x-1">
                                                 <MessageCircle className="h-4 w-4" size={18} />
-                                                <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
+                                                <ReactCountUpWrapper value={comments.length} />
+                                                {/* <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span> */}
                                             </div>
                                         )}
                                     </div>
@@ -149,7 +147,7 @@ export default function PostCard({
                 )}
             >
                 <div className={cn("w-full h-full flex overflow-hidden gap-8 transition-all duration-300 border-0 !p-0 !m-0",
-                    sideCSS[side],
+                    sides[side],
                 )}>
                     <div className="relative overflow-hidden min-w-[90vw] md:min-w-[50vw] aspect-video object-cover rounded-sm">
                         <ImageWithSkeleton
@@ -182,7 +180,7 @@ export default function PostCard({
                             <div className="flex items-center space-x-1">
                                 <Clock className="h-4 w-4" size={18} />
                                 <span>
-                                    {formatDistanceToNow(publishedAt!, { addSuffix: true })}
+                                    {formatedTime}
                                 </span>
                             </div>
                             {(showComments || showViews || showLikes) && (
@@ -190,19 +188,22 @@ export default function PostCard({
                                     {showViews && (
                                         <div className="flex items-center space-x-1">
                                             <Eye className="h-4 w-4" size={18} />
-                                            <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
+                                            <ReactCountUpWrapper value={views.length} />
+                                            {/* <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span> */}
                                         </div>
                                     )}
                                     {showLikes && (
                                         <div className="flex items-center space-x-1">
                                             <HeartIcon className="h-4 w-4" size={18} />
-                                            <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
+                                            <ReactCountUpWrapper value={likes.length} />
+                                            {/* <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span> */}
                                         </div>
                                     )}
                                     {showComments && (
                                         <div className="flex items-center space-x-1">
                                             <MessageCircle className="h-4 w-4" size={18} />
-                                            <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
+                                            <ReactCountUpWrapper value={comments.length} />
+                                            {/* <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span> */}
                                         </div>
                                     )}
                                 </div>
@@ -241,24 +242,27 @@ export default function PostCard({
                         </h3>
                         <div className="flex items-center text-xs text-muted-foreground space-x-2">
                             <span>
-                                {formatDistanceToNow(publishedAt!, { addSuffix: true })}
+                                {formatedTime}
                             </span>
                             {showViews && (
                                 <>
                                     <span>•</span>
-                                    <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
+                                    <ReactCountUpWrapper value={views.length} />
+                                    {/* <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span> */}
                                 </>
                             )}
                             {showLikes && (
                                 <>
                                     <span>•</span>
-                                    <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
+                                    <ReactCountUpWrapper value={likes.length} />
+                                    {/* <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span> */}
                                 </>
                             )}
                             {showComments && (
                                 <>
                                     <span>•</span>
-                                    <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
+                                    <ReactCountUpWrapper value={comments.length} />
+                                    {/* <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span> */}
                                 </>
                             )}
                         </div>
@@ -319,16 +323,16 @@ export default function PostCard({
                                                 height={144}
                                                 alt={author?.firstName.charAt(0) || "U"}
                                                 src={author?.imageUrl || "/defaultProfilePic.svg"}
-                                                className="aspect-square size-full"
+                                                className="aspect-square size-full object-cover"
                                             />
                                         </Avatar>
-                                        <span className="font-medium">{author?.firstName || 'Unknown'} {author?.lastName || 'Author'}</span>
+                                        <span className="font-medium">{author?.fullname || 'Unknown Author'}</span>
                                     </div>
                                 )}
                                 <div className="flex items-center space-x-1">
                                     <Clock className="h-4 w-4" size={18} />
                                     <span>
-                                        {formatDistanceToNow(publishedAt!, { addSuffix: true })}
+                                        {formatedTime}
                                     </span>
                                 </div>
                             </div>
@@ -338,19 +342,22 @@ export default function PostCard({
                                     {showViews && (
                                         <div className="flex items-center space-x-1">
                                             <Eye className="h-4 w-4" size={18} />
-                                            <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
+                                            <ReactCountUpWrapper value={views.length} />
+                                            {/* <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span> */}
                                         </div>
                                     )}
                                     {showLikes && (
                                         <div className="flex items-center space-x-1">
                                             <HeartIcon className="h-4 w-4" size={18} />
-                                            <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
+                                            <ReactCountUpWrapper value={likes.length} />
+                                            {/* <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span> */}
                                         </div>
                                     )}
                                     {showComments && (
                                         <div className="flex items-center space-x-1">
                                             <MessageCircle className="h-4 w-4" size={18} />
-                                            <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
+                                            <ReactCountUpWrapper value={comments.length} />
+                                            {/* <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span> */}
                                         </div>
                                     )}
                                 </div>
@@ -413,16 +420,16 @@ export default function PostCard({
                                             height={144}
                                             alt={author?.firstName.charAt(0) || "U"}
                                             src={author?.imageUrl || "/defaultProfilePic.svg"}
-                                            className="aspect-square size-full"
+                                            className="aspect-square size-full object-cover"
                                         />
                                     </Avatar>
-                                    <span className="font-medium">{author?.firstName || 'Unknown'} {author?.lastName || 'Author'}</span>
+                                    <span className="font-medium">{author?.fullname || 'Unknown Author'}</span>
                                 </div>
                             )}
                             <div className="flex items-center space-x-1">
                                 <Clock className="h-4 w-4" size={18} />
                                 <span>
-                                    {formatDistanceToNow(publishedAt!, { addSuffix: true })}
+                                    {formatedTime}
                                 </span>
                             </div>
                         </div>
@@ -432,19 +439,22 @@ export default function PostCard({
                                 {showViews && (
                                     <div className="flex items-center space-x-1">
                                         <Eye className="h-4 w-4" size={18} />
-                                        <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span>
+                                        <ReactCountUpWrapper value={views.length} />
+                                        {/* <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span> */}
                                     </div>
                                 )}
                                 {showLikes && (
                                     <div className="flex items-center space-x-1">
                                         <HeartIcon className="h-4 w-4" size={18} />
-                                        <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span>
+                                        <ReactCountUpWrapper value={likes.length} />
+                                        {/* <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span> */}
                                     </div>
                                 )}
                                 {showComments && (
                                     <div className="flex items-center space-x-1">
                                         <MessageCircle className="h-4 w-4" size={18} />
-                                        <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span>
+                                        <ReactCountUpWrapper value={comments.length} />
+                                        {/* <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span> */}
                                     </div>
                                 )}
                             </div>

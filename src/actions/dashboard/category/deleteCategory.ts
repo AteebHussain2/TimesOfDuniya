@@ -6,7 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 
-export async function DeleteCategory(slug: string, id: number, posts: number) {
+export async function DeleteCategory(slug: string, id: number) {
     const { userId } = await auth();
     if (!userId) {
         throw new Error('Unauthorized');
@@ -16,18 +16,6 @@ export async function DeleteCategory(slug: string, id: number, posts: number) {
     if (role === UserRoles.MEMBER) {
         throw new Error('Only Admin and Moderator are allowed to delete categories');
     }
-
-    if (posts > 0) {
-        await prisma.post.deleteMany({
-            where: {
-                categoryId: id,
-                category: {
-                    slug,
-                    id,
-                },
-            },
-        });
-    };
 
     await prisma.category.delete({
         where: {

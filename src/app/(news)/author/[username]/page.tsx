@@ -32,7 +32,7 @@ export default async function AuthorPage({
               className="rounded-full object-cover min-w-[100px] min-h-[100px]"
             />
             <div>
-              <h1 className="text-3xl font-bold text-primary mb-2">{author.firstName} {author.lastName}</h1>
+              <h1 className="text-3xl font-bold text-primary mb-2">{author.fullname}</h1>
               <p className="text-foreground mb-4">
                 Journalist and writer covering various topics including politics, technology, and global affairs.
               </p>
@@ -45,7 +45,7 @@ export default async function AuthorPage({
 
         {/* Author's Posts */}
         <div>
-          <h2 className="text-2xl font-bold text-primary mb-6">Articles by {author.firstName} {author.lastName}</h2>
+          <h2 className="text-2xl font-bold text-primary mb-6">Articles by {author.fullname}</h2>
           <div className="flex flex-wrap gap-6">
             {posts.map((post) => (
               <PostCard key={post.id} post={post} showAuthor={false} last={true} showViews={true} showLikes={true} />

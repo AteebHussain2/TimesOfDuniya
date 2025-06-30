@@ -1,14 +1,14 @@
 import { GetCategoriesWithPosts } from "@/actions/dashboard/category/getCategoriesWithPosts";
+import { GetCommentsByPostId } from "@/actions/site/comments/getCommentsByPostId";
 import { GetPostByIdAndSlug } from "@/actions/dashboard/posts/getPostByIdAndSlug";
 import { GetAllPublishedPosts } from "@/actions/site/posts/getAllPublishedPosts";
 import { GetUserDataByUserId } from "@/actions/dashboard/getUserDataByUserId";
+import { GetPostsByCategory } from "@/actions/site/posts/getPostsByCategory";
 import { GetCategories } from "@/actions/dashboard/category/getCategories";
 import { GetAllUsersData } from "@/actions/dashboard/getAllUsersData";
 import { GetLatestPosts } from "@/actions/site/posts/getLatestPosts";
 import { GetAllPosts } from "@/actions/dashboard/posts/getAllPosts";
 import { GetAllTags } from "@/actions/dashboard/tags/getAllTags";
-import { GetCommentsByPostId } from "@/actions/site/comments/getCommentsByPostId";
-import { GetPostsByCategory } from "@/actions/site/posts/getPostsByCategory";
 
 export type TypeGetAllUsersData = Awaited<ReturnType<typeof GetAllUsersData>>;
 export type TypeGetUserDataByUserId = Awaited<ReturnType<typeof GetUserDataByUserId>>;

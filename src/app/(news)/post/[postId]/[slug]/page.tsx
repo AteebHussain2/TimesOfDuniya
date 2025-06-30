@@ -63,19 +63,14 @@ export default async function PostPage({ params }: Props) {
                                 href={`/author/${author.username}`}
                                 className="font-medium hover:text-rose-600 transition-colors"
                             >
-                                {author.firstName} {author.lastName}
+                                {author.fullname}
                             </Link>
                         </div>
-                        <div className="flex items-center space-x-1">
-                            <Calendar className="h-4 w-4" />
-                            <span>
-                                {formatDistanceToNow(publishedAt!, { addSuffix: true })}
-                            </span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                            <Eye className="h-4 w-4" />
-                            <span>{(views.length || 0).toLocaleString()} views</span>
-                        </div>
+
+                        <Calendar className="h-4 w-4" />
+                        <span>
+                            {formatDistanceToNow(publishedAt!, { addSuffix: true })}
+                        </span>
                     </div>
 
                     <div className="flex items-center space-x-4 mb-8">

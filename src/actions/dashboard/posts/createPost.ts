@@ -19,11 +19,6 @@ export async function createPost(formData: z.infer<typeof createPostSchema>) {
         throw new Error('You are not allowed to create posts');
     };
 
-    const category = await prisma.category.findUnique({ where: { slug: formData.category } });
-    if (!category) {
-        throw new Error('Category not found');
-    }
-
     const slug = formData.title
         .toLowerCase()
         .replace(/\s/g, '-')
@@ -50,8 +45,7 @@ export async function createPost(formData: z.infer<typeof createPostSchema>) {
                 }
                 : undefined,
             authorId: userId,
-            categoryId: category.id,
-
+            categoryId: Number(formData.category),
             published: formData.published,
             publishedAt: publishedAt,
             createdAt: new Date(),

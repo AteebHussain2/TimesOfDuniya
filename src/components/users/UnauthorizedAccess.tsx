@@ -2,12 +2,11 @@
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, SendHorizontal, ShieldAlertIcon } from "lucide-react";
+import { getRoleColor, getRoleIcon } from "@/lib/users/userRole";
 import UserProfile from "@/components/users/UserProfile";
-import { userRoleColor } from "@/lib/users/userRole";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
 import { cn } from "@/lib/utils";
 
 const UnauthorizedAccess = ({ role }: { role: string }) => {
@@ -32,10 +31,10 @@ const UnauthorizedAccess = ({ role }: { role: string }) => {
                                 Your current role is:
                             </p>
                             <Badge
-                                variant={'outline'}
-                                className={cn("rounded-full text-[0.6rem] pb-[3px]",
-                                    userRoleColor[role as Role]
-                                )}>
+                                variant="outline"
+                                className={cn("rounded-full text-xs pb-[3px] flex sm:hidden", getRoleColor(role))}
+                            >
+                                {getRoleIcon(role)}
                                 {role}
                             </Badge>
                         </span>

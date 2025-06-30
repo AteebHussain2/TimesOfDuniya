@@ -1,15 +1,14 @@
-import { GetCategoriesWithPosts } from "@/actions/dashboard/category/getCategoriesWithPosts"
-import CategoriesHeader from "./_components/CategoriesHeader"
-import AllCategories from "./_components/AllCategories"
+import { GetCategoriesWithPosts } from "@/actions/dashboard/category/getCategoriesWithPosts";
+import CategoryManagement from "./_components/CategoryManagement";
+import CategoriesHeader from "./_components/CategoriesHeader";
 
 const page = async () => {
     const categories = await GetCategoriesWithPosts();
 
     return (
-        <div className="w-screen md:w-[calc(100vw-280px)] flex flex-col items-start">
+        <div className="w-screen md:w-[calc(100vw-280px)] flex flex-col items-start gap-3">
             <CategoriesHeader />
-
-            <AllCategories categories={categories} />
+            <CategoryManagement categories={categories} />
         </div>
     );
 };
