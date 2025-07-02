@@ -6,7 +6,6 @@ import { Separator } from "@/components/ui/separator";
 import { TypeGetAllUsersData } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import UserCard from "./UserCard";
-import { Grid, List } from "lucide-react";
 
 const UserManagement = ({ users }: { users: TypeGetAllUsersData }) => {
   const filterConfig = {

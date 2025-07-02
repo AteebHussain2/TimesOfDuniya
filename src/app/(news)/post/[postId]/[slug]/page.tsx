@@ -8,11 +8,11 @@ import ShareButton from "@/components/posts/ShareButton";
 import PostCard from "@/components/posts/PostCard";
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Eye } from "lucide-react";
 import { notFound } from "next/navigation";
+import { Calendar } from "lucide-react";
 import { Image } from "@imagekit/next";
-import Link from "next/link";
 import Markdown from "react-markdown";
+import Link from "next/link";
 
 interface Props {
     params: Promise<{

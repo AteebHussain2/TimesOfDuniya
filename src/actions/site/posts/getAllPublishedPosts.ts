@@ -21,5 +21,6 @@ export async function GetAllPublishedPosts() {
             views: true,
             comments: true,
         },
+        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
     });
 }

@@ -16,5 +16,6 @@ export async function GetCategoriesWithPosts() {
         orderBy: {
             createdAt: 'desc',
         },
+        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
     });
 };

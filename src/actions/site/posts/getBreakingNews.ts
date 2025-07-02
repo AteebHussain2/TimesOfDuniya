@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 
-export async function GetLatestPosts() {
+export async function GetBreakingNews() {
     return await prisma.post.findMany({
         where: {
             published: true,
@@ -13,12 +13,7 @@ export async function GetLatestPosts() {
         orderBy: {
             publishedAt: 'desc'
         },
-        include: {
-            category: true,
-            author: true,
-            tags: true
-        },
-        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
+        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60, tags: ['breaking-news'] },
         take: 10,
     });
 };

@@ -1,10 +1,10 @@
 'use server';
 
-import prisma from "@/lib/prisma";
 import { getRoleByUserId } from "@/lib/users/getRole";
 import { UserRoles } from "@/lib/users/userRole";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import prisma from "@/lib/prisma";
 
 export async function CreateCategory(name: string, description: string) {
     const { userId } = await auth();
@@ -27,7 +27,7 @@ export async function CreateCategory(name: string, description: string) {
             name,
             slug,
             description
-        }
+        },
     });
 
     revalidatePath('/content/create');

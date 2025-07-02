@@ -30,5 +30,6 @@ export async function GetAllPosts(category?: string) {
             tags: true,
             author: true,
         },
+        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
     });
 };

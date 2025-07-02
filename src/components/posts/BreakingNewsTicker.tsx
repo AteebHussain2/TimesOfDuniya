@@ -1,6 +1,6 @@
 "use client";
 
-import { GetBreakingNews } from "@/actions/site/posts/getLatestPosts";
+import { GetBreakingNews } from "@/actions/site/posts/getBreakingNews";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";

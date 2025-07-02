@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
 
 export async function GetUserDataByUserId() {
     const { userId } = await auth();
@@ -13,5 +13,6 @@ export async function GetUserDataByUserId() {
         where: {
             id: userId
         },
+        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
     });
 }
