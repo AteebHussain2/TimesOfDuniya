@@ -1,27 +1,23 @@
 "use client";
 
+import { Carousel, CarouselContent, CarouselItem, } from "@/components/ui/carousel";
 import { GetBreakingNews } from "@/actions/site/posts/getBreakingNews";
 import { useQuery } from "@tanstack/react-query";
+import Autoplay from "embla-carousel-autoplay";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect } from "react";
 import { Dot } from "lucide-react";
+import { useRef } from "react";
+
 
 export default function BreakingNewsTicker() {
+    const plugin = useRef(
+        Autoplay({ delay: 2000, stopOnInteraction: true })
+    )
+
     const { data: breakingNews, isPending } = useQuery({
         queryFn: GetBreakingNews,
         queryKey: ['ten-latest-posts'],
     })
-
-    const [currentIndex, setCurrentIndex] = useState(0)
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (breakingNews && breakingNews.length > 0) {
-                setCurrentIndex((prev) => (prev + 1) % breakingNews.length)
-            }
-        }, 4000);
-        return () => clearInterval(interval)
-    }, [breakingNews?.length, breakingNews])
 
     return (
         <div className="bg-rose-600 dark:bg-rose-700 text-white py-2 overflow-hidden">
@@ -35,22 +31,27 @@ export default function BreakingNewsTicker() {
 
                         <span className="hidden sm:inline">BREAKING</span>
                     </Badge>
-                    <div className="flex-1 overflow-hidden">
-                        <div
-                            className="whitespace-nowrap transition-transform duration-500 ease-in-out"
-                            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                        >
+
+                    <Carousel
+                        plugins={[plugin.current]}
+                        className="w-full max-w-xs"
+                        onMouseEnter={plugin.current.stop}
+                        onMouseLeave={plugin.current.reset}
+                    >
+                        <CarouselContent className="w-full">
                             {!isPending ? breakingNews?.map((news, index) => (
-                                <span key={index} className="inline-block w-full truncate">
-                                    {news.title || 'Do You Know: Supporting us is always appreciated...'}
-                                </span>
+                                <CarouselItem key={index}>
+                                    <span className="inline-block w-full truncate">
+                                        {news.title || 'Do You Know: Supporting us is always appreciated...'}
+                                    </span>
+                                </CarouselItem>
                             )) : (
                                 <span className="inline-block w-full truncate">
                                     Do You Know: Supporting us is always appreciated...
                                 </span>
                             )}
-                        </div>
-                    </div>
+                        </CarouselContent>
+                    </Carousel>
                 </div>
             </div>
         </div>

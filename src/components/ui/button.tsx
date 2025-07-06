@@ -20,8 +20,6 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
-        sidebarItem: "w-full !justify-start dark:hover:bg-accent/80 hover:bg-primary/10",
-        sidebarActiveItem: "w-full !justify-start dark:bg-accent/80 bg-primary/10",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
