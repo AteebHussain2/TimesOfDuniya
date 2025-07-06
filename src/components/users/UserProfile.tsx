@@ -4,7 +4,6 @@ import { GetUserDataByUserId } from "@/actions/dashboard/getUserDataByUserId";
 import { getRoleColor, getRoleIcon } from "@/lib/users/userRole";
 import UserProfileSkeleton from "./UserProfileSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import { useUser } from "@clerk/nextjs";
 import { Image } from "@imagekit/next";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
@@ -15,10 +14,9 @@ interface Props {
 }
 
 const UserProfile = ({ width, border }: Props) => {
-    const { user } = useUser();
     const { data: userData, isPending } = useQuery({
         queryFn: GetUserDataByUserId,
-        queryKey: ['userData', user?.id],
+        queryKey: ['userData'],
     })
 
     if (isPending || !userData) {
