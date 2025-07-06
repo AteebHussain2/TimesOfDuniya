@@ -13,6 +13,6 @@ export async function GetCategories() {
         orderBy: {
             createdAt: 'desc',
         },
-        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
+        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60, tags: ['categories'] },
     });
 }

@@ -30,5 +30,9 @@ export async function CreateCategory(name: string, description: string) {
         },
     });
 
+    // await prisma.$accelerate.invalidate({
+    //     tags: ['categories'],
+    // })
+
     revalidatePath('/content/create');
 };
