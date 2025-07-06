@@ -1,13 +1,13 @@
 'use client';
 
-import { GetUserDataByUserId } from "@/actions/dashboard/getUserDataByUserId"
+import { GetUserDataByUserId } from "@/actions/dashboard/getUserDataByUserId";
 import { getRoleColor, getRoleIcon } from "@/lib/users/userRole";
 import UserProfileSkeleton from "./UserProfileSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@clerk/nextjs";
-import { Badge } from "../ui/badge"
+import { Image } from "@imagekit/next";
+import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
-import Image from "next/image"
 
 interface Props {
     width?: number,

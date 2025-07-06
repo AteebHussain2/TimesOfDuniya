@@ -1,16 +1,16 @@
 'use client'
 
-import { ArchiveIcon, ChartColumnIcon, GalleryHorizontalIcon, LibrarySquareIcon, LucideLayoutDashboard, MenuIcon, MessageSquareMoreIcon, UsersRoundIcon } from "lucide-react"
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
-import { Button, buttonVariants } from "./ui/button"
-import { usePathname } from "next/navigation"
-import { useState } from "react"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
-import Logo from "./Logo"
-import { Separator } from "./ui/separator"
-import { DialogTitle } from "@radix-ui/react-dialog"
-import UserProfile from "./users/UserProfile"
+import { ArchiveIcon, ChartColumnIcon, GalleryHorizontalIcon, LibrarySquareIcon, LucideLayoutDashboard, MenuIcon, MessageSquareMoreIcon, UsersRoundIcon } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Button, buttonVariants } from "./ui/button";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import UserProfile from "./users/UserProfile";
+import { usePathname } from "next/navigation";
+import { Separator } from "./ui/separator";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import Logo from "./Logo";
 
 const routes = [
     {
