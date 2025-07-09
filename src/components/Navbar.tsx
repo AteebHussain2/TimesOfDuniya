@@ -13,7 +13,7 @@ import type React from "react";
 import Link from "next/link";
 import Logo from "./Logo";
 
-const categories = ["International", "Pakistan", "Politics", "Business", "Technology", "Sports", "Health", "Entertainment", "Anime", "Dashboard"]
+const categories = ["International", "Pakistan", "Politics", "Business", "Technology", "Sports", "Health", "Entertainment", "Anime"];
 
 export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState("")

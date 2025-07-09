@@ -44,7 +44,7 @@ export default function EditPostForm({ slug, postId }: { slug: string, postId: n
             'thumbnail': post.thumbnail,
             'title': post.title,
             'content': post.content,
-            'category': post.category?.slug || 'International',
+            'category': String(post.category?.id) || '',
             'tags': post.tags.map((tag: TypeGetAllTags[number]) => tag.name),
             'summary': post.summary || '',
             'published': post.published,
@@ -66,7 +66,7 @@ export default function EditPostForm({ slug, postId }: { slug: string, postId: n
                 tags: post.tags.map((tag: TypeGetAllTags[number]) => tag.name),
                 content: post.content || '',
                 summary: post.summary || '',
-                category: post.category?.slug || 'International',
+                category: String(post.category?.id) || '',
                 thumbnail: post.thumbnail || '',
                 published: post.published ?? false,
             });
@@ -80,7 +80,11 @@ export default function EditPostForm({ slug, postId }: { slug: string, postId: n
             toast.success(`Successfully updated post`, { id: 'update-post' });
         },
         onError: (error) => {
-            toast.error(`Failed to update post` + error, { id: 'update-post' });
+            if (error.message === "NEXT_REDIRECT") {
+                toast.success(`Successfully updated post`, { id: 'update-post' });
+            } else {
+                toast.error(`Failed to update post: ` + error.message, { id: 'update-post' });
+            };
         }
     })
 
@@ -89,7 +93,7 @@ export default function EditPostForm({ slug, postId }: { slug: string, postId: n
             updatePostMutation.mutate({ id: postId, slug, formData: values });
             toast.loading(`Updating post...`, { id: 'update-post' });
         } catch (error) {
-            toast.error("Form submission error" + error);
+            toast.error("Form submission error");
         };
     };
 
@@ -188,7 +192,7 @@ export default function EditPostForm({ slug, postId }: { slug: string, postId: n
                                                     {categories?.map((category: TypeGetCategories[number]) => (
                                                         <SelectItem
                                                             key={category.id}
-                                                            value={category.slug}
+                                                            value={String(category.id)}
                                                         >
                                                             {category.name}
                                                         </SelectItem>

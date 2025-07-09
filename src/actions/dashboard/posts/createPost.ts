@@ -55,5 +55,5 @@ export async function createPost(formData: z.infer<typeof createPostSchema>) {
     });
 
     revalidatePath('/');
-    redirect('/content');
+    return redirect('/content');
 }

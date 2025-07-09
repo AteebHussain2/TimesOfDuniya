@@ -52,7 +52,11 @@ export default function CreatePostForm() {
             toast.success(`Successfully created post`, { id: 'create-post' });
         },
         onError: (error) => {
-            toast.error(`Failed to create post` + error, { id: 'create-post' });
+            if (error.message === "NEXT_REDIRECT") {
+                toast.success(`Successfully created post`, { id: 'create-post' });
+            } else {
+                toast.error(`Failed to create post: ` + error.message, { id: 'create-post' });
+            };
         }
     })
 
@@ -61,7 +65,7 @@ export default function CreatePostForm() {
             createPostMutation.mutate(values);
             toast.loading(`Creating post...`, { id: 'create-post' });
         } catch (error) {
-            toast.error("Form submission error" + error);
+            toast.error("Form submission error", { id: 'create-post' });
         };
     };
 
