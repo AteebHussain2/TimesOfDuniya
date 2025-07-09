@@ -8,5 +8,7 @@ export async function GetAllTags() {
     if (!userId) {
         throw new Error('Unauthorized');
     };
-    return await prisma.tag.findMany();
+    return await prisma.tag.findMany({
+        // cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 }
+    });
 };

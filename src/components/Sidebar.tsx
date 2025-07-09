@@ -99,7 +99,6 @@ const MobileSidebar = () => {
                         <DialogTitle asChild>
                             <Button variant={"ghost"} size={"icon"}>
                                 <MenuIcon />
-
                             </Button>
                         </DialogTitle>
                     </SheetTrigger>
@@ -124,6 +123,7 @@ const MobileSidebar = () => {
                                             variant: activeRoute.href === route.href ? "sidebarActiveItem" : "sidebarItem",
                                         })
                                     )}
+                                    onClick={() => setOpen(false)}
                                 >
                                     <route.icon size={20} className={cn('size-[20px]', activeRoute.href === route.href ? 'fill-primary' : 'fill-transparent')} />
                                     <span className="font-semibold">{route.label}</span>

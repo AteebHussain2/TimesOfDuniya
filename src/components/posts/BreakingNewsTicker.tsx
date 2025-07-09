@@ -7,11 +7,12 @@ import Autoplay from "embla-carousel-autoplay";
 import { Badge } from "@/components/ui/badge";
 import { Dot } from "lucide-react";
 import { useRef } from "react";
+import Link from "next/link";
 
 
 export default function BreakingNewsTicker() {
     const plugin = useRef(
-        Autoplay({ delay: 2000, stopOnInteraction: true })
+        Autoplay({ delay: 8000, stopOnInteraction: true })
     )
 
     const { data: breakingNews, isPending } = useQuery({
@@ -23,7 +24,7 @@ export default function BreakingNewsTicker() {
         <div className="bg-rose-600 dark:bg-rose-700 text-white py-2 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center">
-                    <Badge variant="secondary" className="flex items-center bg-white text-rose-600 dark:text-rose-700 mr-4 flex-shrink-0">
+                    <Badge variant="default" className="flex items-center bg-white text-rose-600 dark:text-rose-700 mr-4 flex-shrink-0">
                         <span className="relative flex items-center justify-center">
                             <span className="animate-ping absolute rounded-full w-[12px] h-[12px] bg-foreground/20"></span>
                             <Dot className="text-rose-600 !w-5 !h-5 min-w-5 min-h-5" size={24} />
@@ -41,14 +42,16 @@ export default function BreakingNewsTicker() {
                         <CarouselContent className="w-full">
                             {!isPending ? breakingNews?.map((news, index) => (
                                 <CarouselItem key={index}>
-                                    <span className="inline-block w-full truncate">
+                                    <Link href={`/post/${news.id}/${news.slug}`} className="inline-block w-full truncate">
                                         {news.title || 'Do You Know: Supporting us is always appreciated...'}
-                                    </span>
+                                    </Link>
                                 </CarouselItem>
                             )) : (
-                                <span className="inline-block w-full truncate">
-                                    Do You Know: Supporting us is always appreciated...
-                                </span>
+                                <CarouselItem>
+                                    <Link href={`https://dynamic-portfolios.vercel.app/ateeb`} target="_blank" className="inline-block w-full truncate">
+                                        Do You Know: Supporting us is always appreciated...
+                                    </Link>
+                                </CarouselItem>
                             )}
                         </CarouselContent>
                     </Carousel>

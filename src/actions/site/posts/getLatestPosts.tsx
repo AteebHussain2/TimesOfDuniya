@@ -18,7 +18,7 @@ export async function GetLatestPosts() {
             author: true,
             tags: true
         },
-        cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
+        // cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
         take: 10,
     });
 };

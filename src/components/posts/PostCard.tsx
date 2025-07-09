@@ -248,6 +248,7 @@ export default function PostCard({
                                 <>
                                     <span>•</span>
                                     <ReactCountUpWrapper value={views.length} />
+                                    &ensp;views
                                     {/* <span>{views.length > 1000 ? `${(views.length / 1000).toFixed(1)}k` : views.length}</span> */}
                                 </>
                             )}
@@ -255,6 +256,7 @@ export default function PostCard({
                                 <>
                                     <span>•</span>
                                     <ReactCountUpWrapper value={likes.length} />
+                                    &ensp;likes
                                     {/* <span>{likes.length > 1000 ? `${(likes.length / 1000).toFixed(1)}k` : likes.length}</span> */}
                                 </>
                             )}
@@ -262,6 +264,7 @@ export default function PostCard({
                                 <>
                                     <span>•</span>
                                     <ReactCountUpWrapper value={comments.length} />
+                                    &ensp;comments
                                     {/* <span>{comments.length > 1000 ? `${(comments.length / 1000).toFixed(1)}k` : comments.length}</span> */}
                                 </>
                             )}

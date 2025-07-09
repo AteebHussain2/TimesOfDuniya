@@ -4,6 +4,7 @@ import { getRoleByUserId } from "@/lib/users/getRole";
 import { createPostSchema } from "@/lib/post/post";
 import { UserRoles } from "@/lib/users/userRole";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
@@ -53,5 +54,6 @@ export async function createPost(formData: z.infer<typeof createPostSchema>) {
         },
     });
 
-    return redirect('/content');
+    revalidatePath('/');
+    redirect('/content');
 }

@@ -63,5 +63,6 @@ export async function UpdatePost({ id, slug, formData }: Props) {
     });
 
     revalidatePath('/content/edit/[id]/[slug]', 'page');
-    return redirect('/content');
+    revalidatePath('/');
+    redirect('/content');
 };
