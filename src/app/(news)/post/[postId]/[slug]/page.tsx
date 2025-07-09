@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             siteName: "Times Of Duniya",
             images: [
                 {
-                    url: post.thumbnail,
+                    url: `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/${post.thumbnail}`,
                     width: 1200,
                     height: 630,
                     alt: post.title,
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             card: "summary_large_image",
             title: post.title,
             description: post.summary || "",
-            images: [post.thumbnail],
+            images: [`${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/${post.thumbnail}`],
         },
     };
 };
