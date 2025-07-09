@@ -12,6 +12,7 @@ import { notFound } from "next/navigation";
 import { Calendar } from "lucide-react";
 import { Image } from "@imagekit/next";
 import Markdown from "react-markdown";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 interface Props {
@@ -20,6 +21,39 @@ interface Props {
         slug: string
     }>
 }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { postId, slug } = await params;
+    const post = await GetPostByIdAndSlug(Number(postId), slug);
+
+    if (!post) return {};
+
+    return {
+        title: post.title,
+        description: post.summary || "Read latest news on Times Of Duniya.",
+        openGraph: {
+            title: post.title,
+            description: post.summary || "Stay informed with Times Of Duniya.",
+            url: `https://times-of-duniya.vercel.app/post/${post.id}/${post.slug}`,
+            siteName: "Times Of Duniya",
+            images: [
+                {
+                    url: post.thumbnail,
+                    width: 1200,
+                    height: 630,
+                    alt: post.title,
+                },
+            ],
+            type: "article",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: post.title,
+            description: post.summary || "",
+            images: [post.thumbnail],
+        },
+    };
+};
 
 export default async function PostPage({ params }: Props) {
     const { postId, slug } = await params;
