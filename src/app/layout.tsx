@@ -35,6 +35,12 @@ export const metadata: Metadata = {
     description: "Stay updated with the latest news from around the world.",
     creator: "@timesofduniya",
   },
+  verification: {
+    google: '9UeBDmTgKvOttg8BMhpKt9-O3AupRMAvkEhkkXsXhn4',
+  },
+  other: {
+    'google-site-verification': '9UeBDmTgKvOttg8BMhpKt9-O3AupRMAvkEhkkXsXhn4',
+  },
 }
 
 export default function RootLayout({
