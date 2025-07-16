@@ -1,11 +1,13 @@
 import { GetPostsByCategory } from "@/actions/site/posts/getPostsByCategory";
+import { GetCategories } from "@/actions/site/categories/getCategories";
 import { Separator } from "@/components/ui/separator";
 import PostCard from "@/components/posts/PostCard";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 import React from "react";
 
-const categories = ["international", "pakistan", "politics", "business", "technology", "sports", "health", "entertainment", "anime"];
+let categories = ["international", "pakistan", "politics", "business", "technology", "sports", "health", "entertainment", "anime"];
+categories = (await GetCategories()).map(category => category.slug);
 
 const categoryDescriptions = {
     international: "Global news and international affairs from around the world",
