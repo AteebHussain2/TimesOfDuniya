@@ -9,5 +9,6 @@ export async function GetAllAuthors() {
                 not: "MEMBER"
             },
         },
+        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
     });
 };

@@ -1,144 +1,104 @@
+import { GetExcludedTitles } from "@/actions/dashboard/posts/getExcludedTitles";
+import { TypesGetExcludedTitles } from "@/lib/types";
+import { isValidSecret } from "@/lib/isValidSecret";
+import { Category, STATUS, TRIGGER, TYPE } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { timingSafeEqual } from "crypto";
 import prisma from "@/lib/prisma";
-import { Category } from "@prisma/client";
-
-type Topic = {
-    title: string,
-    summary: string,
-    source: string[] | string,
-    published: string
-}
-
-function isValidSecret(secret: string) {
-    const API_SECRET = process.env.CRON_API_SECRET_KEY;
-    if (!API_SECRET) {
-        return false;
-    };
-
-    try {
-        return timingSafeEqual(Buffer.from(secret), Buffer.from(API_SECRET));
-    } catch (error) {
-        console.error(error);
-        return false;
-    };
-};
 
 export async function GET(request: Request) {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        console.error('@@AUTH HEADER: ', request.headers.get('authorization'))
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    };
-
-    const secret = authHeader.split(' ')[1];
-    if (!isValidSecret(secret)) {
-        console.error('@@SECRET: ', secret)
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    };
-    // const categories = await prisma.category.findMany();
-    const categories = [{
-        id: 1,
-        name: "Pakistan",
-        description: "",
-        slug: "pakistan",
-        createdAt: new Date,
-        updatedAt: null
-    }]
-
-    for (const category of categories) {
-        try {
-            console.log("Invocation for: ", category.name);
-            await ExecuteAgentProcess(category);
-        } catch (error) {
-            console.log('Error during invocation of CreatPost: ', error)
-        };
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    return NextResponse.json(`Posts To Create: ${categories.length}`, { status: 200 });
-}
-
-async function ExecuteAgentProcess(category: Category) {
-    const SECRET_KEY = process.env.BACKEND_SECRET_KEY
-    if (!SECRET_KEY) {
-        throw new Error("Missing validation credentials!");
+    const secret = authHeader.split(" ")[1];
+    const API_KEY = process.env.CRON_API_SECRET_KEY;
+    if (!API_KEY) {
+        throw new Error("API_KEY not found to validate the request!")
     };
 
-    const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
-    if (!BACKEND_BASE_URL) {
-        throw new Error("Missing Backend Base Url");
+    if (!isValidSecret(secret, API_KEY)) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
 
     try {
-        // const response = await fetch(`${BACKEND_BASE_URL}/api/posts/create-topics/${category.name}`, {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${SECRET_KEY}`,
-        //     },
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //         "min_topics": 1,
-        //         "max_topics": 2,
-        //         "time_duration": "24 hours",
-        //         "excluded_titles": [
-        //             "Gunmen in Balochistan Pakistan Abduct and Kill Nine Bus Passengers",
-        //             "Pakistan's Prime Minister Announces New Economic Reforms",
-        //             "Pakistan's Cricket Team Wins Historic Match"
-        //         ]
-        //     }),
-        // });
+        const categories = await prisma.category.findMany({ where: { slug: { not: "blog" } } });
+        const excluded_titles = await GetExcludedTitles()
 
-        // const data = await response.json();
-        // console.log(JSON.stringify(data, null, 4))
+        for (const category of categories) {
+            const job = await prisma.job.create({
+                data: {
+                    categoryId: category.id,
+                    type: TYPE.TOPIC_GENERATION,
+                    status: STATUS.QUEUED,
+                    trigger: TRIGGER.CRON
+                },
+            });
 
-        const data = {
-            "message": "Successfull!",
-            "content": {
-                "root": [
-                    {
-                        "title": "Pakistan signs $4.5 billion loans with local banks to ease power sector debt",
-                        "summary": "Pakistan has signed term sheets with 18 commercial banks for a 1.275 trillion Pakistani rupee ($4.50 billion) Islamic finance facility to help pay down its power sector debt.",
-                        "source": "https://www.reuters.com/sustainability/boards-policy-regulation/pakistan-signs-45-billion-loans-with-local-banks-ease-power-sector-debt-2025-06-20/",
-                        "published": "2025-06-20"
-                    },
-                    // {
-                    //     "title": "Pakistan's economy steered towards transparency with SIFC's zero tolerance policy",
-                    //     "summary": "A special report highlights the practical implementation and significant impact of Pakistan's \"Zero Tolerance...\" policy, aiming to enhance economic transparency.",
-                    //     "source": "https://ptv.com.pk/ptvworld/newsdetail/8920",
-                    //     "published": "2025-06-21"
-                    // },
-                ]
-            }
+            await ExecuteTrendingTopicsAgent(category, excluded_titles[category.slug], job.id);
         }
 
-        const topics = data.content.root
-        for (const topic of topics) {
-            await ExecuteArticleWriterAgent(topic, BACKEND_BASE_URL, SECRET_KEY)
-        }
+        return NextResponse.json({
+            ok: true,
+            message: `Jobs queued for ${categories.length} categories.`,
+            status: 200
+        });
     } catch (error) {
-        console.error('Failed to send request: ', { status: 500, statusText: 'Something went wrong with server, see logs.', DetailedError: error, JSONDetailedError: JSON.stringify(error) });
+        return NextResponse.json({
+            ok: false,
+            error: "Internal Server Error",
+            message: (error instanceof Error) ? error.message : String(error),
+            status: 500
+        })
     }
+
 }
 
-async function ExecuteArticleWriterAgent(topic: Topic, BACKEND_BASE_URL: string, SECRET_KEY: string) {
+async function ExecuteTrendingTopicsAgent(category: Category, excluded_titles: string[], jobId: number) {
+    const SECRET_KEY = process.env.BACKEND_SECRET_KEY;
+    if (!SECRET_KEY) throw new Error("Missing validation credentials!");
+
+    const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
+    if (!BACKEND_BASE_URL) throw new Error("Missing Backend Base URL");
+
     try {
-        console.log("Invocation for: ", topic.title);
-        const response = await fetch(`${BACKEND_BASE_URL}/api/posts/create-article`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SECRET_KEY}`
-            },
-            method: 'POST',
-            body: JSON.stringify(topic)
+        const response = await fetch(
+            `${BACKEND_BASE_URL}/api/posts/create-topics/`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${SECRET_KEY}`,
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    min_topics: 1,
+                    max_topics: 2,
+                    time_duration: "24 hours",
+                    excluded_titles: excluded_titles,
+                    category,
+                    trigger: TRIGGER.CRON,
+                    jobId,
+                }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Unexpected Error: Server returned failed status!`,)
+        }
+
+        return NextResponse.json({
+            ok: true,
+            message: `Job queued for category ${category.name}.`,
         });
 
-        const article = await response.json();
-        console.log(JSON.stringify(article, null, 4))
     } catch (error) {
-        console.error('Failed to send request: ', { status: 500, statusText: 'Something went wrong with server, see logs.', DetailedError: error, JSONDetailedError: JSON.stringify(error) });
+        const errorMessage = (error instanceof Error) ? error.message : String(error)
+        await prisma.job.update({
+            where: { id: jobId },
+            data: { status: STATUS.FAILED, error: errorMessage, }
+        })
+
+        throw new Error(`${errorMessage}`,)
     }
-}
-
-async function PublishArticleToDataBase() {
-
 }

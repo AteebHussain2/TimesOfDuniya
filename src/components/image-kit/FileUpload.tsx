@@ -139,6 +139,8 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
             return;
         }
         setFiles(Array.from(fileInput.files));
+
+        handleUpload();
     }
 
     return (
@@ -199,8 +201,8 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
                                         className="aspect-video rounded-md object-cover"
                                         src={URL.createObjectURL(file)}
                                         alt={file.name}
-                                        height={280}
-                                        width={540}
+                                        height={480}
+                                        width={640}
                                     />
                                 </CardContent>
 
@@ -230,7 +232,7 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
                 </div >
             )}
 
-            <Button
+            {/* <Button
                 disabled={progress === 100 || uploaded || uploading}
                 type="button"
                 variant={'outline'}
@@ -253,7 +255,7 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
                         <p>Loading...</p>
                     </>
                 )}
-            </Button>
+            </Button> */}
         </>
     );
 };

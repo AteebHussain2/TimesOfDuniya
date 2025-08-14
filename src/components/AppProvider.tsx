@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from './providers/theme-providers';
+import { LayoutProvider } from "./layout/layout-context";
 import { ImageKitProvider } from '@imagekit/next';
 import NextTopProvider from 'nextjs-toploader';
 import { useState } from 'react';
@@ -22,7 +23,9 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
                     defaultTheme="system"
                     enableSystem
                 >
-                    {children}
+                    <LayoutProvider>
+                        {children}
+                    </LayoutProvider>
                 </ThemeProvider>
             </ImageKitProvider>
         </QueryClientProvider>

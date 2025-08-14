@@ -9,6 +9,8 @@ import { GetAllUsersData } from "@/actions/dashboard/getAllUsersData";
 import { GetLatestPosts } from "@/actions/site/posts/getLatestPosts";
 import { GetAllPosts } from "@/actions/dashboard/posts/getAllPosts";
 import { GetAllTags } from "@/actions/dashboard/tags/getAllTags";
+import { GetExcludedTitles } from "@/actions/dashboard/posts/getExcludedTitles";
+import { GetPendingJobs } from "@/actions/dashboard/jobs/getPendingJobs";
 
 export type TypeGetAllUsersData = Awaited<ReturnType<typeof GetAllUsersData>>;
 export type TypeGetUserDataByUserId = Awaited<ReturnType<typeof GetUserDataByUserId>>;
@@ -22,10 +24,35 @@ export type TypeGetPostByIdAndSlug = Awaited<ReturnType<typeof GetPostByIdAndSlu
 export type TypeGetLatestPosts = Awaited<ReturnType<typeof GetLatestPosts>>
 export type TypeGetAllPublishedPosts = Awaited<ReturnType<typeof GetAllPublishedPosts>>
 export type TypeGetPostsByCategory = Awaited<ReturnType<typeof GetPostsByCategory>>
+export type TypesGetExcludedTitles = Awaited<ReturnType<typeof GetExcludedTitles>>
 
 // Type Categories*
 export type TypeGetCategories = Awaited<ReturnType<typeof GetCategories>>;
 export type TypeGetCategoriesWithPosts = Awaited<ReturnType<typeof GetCategoriesWithPosts>>;
 
 // Type Comments*
-export type TypeGetCommentByPostId = Awaited<ReturnType<typeof GetCommentsByPostId>>
+export type TypeGetCommentByPostId = Awaited<ReturnType<typeof GetCommentsByPostId>>;
+
+// Type Jobs*
+export type TypeGetPendingJobs = Awaited<ReturnType<typeof GetPendingJobs>>;
+
+export type TypeJobWithTopics = {
+    id: number;
+    error: string | null;
+    categoryId: number;
+    status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'QUEUED';
+    type: 'TOPIC_GENERATION' | 'ARTICLE_GENERATION';
+    trigger: string;
+    totalItems: number;
+    completedItems: number;
+    createdAt: Date;
+    updatedAt: Date;
+    topics: {
+        id: number;
+        title: string;
+        status: string;
+        createdAt: Date;
+        source: string;
+        summary: string;
+    }[];
+};

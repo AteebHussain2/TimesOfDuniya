@@ -273,7 +273,7 @@ export default function PostCard({
                 </div>
             </Link>
         )
-    }
+    }   
 
     if (horizontal) {
         return (

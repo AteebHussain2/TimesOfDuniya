@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
   // previewFeatures = ["accelerate"]
 }
 
@@ -41,17 +41,23 @@ enum Role {
 }
 
 model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
+  id        Int      @id @default(autoincrement())
   thumbnail String
+  title     String
   slug      String
   summary   String?
   content   String
+  source    Source[]
 
   published   Boolean   @default(false)
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
+
+  accuracy      Int?          @default(0)
+  reason        String?
+  feedback      String?
+  articleStatus ARTICLESTATUS @default(PENDING)
 
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -66,6 +72,15 @@ model Post {
   views    View[]
 }
 
+model Source {
+  id        Int      @id @default(autoincrement())
+  url       String
+  createdAt DateTime @default(now())
+
+  postId Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
 model Category {
   id          Int     @id @default(autoincrement())
   name        String  @unique
@@ -75,6 +90,9 @@ model Category {
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
+  Job       Job[]
+  Topic     Topic[]
+  Article   Article[]
 }
 
 model Tag {
@@ -142,4 +160,107 @@ model View {
   // Prevent duplicate views per user/post (optional)
   @@unique([postId, userId])
   @@unique([postId, ipAddress])
+}
+
+model Job {
+  id             Int      @id @default(autoincrement())
+  category       Category @relation(fields: [categoryId], references: [id])
+  categoryId     Int
+  type           TYPE
+  trigger        TRIGGER  @default(CRON)
+  status         STATUS   @default(QUEUED)
+  totalItems     Int      @default(0)
+  completedItems Int      @default(0)
+  error          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  topics      Topic[]
+  articles    Article[]
+  UsageMetric UsageMetric[]
+}
+
+model Topic {
+  id         Int      @id @default(autoincrement())
+  job        Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId      Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  title      String
+  summary    String?
+  source     String?
+  published  String?
+  status     STATUS   @default(PENDING)
+  createdAt  DateTime @default(now())
+
+  articles Article[]
+}
+
+model Article {
+  id           Int       @id @default(autoincrement())
+  thumbnail    String?
+  title        String
+  summary      String?
+  content      String
+  tags         String[]
+  source       String[]
+  publishedAt  DateTime?
+  publishedUrl String?
+
+  accuracy      Int?          @default(0)
+  reasoning     String?
+  feedback      String?
+  articleStatus ARTICLESTATUS @default(PENDING)
+
+  topicId Int
+  topic   Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  jobId Int
+  job   Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  status    STATUS   @default(PENDING)
+  createdAt DateTime @default(now())
+}
+
+enum ARTICLESTATUS {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum TYPE {
+  TOPIC_GENERATION
+  ARTICLE_GENERATION
+}
+
+enum TRIGGER {
+  MANUAL
+  CRON
+}
+
+enum STATUS {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  QUEUED
+}
+
+model UsageMetric {
+  id                 Int      @id @default(autoincrement())
+  userId             String?
+  date               DateTime
+  promptTokens       Int
+  completionTokens   Int
+  totalTokens        Int
+  successfulRequests Int
+  trigger            TRIGGER  @default(CRON)
+
+  jobId Int? // Optional relation to Job
+  job   Job? @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
 }

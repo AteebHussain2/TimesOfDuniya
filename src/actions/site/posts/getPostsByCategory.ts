@@ -24,6 +24,6 @@ export async function GetPostsByCategory(slug: string) {
             likes: true,
             comments: true,
         },
-        // cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60 },
+        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
     });
 };

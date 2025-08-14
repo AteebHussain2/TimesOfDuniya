@@ -224,7 +224,7 @@ const PostActions = ({
 
         <TooltipWrapper content="Analytics">
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
-            <Link href={`/content/analytics/${postId}/${postSlug}`}>
+            <Link href={`/analytics/${postId}/${postSlug}`}>
               <BarChart3 className="h-4 w-4" />
             </Link>
           </Button>

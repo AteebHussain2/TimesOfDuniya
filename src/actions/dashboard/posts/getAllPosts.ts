@@ -30,7 +30,7 @@ export async function GetAllPosts() {
                 author: true,
                 views: true,
             },
-            // cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60, tags: ['posts', 'author'] },
+            cacheStrategy: { swr: 30 * 60, ttl: 30 * 60, tags: ['posts', 'author'] },
         });
     }
 
@@ -44,6 +44,6 @@ export async function GetAllPosts() {
             author: true,
             views: true,
         },
-        // cacheStrategy: { swr: 3 * 60 * 60, ttl: 30 * 60, tags: ['posts'] },
+        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60, tags: ['posts'] },
     });
 };
