@@ -1,8 +1,20 @@
 'use server'
 
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function GetAllPublishedPosts() {
+type GetAllPublishedPosts = Prisma.PostGetPayload<{
+    include: {
+        author: true,
+        category: true,
+        tags: true,
+        likes: true,
+        views: true,
+        comments: true,
+    }
+}>;
+
+export async function GetAllPublishedPosts(): Promise<GetAllPublishedPosts[]> {
     return await prisma.post.findMany({
         orderBy: {
             publishedAt: 'desc'
@@ -22,5 +34,5 @@ export async function GetAllPublishedPosts() {
             comments: true,
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
-    });
+    }) as GetAllPublishedPosts[];
 }

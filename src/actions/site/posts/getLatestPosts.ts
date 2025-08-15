@@ -1,8 +1,18 @@
 'use server';
 
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function GetLatestPosts() {
+type GetLatestPosts = Prisma.PostGetPayload<{
+    include: {
+        category: true,
+        tags: true,
+        author: true,
+        views: true,
+    },
+}>;
+
+export async function GetLatestPosts(): Promise<GetLatestPosts[]> {
     return await prisma.post.findMany({
         where: {
             published: true,
@@ -20,5 +30,5 @@ export async function GetLatestPosts() {
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 },
         take: 10,
-    });
+    }) as GetLatestPosts[];
 };

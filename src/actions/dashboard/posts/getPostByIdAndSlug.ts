@@ -1,9 +1,18 @@
 'use server';
 
 import { auth } from "@clerk/nextjs/server";
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function GetPostByIdAndSlug(id: number, slug: string) {
+type GetPostByIdAndSlug = Prisma.PostGetPayload<{
+    include: {
+        tags: true,
+        category: true,
+        author: true,
+    },
+}>;
+
+export async function GetPostByIdAndSlug(id: number, slug: string): Promise<GetPostByIdAndSlug> {
     const { userId } = await auth();
     if (!userId) {
         throw new Error('Unauthorized');
@@ -20,5 +29,5 @@ export async function GetPostByIdAndSlug(id: number, slug: string) {
             author: true,
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 },
-    });
+    }) as GetPostByIdAndSlug;
 };

@@ -1,8 +1,9 @@
 'use server';
 
+import { Posts } from "./getFirstPost";
 import prisma from "@/lib/prisma";
 
-export async function GetPostsByCategory(slug: string) {
+export async function GetPostsByCategory(slug: string): Promise<Posts[]> {
     return await prisma.post.findMany({
         where: {
             category: {
@@ -25,5 +26,5 @@ export async function GetPostsByCategory(slug: string) {
             comments: true,
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
-    });
+    }) as Posts[];
 };

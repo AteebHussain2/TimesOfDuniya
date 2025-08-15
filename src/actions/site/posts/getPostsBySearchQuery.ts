@@ -1,8 +1,9 @@
 'use server';
 
+import { Posts } from "./getFirstPost";
 import prisma from "@/lib/prisma";
 
-export async function GetPostsBySearchQuery(query: string) {
+export async function GetPostsBySearchQuery(query: string): Promise<Posts[]>  {
     return await prisma.post.findMany({
         where: {
             OR: [
@@ -84,5 +85,5 @@ export async function GetPostsBySearchQuery(query: string) {
             comments: true,
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
-    });
+    }) as Posts[];
 };

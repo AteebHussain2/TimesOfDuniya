@@ -1,8 +1,9 @@
 'use server';
 
+import { Posts } from "./getFirstPost";
 import prisma from "@/lib/prisma";
 
-export async function GetPostsByAuthor(username: string) {
+export async function GetPostsByAuthor(username: string): Promise<Posts[]> {
     return await prisma.post.findMany({
         where: {
             author: {
@@ -22,5 +23,5 @@ export async function GetPostsByAuthor(username: string) {
             comments: true,
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 },
-    });
+    }) as Posts[];
 };

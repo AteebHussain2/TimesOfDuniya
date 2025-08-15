@@ -1,8 +1,20 @@
 'use server';
 
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function GetFirstPost() {
+export type Posts = Prisma.PostGetPayload<{
+    include: {
+        category: true,
+        tags: true,
+        author: true,
+        views: true,
+        comments?: true,
+        likes?: true
+    },
+}>;
+
+export async function GetFirstPost(): Promise<Posts> {
     return await prisma.post.findFirst({
         where: {
             published: true,
@@ -19,5 +31,5 @@ export async function GetFirstPost() {
             comments: true,
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
-    });
+    }) as Posts;
 };

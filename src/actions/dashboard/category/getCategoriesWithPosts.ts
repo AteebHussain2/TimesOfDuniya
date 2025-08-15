@@ -1,15 +1,20 @@
 'use server';
 
 import { auth } from "@clerk/nextjs/server";
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function GetCategoriesWithPosts() {
+type CategoryWithPosts = Prisma.CategoryGetPayload<{
+    include: { posts: true }
+}>;
+
+export async function GetCategoriesWithPosts(): Promise<CategoryWithPosts[]> {
     const { userId } = await auth();
     if (!userId) {
         throw new Error('Unauthorized');
     };
 
-    return await prisma.category.findMany({
+    const categories = await prisma.category.findMany({
         include: {
             posts: true,
         },
@@ -18,4 +23,6 @@ export async function GetCategoriesWithPosts() {
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60, tags: ['categories', 'posts'] },
     });
+
+    return categories as CategoryWithPosts[];
 };

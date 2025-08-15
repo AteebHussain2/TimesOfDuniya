@@ -3,9 +3,18 @@
 import { getRoleByUserId } from "@/lib/users/getRole";
 import { UserRoles } from "@/lib/users/userRole";
 import { auth } from "@clerk/nextjs/server";
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function GetAllPosts(category?: string) {
+type GetAllPosts = Prisma.PostGetPayload<{
+    include: {
+        category: true,
+        tags: true,
+        author: true,
+    },
+}>;
+
+export async function GetAllPosts(category?: string): Promise<GetAllPosts[]> {
     const { userId } = await auth();
     if (!userId) {
         throw new Error('Unauthorized');
@@ -31,5 +40,5 @@ export async function GetAllPosts(category?: string) {
             author: true,
         },
         cacheStrategy: { swr: 30 * 60, ttl: 30 * 60, tags: ['posts'] },
-    });
+    }) as GetAllPosts[];
 };
