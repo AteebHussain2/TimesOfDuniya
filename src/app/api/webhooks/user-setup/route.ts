@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { Role } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
     const body = await request.json()
@@ -17,6 +18,7 @@ export async function POST(request: NextRequest) {
                         email: data.email_addresses[0].email_address,
                         createdAt: new Date(),
                         imageUrl: data.profile_image_url,
+                        role: Role.EDITOR,
                     },
                 });
                 return NextResponse.json('User Successfully Created', { status: 200 });
