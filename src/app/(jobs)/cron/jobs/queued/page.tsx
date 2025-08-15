@@ -1,6 +1,5 @@
 import { GetQueuedJob } from "@/actions/dashboard/jobs/getQueuedJobs";
 import { JobCard } from "@/components/JobCard"
-import { differenceInDays } from "date-fns";
 import { TRIGGER } from "@prisma/client";
 
 export default async function FailedJobsPage() {
