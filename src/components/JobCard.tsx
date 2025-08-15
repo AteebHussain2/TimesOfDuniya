@@ -37,11 +37,13 @@ export function JobCard({ job, showGenerateButton }: JobCardProps) {
   const getStatusColor = (status: STATUS) => {
     switch (status) {
       case STATUS.COMPLETED:
-        return "text-[var(--color-success)] border-[var(--color-success)]"
+        return "text-green-800 dark:text-green-600 border-green-800 dark:border-green-600"
       case STATUS.FAILED:
         return "text-[var(--color-destructive)] border-[var(--color-destructive)]"
       case STATUS.PENDING:
         return "text-yellow-800 dark:text-yellow-400 border-yellow-800 dark:border-yellow-400"
+      case STATUS.QUEUED:
+        return "text-blue-800 dark:text-blue-400 border-blue-800 dark:border-blue-400"
       default:
         return "text-[var(--color-border)] border-[var(--color-border)]"
     }

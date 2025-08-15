@@ -12,7 +12,6 @@ export async function GetQueuedJobsWithRequestsCount() {
             status: STATUS.QUEUED,
             trigger: TRIGGER.CRON,
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
     });
 
     const usage = await prisma.usageMetric.aggregate({
@@ -24,10 +23,8 @@ export async function GetQueuedJobsWithRequestsCount() {
             },
         },
         _sum: {
-            totalTokens: true,
             successfulRequests: true,
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
     }) as { _sum: { successfulRequests: number | null } };
 
     return {

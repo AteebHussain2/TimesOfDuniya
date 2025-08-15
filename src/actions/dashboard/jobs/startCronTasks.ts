@@ -8,7 +8,7 @@ export async function StartCronTasks(role: string) {
 
     if (data?.requests >= 150) {
         throw new Error("You have exceeded per day limit!");
-    } else if (data?.queuedJobs >= 0) {
+    } else if (data?.queuedJobs > 0) {
         throw new Error("Jobs have already been queued!");
     }
 

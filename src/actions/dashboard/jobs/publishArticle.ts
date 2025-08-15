@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { ARTICLESTATUS } from "@prisma/client";
+import { ARTICLESTATUS, STATUS } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function PublishArticle(jobId: number, topicId: number) {
@@ -84,6 +84,23 @@ export async function PublishArticle(jobId: number, topicId: number) {
             publishedUrl: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/post/${post.id}/${post.slug}`,
         },
     });
+
+    const allTopics = await prisma.topic.findMany({
+        where: { jobId },
+        include: { articles: true }
+    });
+
+    const allArticlesPublished = allTopics.every(topic =>
+        topic.articles.length > 0 &&
+        topic.articles.every(article => article.publishedAt !== null)
+    );
+
+    if (allArticlesPublished && job.totalItems === job.completedItems) {
+        await prisma.job.update({
+            where: { id: jobId },
+            data: { status: STATUS.COMPLETED }
+        });
+    };
 
     revalidatePath('/job/[jobId]/topic/[topicId]/preview', 'page');
     return post;
