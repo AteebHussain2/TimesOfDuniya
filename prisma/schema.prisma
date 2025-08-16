@@ -188,7 +188,7 @@ model Topic {
   categoryId Int
   title      String
   summary    String?
-  source     String?
+  source     String[]
   published  String?
   status     STATUS   @default(PENDING)
   createdAt  DateTime @default(now())

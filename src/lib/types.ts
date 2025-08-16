@@ -52,7 +52,7 @@ export type TypeJobWithTopics = {
         title: string;
         status: string;
         createdAt: Date;
-        source: string;
+        source: string[];
         summary: string;
     }[];
 };

@@ -141,12 +141,14 @@ export function JobCard({ job, showGenerateButton }: JobCardProps) {
                 <Link href={`/job/${job.id}/topic/${topic.id}/preview`} className="flex flex-col p-2 rounded-sm pb-2 hover:bg-accent transition-colors">
                   <h4 className="font-medium">{topic.title}</h4>
                   <p className="text-sm text-muted-foreground">{topic.summary}</p>
-                  {topic.source && (
-                    <span className="text-blue-500 flex items-center gap-1 text-xs mt-1">
-                      <LinkIcon className="w-3 h-3" />
-                      {topic.source.split("/").slice(0, 3).join("/")}
-                    </span>
-                  )}
+                  <div className="flex flex-col gap-1 items-start">
+                    {topic.source && topic.source.map(s => (
+                      <span className="text-blue-500 flex items-center gap-1 text-xs mt-1">
+                        <LinkIcon className="w-3 h-3" />
+                        {s.split("/").slice(0, 3).join("/")}
+                      </span>
+                    ))}
+                  </div>
                 </Link >
                 <Separator className="last:hidden" />
               </React.Fragment>
