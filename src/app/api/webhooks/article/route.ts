@@ -7,7 +7,6 @@ import { revalidatePath } from "next/cache";
 export async function POST(request: Request) {
     const authHeader = request.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        console.error("@@AUTH HEADER: ", request.headers.get("authorization"));
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 

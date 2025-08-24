@@ -1,7 +1,23 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { isValidSecret } from "@/lib/isValidSecret";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const secret = authHeader.split(" ")[1];
+    const API_KEY = process.env.BACKEND_SECRET_KEY;
+    if (!API_KEY) {
+        throw new Error("API_KEY not found to validate the request!")
+    };
+
+    if (!isValidSecret(secret, API_KEY)) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const body = await req.json();
 
