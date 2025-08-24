@@ -1,12 +1,12 @@
 'use client';
 
-import { useMutation } from "@tanstack/react-query";
+// import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { CloudUploadIcon } from "lucide-react";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 const SaveButton = ({ jobId, topicId }: { jobId: number, topicId: number }) => {
-
+    console.log({ jobId, topicId });
     return (
         <Button
             disabled={false}

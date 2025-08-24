@@ -32,7 +32,7 @@ export function WhatsNewCard() {
       <CardHeader>
         <CardTitle className="text-2xl font-bold flex items-center gap-2">
           <Sparkles className="w-6 h-6 text-primary" />
-          What's New
+          What&apos;s New
         </CardTitle>
         <p className="text-muted-foreground">Latest updates and features</p>
       </CardHeader>

@@ -9,7 +9,7 @@ import { toast } from "sonner";
 const ExecuteButton = ({ jobId, topicId }: { jobId: number, topicId: number }) => {
     const ExecuteMutation = useMutation({
         mutationFn: () => GenerateArticle(jobId, topicId),
-        onSuccess: (data) => toast.success("Added to queue successfully!", { id: "generate-article" }),
+        onSuccess: () => toast.success("Added to queue successfully!", { id: "generate-article" }),
         onError: (error: Error) => toast.error(error?.message || "An error occurred while adding to queue!", { id: "generate-article" }),
     });
 

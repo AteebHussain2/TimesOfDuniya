@@ -1,7 +1,7 @@
 'use client';
 
 import { StartCronTasks } from '@/actions/dashboard/jobs/startCronTasks';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Loader2Icon, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';

@@ -1,6 +1,5 @@
 import Dashboard from "./_components/Dashboard"
 import { getRole } from "@/lib/users/getRole"
-import { UserRoles } from "@/lib/users/userRole"
 import { Role } from "@prisma/client"
 
 export default async function DashboardPage() {

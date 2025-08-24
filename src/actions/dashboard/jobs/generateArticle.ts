@@ -1,6 +1,6 @@
 "use server";
 
-import { ExecuteJob, GenerateArticleRequest } from "./executeJob";
+import { GenerateArticleRequest } from "./executeJob";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 

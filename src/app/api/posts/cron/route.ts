@@ -1,8 +1,6 @@
 import { GetExcludedTitles } from "@/actions/dashboard/posts/getExcludedTitles";
-import { Category, STATUS, TRIGGER, TYPE } from "@prisma/client";
 import { isValidSecret } from "@/lib/isValidSecret";
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 
 export async function GET(request: Request) {
     const authHeader = request.headers.get("authorization");

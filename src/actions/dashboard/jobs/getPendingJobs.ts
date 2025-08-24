@@ -1,6 +1,6 @@
 "use server";
 
-import { STATUS, TRIGGER, TYPE } from "@prisma/client";
+import { STATUS, TRIGGER } from "@prisma/client";
 import { TypeJobWithTopics } from "@/lib/types";
 import prisma from "@/lib/prisma";
 

@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         if (jobStatus === STATUS.PENDING && article) {
             const articleStatus = data.status === "APPROVED" && article.length !== 0 ? ARTICLESTATUS.APPROVED : ARTICLESTATUS.REJECTED;
 
-            const savedArticle = await prisma.article.create({
+            await prisma.article.create({
                 data: {
                     topicId: topicId,
                     jobId,

@@ -7,7 +7,7 @@ import {
     ImageKitUploadNetworkError,
     upload,
 } from "@imagekit/next";
-import { CheckCircle, CloudUpload, Loader2Icon, Paperclip, Trash2Icon } from "lucide-react";
+import { CloudUpload, Paperclip, Trash2Icon } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { useRef, useState } from "react";
 import { Button } from "../ui/button";
@@ -22,8 +22,8 @@ interface Props {
 }
 
 const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
-    const [uploading, setUploading] = useState(false)
-    const [uploaded, setUploaded] = useState(false)
+    // const [uploading, setUploading] = useState(false)
+    // const [uploaded, setUploaded] = useState(false)
     const [progress, setProgress] = useState(0);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const abortController = new AbortController();
@@ -73,7 +73,7 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
         }
 
         setFiles(Array.from(fileInput.files));
-        setUploading(true);
+        // setUploading(true);
 
         // Extract the first file from the file input
         const file = fileInput.files[0];
@@ -110,12 +110,12 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
             if (uploadResponse.filePath) {
                 setFilePath(uploadResponse.filePath)
                 toast.success("File uploaded successfully!");
-                setUploaded(true);
-                setUploading(false);
+                // setUploaded(true);
+                // setUploading(false);
             };
 
         } catch (error) {
-            setUploading(false);
+            // setUploading(false);
             // Handle specific error types provided by the ImageKit SDK.
             if (error instanceof ImageKitAbortError) {
                 console.error("Upload aborted:", error.reason);
@@ -188,8 +188,8 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
                                         onClick={() => {
                                             setFiles(files.filter((f) => f.name !== file.name));
                                             setProgress(0);
-                                            setUploaded(false);
-                                            setUploading(false);
+                                            // setUploaded(false);
+                                            // setUploading(false);
                                         }}
                                     >
                                         <Trash2Icon className="stroke-destructive" />

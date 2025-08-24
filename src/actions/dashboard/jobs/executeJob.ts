@@ -122,7 +122,7 @@ export async function GenerateArticleRequest({
     BACKEND_BASE_URL: string;
     SECRET_KEY: string;
 }) {
-    let results: { topic: string; ok: boolean }[] = [];
+    const results: { topic: string; ok: boolean }[] = [];
     for (const topic of topics) {
         try {
             const response = await fetch(`${BACKEND_BASE_URL}/api/posts/create-article`, {
