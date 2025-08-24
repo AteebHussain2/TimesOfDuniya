@@ -22,25 +22,13 @@ export async function GET(request: Request) {
 
 
     try {
-        const categories = await prisma.category.findMany({ where: { slug: { not: "blog" } } });
         const excluded_titles = await GetExcludedTitles()
 
-        for (const category of categories) {
-            const job = await prisma.job.create({
-                data: {
-                    categoryId: category.id,
-                    type: TYPE.TOPIC_GENERATION,
-                    status: STATUS.QUEUED,
-                    trigger: TRIGGER.CRON
-                },
-            });
-
-            await ExecuteTrendingTopicsAgent(category, excluded_titles[category.slug], job.id);
-        }
+        await ExecuteTrendingTopicsAgent(excluded_titles);
 
         return NextResponse.json({
             ok: true,
-            message: `Jobs queued for ${categories.length} categories.`,
+            message: `Jobs queued for all categories.`,
             status: 200
         });
     } catch (error) {
@@ -54,7 +42,7 @@ export async function GET(request: Request) {
 
 }
 
-async function ExecuteTrendingTopicsAgent(category: Category, excluded_titles: string[], jobId: number) {
+async function ExecuteTrendingTopicsAgent(excluded_titles: Awaited<ReturnType<typeof GetExcludedTitles>>) {
     const SECRET_KEY = process.env.BACKEND_SECRET_KEY;
     if (!SECRET_KEY) throw new Error("Missing validation credentials!");
 
@@ -63,7 +51,7 @@ async function ExecuteTrendingTopicsAgent(category: Category, excluded_titles: s
 
     try {
         const response = await fetch(
-            `${BACKEND_BASE_URL}/api/posts/create-topics/`,
+            `${BACKEND_BASE_URL}/api/posts/cron/create-topics`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -75,9 +63,6 @@ async function ExecuteTrendingTopicsAgent(category: Category, excluded_titles: s
                     max_topics: 2,
                     time_duration: "24 hours",
                     excluded_titles: excluded_titles,
-                    category,
-                    trigger: TRIGGER.CRON,
-                    jobId,
                 }),
             }
         );
@@ -85,19 +70,8 @@ async function ExecuteTrendingTopicsAgent(category: Category, excluded_titles: s
         if (!response.ok) {
             throw new Error(`Unexpected Error: Server returned failed status!`,)
         }
-
-        return NextResponse.json({
-            ok: true,
-            message: `Job queued for category ${category.name}.`,
-        });
-
     } catch (error) {
         const errorMessage = (error instanceof Error) ? error.message : String(error)
-        await prisma.job.update({
-            where: { id: jobId },
-            data: { status: STATUS.FAILED, error: errorMessage, }
-        })
-
         throw new Error(`${errorMessage}`,)
     }
 }

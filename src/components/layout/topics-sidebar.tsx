@@ -1,11 +1,12 @@
 "use client"
+
+import { GetJobWithTopicsAndArticlesById } from "@/actions/dashboard/jobs/getJobWithTopicsAndArticlesById";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { TopicsSidebarContent } from "./topics-sidebar-content";
 import { useLayout } from "@/components/layout/layout-context";
 import { useState, useEffect, useCallback } from "react";
 import { BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GetJobWithTopicsAndArticlesById } from "@/actions/dashboard/jobs/getJobWithTopicsAndArticlesById";
 
 export function TopicsSidebar({ job }: { job: Awaited<ReturnType<typeof GetJobWithTopicsAndArticlesById>> }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)

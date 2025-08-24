@@ -30,13 +30,6 @@ export async function ExecuteJob(jobId: number) {
     );
 
     const jobStatus = job?.status;
-    await prisma.job.update({
-        where: { id: jobId },
-        data: {
-            status: STATUS.QUEUED,
-            error: null,
-        },
-    });
 
     const SECRET_KEY = process.env.BACKEND_SECRET_KEY;
     if (!SECRET_KEY) throw new Error("Missing validation credentials!");
@@ -59,12 +52,13 @@ export async function ExecuteJob(jobId: number) {
                         max_topics: 2,
                         time_duration: "24 hours",
                         excluded_titles,
-                        trigger: job?.trigger,
                         BACKEND_BASE_URL,
                         SECRET_KEY,
+                        path: "/create-topic/retry"
                     });
 
-                    revalidatePath(`/${job?.trigger.toLowerCase()}/jobs/failed`);
+                    revalidatePath(`/cron/jobs/failed`);
+                    revalidatePath(`/manual/jobs/failed`);
                     break;
 
                 case TYPE.ARTICLE_GENERATION:
@@ -73,7 +67,7 @@ export async function ExecuteJob(jobId: number) {
                         throw new Error("No topics available for article generation!");
                     }
 
-                    const result = await GenerateArticleRequest({
+                    GenerateArticleRequest({
                         topics,
                         jobId,
                         jobTrigger: job?.trigger,
@@ -81,8 +75,9 @@ export async function ExecuteJob(jobId: number) {
                         SECRET_KEY,
                     });
 
-                    revalidatePath(`/${job.trigger.toLowerCase()}/jobs/failed`);
-                    return result;
+                    revalidatePath(`/cron/jobs/failed`);
+                    revalidatePath(`/manual/jobs/failed`);
+                    redirect(`/job/${jobId}/topic/${job.topics[0].id}/preview`);
             };
             break;
 
@@ -94,7 +89,7 @@ export async function ExecuteJob(jobId: number) {
                         throw new Error("Topics are not generated yet!")
                     }
 
-                    const result = await GenerateArticleRequest({
+                    await GenerateArticleRequest({
                         topics,
                         jobId,
                         jobTrigger: job?.trigger,
@@ -102,12 +97,13 @@ export async function ExecuteJob(jobId: number) {
                         SECRET_KEY,
                     })
 
-                    revalidatePath(`/${job.trigger.toLowerCase()}/jobs/pending`);
-                    return result;
+                    revalidatePath(`/cron/jobs/pending`);
+                    revalidatePath(`/manual/jobs/pending`);
+                    redirect(`/job/${jobId}/topic/${job.topics[0].id}/preview`);
 
 
                 case TYPE.ARTICLE_GENERATION:
-                    return redirect(`/job/${jobId}/topic/${job.topics[0].id}`)
+                    redirect(`/job/${jobId}/topic/${job.topics[0].id}`)
             };
             break;
     }
@@ -137,9 +133,9 @@ export async function GenerateArticleRequest({
                 },
                 body: JSON.stringify({
                     title: topic?.title,
-                    summary: topic?.summary || "",
-                    published: topic?.published || "",
-                    sources: topic?.source || "",
+                    summary: topic?.summary,
+                    published: topic?.published,
+                    sources: topic?.source,
                     categoryId: topic?.categoryId,
                     jobId,
                     trigger: jobTrigger,
@@ -179,24 +175,24 @@ export async function GenerateTopicRequest({
     time_duration,
     excluded_titles,
     category,
-    trigger,
     jobId,
     BACKEND_BASE_URL,
-    SECRET_KEY
+    SECRET_KEY,
+    path,
 }: {
     min_topics: number,
     max_topics: number,
     time_duration: string,
     excluded_titles?: string[];
     category: Category;
-    trigger: string;
     jobId: number;
     BACKEND_BASE_URL: string,
     SECRET_KEY: string,
+    path: string,
 }) {
     try {
         const response = await fetch(
-            `${BACKEND_BASE_URL}/api/posts/create-topics`,
+            `${BACKEND_BASE_URL}/api/posts${path}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -208,8 +204,8 @@ export async function GenerateTopicRequest({
                     max_topics,
                     time_duration,
                     excluded_titles,
-                    category,
-                    trigger,
+                    categoryName: category.name,
+                    categoryId: category.id,
                     jobId,
                 }),
             },

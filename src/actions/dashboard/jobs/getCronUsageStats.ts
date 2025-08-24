@@ -16,6 +16,9 @@ export async function GetCronUsageStats() {
                 gte: todayStart,
                 lte: todayEnd,
             },
+            status: {
+                not: STATUS.QUEUED,
+            },
         },
         select: {
             status: true,

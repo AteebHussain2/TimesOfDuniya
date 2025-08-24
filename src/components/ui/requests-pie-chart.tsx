@@ -4,7 +4,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Pie, PieChart, Cell, ResponsiveContainer } from "recharts"
 import { Card, CardContent } from "@/components/ui/card"
 
-const DAILY_REQUEST_LIMIT = 200
+const DAILY_REQUEST_LIMIT = 800;
 
 const chartConfig = {
   requestsMade: {

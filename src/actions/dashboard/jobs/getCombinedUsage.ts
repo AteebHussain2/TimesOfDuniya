@@ -13,6 +13,9 @@ export async function GetCombinedUsage() {
             createdAt: {
                 gte: monthStart,
             },
+            status: {
+                not: STATUS.QUEUED,
+            }
         },
         select: {
             id: true,

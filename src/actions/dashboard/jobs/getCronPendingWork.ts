@@ -7,7 +7,9 @@ export async function GetCronPendingWork() {
     const [queuedJobs, pendingTopics, pendingArticles] = await Promise.all([
         prisma.job.count({
             where: {
-                status: STATUS.QUEUED,
+                status: {
+                    in: [STATUS.QUEUED, STATUS.PROCESSING]
+                },
                 trigger: TRIGGER.CRON,
             },
             cacheStrategy: { swr: 300, ttl: 60 }

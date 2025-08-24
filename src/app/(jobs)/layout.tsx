@@ -13,11 +13,13 @@ export default function JobsGroupedLayout({ children }: { children: React.ReactN
         <SharedTopbar
           title="Job Monitoring"
           leftContent={
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <ArrowLeft className="w-4 h-4" />
-              </Button>
-            </Link>
+            <div>
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <ArrowLeft className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
           }
         />
         <main className="flex-1 overflow-auto p-6">{children}</main>

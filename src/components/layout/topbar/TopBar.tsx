@@ -1,14 +1,15 @@
 'use client';
 
 import TooltipWrapper from "@/components/TooltipWrapper";
+import { ChevronLeftIcon, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import SaveButton from "./SaveButton";
+// import UnPublishButton from "./UnPublishButton";
+// import NavigationTabs from "./NavigationTabs";
+import { useLayout } from "../layout-context";
 import ExecuteButton from "./ExecuteButton";
-import NavigationTabs from "./NavigationTabs";
 import PublishButton from "./PublishButton";
-import UnPublishButton from "./UnPublishButton";
+import { useRouter } from "next/navigation";
+// import SaveButton from "./SaveButton";
 
 interface Props {
     title: string;
@@ -28,10 +29,14 @@ const TopBar = ({
     isPublished = false,
 }: Props) => {
     const router = useRouter();
+    const { toggleMobileSidebar } = useLayout()
 
     return (
         <header className="flex p-2 border-b-2 border-separate justify-between items-center w-full h-[60px] sticky top-0 bg-background z-10">
             <div className="flex flex-1 gap-1">
+                <Button variant="ghost" size="icon" className="lg:hidden" onClick={toggleMobileSidebar}>
+                    <Menu className="w-5 h-5" />
+                </Button>
                 <TooltipWrapper content="Go Back">
                     <Button
                         variant={"ghost"}
@@ -56,7 +61,7 @@ const TopBar = ({
                 </div>
             </div>
 
-            <NavigationTabs jobId={jobId} topicId={topicId} />
+            {/* <NavigationTabs jobId={jobId} topicId={topicId} /> */}
 
             <div className="flex flex-1 gap-1 justify-end">
                 {!hideButtons && (

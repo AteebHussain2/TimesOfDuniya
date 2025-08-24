@@ -1,13 +1,14 @@
 import { GetJobWithTopicsAndArticlesById } from "@/actions/dashboard/jobs/getJobWithTopicsAndArticlesById";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ArticleFileUpload from "./ArticleFileUpload";
-import { FileText, LinkIcon, Tag, Upload } from "lucide-react";
+import { FileText, LinkIcon, Tag } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import ArticleFileUpload from "./ArticleFileUpload";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Markdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { getStatusColor, getStatusIcon } from "@/lib/job";
 
 export async function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType<typeof GetJobWithTopicsAndArticlesById>>, topicId: number }) {
     const currentTopic = job?.topics.find((topic) => topic.id === Number(topicId));
@@ -28,9 +29,15 @@ export async function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType
     }
 
     return (
-        <div className="w-full sm:max-w-[60%] mx-auto flex-1 overflow-auto">
+        <div className="w-full sm:max-w-[80%] mx-auto flex-1 overflow-auto">
             <div className="my-6">
                 <h1 className="text-2xl font-bold mb-2">Topic: {currentTopic.title}</h1>
+                <Badge
+                    variant={'outline'}
+                    className={cn("flex items-center gap-2 text-md mb-2 rounded-sm", getStatusColor(currentArticle?.status ?? job?.status))}
+                >
+                    {getStatusIcon(currentArticle?.status ?? job?.status)} STATUS: {currentArticle?.status ?? job?.status}
+                </Badge>
                 {(currentArticle?.publishedAt || currentArticle?.publishedUrl) && (
                     <span className="text-sm text-blue-400 hover:underline transition-all flex items-center gap-1 mb-2">
                         <LinkIcon className="h-4 w-4" />
@@ -53,7 +60,7 @@ export async function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div className="pt-2 border-t relative">
-                            <ArticleFileUpload id={currentArticle?.id} thumbnail={currentArticle?.thumbnail} />
+                            <ArticleFileUpload id={currentArticle?.id} thumbnail={currentArticle?.thumbnail} published={Boolean(currentArticle?.publishedAt)} />
                         </div>
 
                         <p className="text-2xl font-bold">{currentArticle.title}</p>
@@ -146,10 +153,14 @@ export async function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType
                     </div>
                     <div>
                         <h3 className="text-lg font-semibold mb-1">Source(s)</h3>
-                        <span className="text-blue-500 hover:underline flex items-center gap-1 text-sm">
-                            <LinkIcon className="w-4 h-4" />
-                            {currentTopic.source}
-                        </span>
+                        <div className="flex flex-col gap-1 items-start">
+                            {currentTopic.source && currentTopic.source.map((s, i) => (
+                                <span key={i} className="text-blue-500 flex items-center gap-1 text-xs mt-1">
+                                    <LinkIcon className="w-4 h-4" />
+                                    {s}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </CardContent>
             </Card>
