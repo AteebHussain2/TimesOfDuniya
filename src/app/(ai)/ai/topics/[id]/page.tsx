@@ -1,12 +1,11 @@
 import ArticleFileUpload from "@/app/(topics)/job/[jobId]/topic/[topicId]/preview/_components/ArticleFileUpload"
 import { GetManualTopicWithJobById } from "@/actions/dashboard/jobs/getManualTopicWithJobById"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, FileText, LinkIcon, Tag } from "lucide-react"
+import { ArrowLeft, FileText, LinkIcon } from "lucide-react"
 import { getStatusColor, getStatusIcon } from "@/lib/job"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import Markdown from "react-markdown"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 

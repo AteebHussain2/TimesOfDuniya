@@ -1,10 +1,9 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { Bell, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "../ThemeToggle";
 import { MobileAISidebar } from "./sidebar";
-import Logo from "../Logo";
+import { User } from "lucide-react";
 
 export function Topbar() {
   return (

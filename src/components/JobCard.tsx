@@ -7,7 +7,7 @@ import { Play, Loader2, LinkIcon, UploadCloud } from "lucide-react";
 import { ExecuteJob } from "@/actions/dashboard/jobs/executeJob";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { TypeJobWithTopics } from "@/lib/types";
+import { TypeJob } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { STATUS, TYPE } from "@prisma/client";
 import { Separator } from "./ui/separator";
@@ -17,7 +17,7 @@ import Link from "next/link";
 import React from "react";
 
 interface JobCardProps {
-  job: TypeJobWithTopics,
+  job: TypeJob,
   showGenerateButton: boolean
 }
 

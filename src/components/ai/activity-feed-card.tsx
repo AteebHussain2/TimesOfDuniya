@@ -13,7 +13,7 @@ export function ActivityFeedCard() {
   return (
     <Card className="flex-1">
       <CardHeader>
-        <CardTitle>What's New</CardTitle>
+        <CardTitle>What&apos;s New</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">

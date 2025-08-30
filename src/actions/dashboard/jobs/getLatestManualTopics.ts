@@ -1,7 +1,7 @@
 "use server"
 
 import { getOrCreateGuestId } from "@/lib/guestUser"
-import { Prisma, TRIGGER, TYPE } from "@prisma/client";
+import { Prisma, TRIGGER } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
 

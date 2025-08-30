@@ -11,6 +11,7 @@ import { GetAllUsersData } from "@/actions/dashboard/getAllUsersData";
 import { GetLatestPosts } from "@/actions/site/posts/getLatestPosts";
 import { GetAllPosts } from "@/actions/dashboard/posts/getAllPosts";
 import { GetAllTags } from "@/actions/dashboard/tags/getAllTags";
+import { Prisma } from "@prisma/client";
 
 export type TypeGetAllUsersData = Awaited<ReturnType<typeof GetAllUsersData>>;
 export type TypeGetUserDataByUserId = Awaited<ReturnType<typeof GetUserDataByUserId>>;
@@ -56,3 +57,18 @@ export type TypeJobWithTopics = {
         summary: string;
     }[];
 };
+
+export type TypeJob = Prisma.JobGetPayload<{
+    include: {
+        topics: {
+            select: {
+                id: true,
+                title: true,
+                status: true,
+                createdAt: true,
+                source: true,
+                summary: true,
+            },
+        },
+    },
+}>;

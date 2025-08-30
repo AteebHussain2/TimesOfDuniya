@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, FileText, Lightbulb, Clock, Users, Loader2, ClockAlert, Menu, XIcon } from "lucide-react";
+import { LayoutDashboard, FileText, Lightbulb, Clock, Users, Loader2, ClockAlert, Menu } from "lucide-react";
 import { GetAllManualQueueJobs } from "@/actions/dashboard/jobs/getAllManualQueueJobs";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { useQuery } from "@tanstack/react-query";

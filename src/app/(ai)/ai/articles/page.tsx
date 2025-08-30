@@ -1,11 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { GetAllManualArticles } from "@/actions/dashboard/jobs/getAllManualArticles"
-import { Clock, Eye, Share, ImageIcon } from "lucide-react"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { PublishArticleButton } from "@/components/ai/articles-section"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GetAllManualArticles } from "@/actions/dashboard/jobs/getAllManualArticles";
+import { PublishArticleButton } from "@/components/ai/articles-section";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Eye, ImageIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default async function ArticlesPage() {
   const articles = await GetAllManualArticles();

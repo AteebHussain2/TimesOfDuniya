@@ -15,7 +15,7 @@ export function GuestLimitModal({ open, onOpenChange }: GuestLimitModalProps) {
         <DialogHeader>
           <DialogTitle>Generation Limit Reached</DialogTitle>
           <DialogDescription>
-            You've used all 3 free generations. Sign up or log in to continue generating unlimited content.
+            You&apos;ve used all 3 free generations. Sign up or log in to continue generating unlimited content.
           </DialogDescription>
         </DialogHeader>
 

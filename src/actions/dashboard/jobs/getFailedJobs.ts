@@ -1,10 +1,10 @@
 "use server";
 
 import { STATUS, TRIGGER } from "@prisma/client";
-import { TypeJobWithTopics } from "@/lib/types";
+import { TypeJob } from "@/lib/types";
 import prisma from "@/lib/prisma";
 
-export async function GetFailedJobs(trigger: TRIGGER): Promise<TypeJobWithTopics[]> {
+export async function GetFailedJobs(trigger: TRIGGER): Promise<TypeJob[]> {
     const jobs = await prisma.job.findMany({
         where: {
             status: STATUS.FAILED,
@@ -25,5 +25,5 @@ export async function GetFailedJobs(trigger: TRIGGER): Promise<TypeJobWithTopics
         orderBy: { updatedAt: 'desc' },
     });
 
-    return jobs as TypeJobWithTopics[];
+    return jobs as TypeJob[];
 }

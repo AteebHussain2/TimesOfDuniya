@@ -1,24 +1,10 @@
 "use server";
 
-import { Prisma, STATUS, TRIGGER } from "@prisma/client";
+import { STATUS, TRIGGER } from "@prisma/client";
+import { TypeJob } from "@/lib/types";
 import prisma from "@/lib/prisma";
 
-export type Job = Prisma.JobGetPayload<{
-    include: {
-        topics: {
-            select: {
-                id: true,
-                title: true,
-                status: true,
-                createdAt: true,
-                source: true,
-                summary: true,
-            },
-        },
-    },
-}>;
-
-export async function GetQueuedJob(trigger: TRIGGER): Promise<Job[]> {
+export async function GetQueuedJob(trigger: TRIGGER): Promise<TypeJob[]> {
     const jobs = await prisma.job.findMany({
         where: {
             status: STATUS.QUEUED,
@@ -39,5 +25,5 @@ export async function GetQueuedJob(trigger: TRIGGER): Promise<Job[]> {
         orderBy: { updatedAt: 'desc' },
     });
 
-    return jobs as Job[];
+    return jobs as TypeJob[];
 }
