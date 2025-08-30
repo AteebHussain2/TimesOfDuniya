@@ -11,8 +11,8 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Logo and Description */}
                     <div className="col-span-1 md:col-span-2">
-                        <h2 className="text-2xl font-bold mb-4 text-foreground">
-                            Times Of <span className="text-rose-600 dark:text-rose-500">Duniya</span>
+                        <h2 className="text-2xl font-bold mb-4 text-foreground tracking-wide">
+                            I<span className="text-rose-600 dark:text-rose-500">T</span>LAA - ا<span className="text-rose-600 dark:text-rose-500">ط</span>لاع
                         </h2>
                         <p className="text-muted-foreground mb-4">
                             Your trusted source for the latest news and updates from around the world. Stay informed with our
