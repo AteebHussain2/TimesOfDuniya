@@ -15,7 +15,7 @@ const Logo = ({ title, fontSize = "text-2xl" }: LogoProps) => {
         >
             <h1>
                 {title ?? <>
-                    Times Of <span className="text-rose-600 dark:text-rose-500">Duniya</span>
+                    ITL<span className="text-rose-600 dark:text-rose-500">AA</span>
                 </>}
             </h1>
         </Link>

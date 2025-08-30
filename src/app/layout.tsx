@@ -14,26 +14,26 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Times Of Duniya - Latest News & Updates",
+  title: "ITLAA - Insights And Trends All Around",
   description:
     "Stay updated with the latest news from around the world. Breaking news, politics, technology, sports, and more.",
   keywords: ["news", "breaking news", "world news", "politics", "technology", "sports"],
-  authors: [{ name: "Times Of Duniya" }],
-  creator: "Times Of Duniya",
-  publisher: "Times Of Duniya",
+  authors: [{ name: "ITLAA" }],
+  creator: "ITLAA",
+  publisher: "ITLAA",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://timesofduniya.com",
-    title: "Times Of Duniya - Latest News & Updates",
+    url: "https://itlaa.vercel.app",
+    title: "ITLAA - Latest News & Updates",
     description: "Stay updated with the latest news from around the world.",
-    siteName: "Times Of Duniya",
+    siteName: "ITLAA",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Times Of Duniya - Latest News & Updates",
+    title: "ITLAA - Latest News & Updates",
     description: "Stay updated with the latest news from around the world.",
-    creator: "@timesofduniya",
+    creator: "@itlaa",
   },
   verification: {
     google: '9UeBDmTgKvOttg8BMhpKt9-O3AupRMAvkEhkkXsXhn4',

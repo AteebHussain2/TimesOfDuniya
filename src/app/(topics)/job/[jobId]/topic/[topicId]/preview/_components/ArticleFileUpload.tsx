@@ -128,3 +128,127 @@ const ArticleFileUpload = ({ id, thumbnail, published }: { id: number, thumbnail
 }
 
 export default ArticleFileUpload;
+
+
+export const ArticleUploadImageButton = ({ id, thumbnail, published }: { id: number, thumbnail: string | null, published: boolean }) => {
+    const [files, setFiles] = useState<File[]>([]);
+    const [filePath, setFilePath] = useState("");
+    const [open, setOpen] = useState(false);
+
+    const fileUploadMutation = useMutation({
+        mutationFn: ({ id, filePath }: { id: number, filePath: string }) => UpdateJobArticle(id, filePath),
+        onSuccess: () => {
+            toast.success("Article saved successfully!", { id: "file-upload" });
+            setFilePath("");
+            setFiles([]);
+            setOpen(false);
+        },
+        onError: (error) => {
+            toast.error(`Error saving article: ${error}`, { id: "file-upload" });
+        },
+    });
+
+    return (
+        <>
+            {thumbnail ? !published && (
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="ghost" className="w-[150px] flex items-center justify-center gap-2">
+                            <Upload className="mr-2 size-4" />
+                            Change Image
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Upload Article Image</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col gap-4">
+                            <FileUpload
+                                id="fileInput"
+                                setFilePath={setFilePath}
+                                setFiles={setFiles}
+                                files={files}
+                            />
+                            <Button
+                                disabled={fileUploadMutation.isPending || !filePath}
+                                type="button"
+                                variant={'outline'}
+                                onClick={() => {
+                                    toast.loading("Saving article ...", { id: "file-upload" });
+                                    fileUploadMutation.mutate({ id, filePath });
+                                }}
+                                className="flex items-center gap-2 cursor-pointer"
+                            >
+                                {!fileUploadMutation.isPending && !fileUploadMutation.isSuccess ? (
+                                    <>
+                                        <SaveIcon className="size-[18px]" />
+                                        <p>Save Article</p>
+                                    </>
+                                ) : fileUploadMutation.isSuccess ? (
+                                    <>
+                                        <CheckCircle className="text-green-600 size-[18px]" />
+                                        <p>Saved Article</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Loader2Icon className="animate-spin size-[18px]" />
+                                        <p>Saving...</p>
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            ) : (
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="ghost" className="w-[150px] flex items-center justify-center gap-2">
+                            <Upload className="mr-2 size-4" />
+                            Upload Image
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Upload Article Image</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col gap-4">
+                            <FileUpload
+                                id="fileInput"
+                                setFilePath={setFilePath}
+                                setFiles={setFiles}
+                                files={files}
+                            />
+                            <Button
+                                disabled={fileUploadMutation.isPending || !filePath}
+                                type="button"
+                                variant={'outline'}
+                                onClick={() => {
+                                    toast.loading("Saving article ...", { id: "file-upload" });
+                                    fileUploadMutation.mutate({ id, filePath });
+                                }}
+                                className="flex items-center gap-2 cursor-pointer"
+                            >
+                                {!fileUploadMutation.isPending && !fileUploadMutation.isSuccess ? (
+                                    <>
+                                        <SaveIcon className="size-[18px]" />
+                                        <p>Save Article</p>
+                                    </>
+                                ) : fileUploadMutation.isSuccess ? (
+                                    <>
+                                        <CheckCircle className="text-green-600 size-[18px]" />
+                                        <p>Saved Article</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Loader2Icon className="animate-spin size-[18px]" />
+                                        <p>Saving...</p>
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            )}
+        </>
+    )
+}

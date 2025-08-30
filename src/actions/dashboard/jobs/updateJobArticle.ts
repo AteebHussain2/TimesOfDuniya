@@ -20,4 +20,6 @@ export async function UpdateJobArticle(id: number, filePath: string) {
     });
 
     revalidatePath('/job/[jobId]/topic/[topicId]/preview', "page");
+    revalidatePath('/ai/articles', "page");
+    revalidatePath('/ai', "page");
 };

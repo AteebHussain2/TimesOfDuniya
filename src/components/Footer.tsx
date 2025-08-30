@@ -72,7 +72,7 @@ export default function Footer() {
                 <Separator className="my-8" />
 
                 <div className="text-center text-muted-foreground">
-                    <p>&copy; 2024 Times Of Duniya. All rights reserved.</p>
+                    <p>&copy; 2024 ITLAA - Insights And Trends All Around. All rights reserved.</p>
                 </div>
             </div>
         </footer>

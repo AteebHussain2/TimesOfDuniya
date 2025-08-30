@@ -8,7 +8,7 @@ const handleShare = async () => {
     if (navigator.share) {
         try {
             await navigator.share({
-                title: "Times Of Duniya Article",
+                title: "ITLAA Article",
                 url: window.location.href,
             });
             toast.info('Link Copied to Clipboard!', { id: 'toast-copy' });

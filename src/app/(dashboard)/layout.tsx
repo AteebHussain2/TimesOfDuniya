@@ -10,8 +10,8 @@ import { getRole } from "@/lib/users/getRole";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Dashboard - Times Of Duniya",
-    description: "Welcome to the Times Of Duniya Admin Dashboard",
+    title: "ITLAA - Insights And Trends All Around",
+    description: "Welcome to the ITLAA - Insights And Trends All Around Admin Dashboard",
 };
 
 export default async function RootLayout({

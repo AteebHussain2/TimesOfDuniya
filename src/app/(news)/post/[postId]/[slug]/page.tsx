@@ -30,12 +30,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return {
         title: post.title,
-        description: post.summary || "Read latest news on Times Of Duniya.",
+        description: post.summary || "Read latest news on ITLAA - Insights And Trends All Around.",
         openGraph: {
             title: post.title,
-            description: post.summary || "Stay informed with Times Of Duniya.",
+            description: post.summary || "Stay informed with ITLAA - Insights And Trends All Around.",
             url: `https://times-of-duniya.vercel.app/post/${post.id}/${post.slug}`,
-            siteName: "Times Of Duniya",
+            siteName: "ITLAA - Insights And Trends All Around",
             images: [
                 {
                     url: `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/${post.thumbnail}`,
