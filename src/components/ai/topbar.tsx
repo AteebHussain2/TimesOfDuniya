@@ -12,7 +12,7 @@ export function Topbar() {
         <div className="flex items-center gap-4">
           <MobileAISidebar />
           <div className="flex items-center space-x-4 text-lg font-bold">
-            ITL<span className="text-rose-600 dark:text-rose-500">AA</span>
+            I<span className="text-rose-600 dark:text-rose-500">T</span>LAA - ا<span className="text-rose-600 dark:text-rose-500">ط</span>لاع
             <Badge variant="secondary" className="text-xs">
               AI Studio
             </Badge>

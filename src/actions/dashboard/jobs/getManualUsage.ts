@@ -8,6 +8,19 @@ export async function GetManualUsage() {
     const monthStart = startOfMonth(new Date());
     const monthEnd = endOfMonth(new Date());
 
+    const jobs = await prisma.job.findMany({
+        where: {
+            trigger: TRIGGER.MANUAL,
+            createdAt: {
+                gte: monthStart,
+                lte: monthEnd,
+            },
+        },
+        select: {
+            userId: true
+        }
+    })
+
     // Fetch all MANUAL usage metrics for the current month
     const usage = await prisma.usageMetric.findMany({
         where: {
@@ -18,14 +31,13 @@ export async function GetManualUsage() {
             },
         },
         select: {
-            userId: true,
             successfulRequests: true,
         },
         cacheStrategy: { swr: 300, ttl: 60 }
     });
 
     // Unique user IDs (non-null for guests or signed-in users)
-    const uniqueUserIds = new Set(usage.map(u => u.userId).filter(Boolean));
+    const uniqueUserIds = new Set(jobs.map(j => j.userId).filter(Boolean));
 
     // Aggregate usage metrics
     const totalSuccessfulRequests = usage.reduce((sum, entry) => sum + (entry.successfulRequests || 0), 0);

@@ -12,7 +12,6 @@ export async function GetCronRequests() {
             successfulRequests: true,
         },
         where: {
-            trigger: TRIGGER.CRON,
             date: {
                 gte: todayStart,
                 lte: todayEnd,
