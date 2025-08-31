@@ -6,14 +6,13 @@ import { formatDistanceToNow } from "date-fns"
 interface ArticleListItemProps {
   id: number
   title: string
-  author: string
   createdAt: Date
   thumbnail: string
-  views: number
   last?: boolean
+  category: string
 }
 
-const ArticleListItem = ({ id, title, author, createdAt, thumbnail, views, last }: ArticleListItemProps) => {
+const ArticleListItem = ({ id, title, createdAt, thumbnail, last, category }: ArticleListItemProps) => {
   const formattedDate = formatDistanceToNow(createdAt);
 
   return (
@@ -33,11 +32,9 @@ const ArticleListItem = ({ id, title, author, createdAt, thumbnail, views, last 
             {title}
           </h3>
           <div className="flex items-center text-xs text-muted-foreground space-x-2">
-            <span>{author}</span>
+            <span>{category}</span>
             <span>•</span>
             <span>{formattedDate}</span>
-            <span>•</span>
-            <span>{views} views</span>
           </div>
         </div>
       </div>

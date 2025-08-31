@@ -1,3 +1,4 @@
+import { GetManualUnpublishedArticles } from "@/actions/dashboard/jobs/getManualUnpublishedArticles";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import ArticleListItem from "../ui/article-list-item"
 import { FileText } from "lucide-react";
@@ -11,8 +12,8 @@ type Article = {
     views: number,
 }
 
-const ManualArticles = () => {
-    const manualUnpublishedArticles: Article[] = [];
+const ManualArticles = async () => {
+    const manualUnpublishedArticles: Awaited<ReturnType<typeof GetManualUnpublishedArticles>> = await GetManualUnpublishedArticles();
 
     return (
         <section className="space-y-4">
@@ -40,10 +41,9 @@ const ManualArticles = () => {
                                     <ArticleListItem
                                         id={article.id}
                                         title={article.title}
-                                        author={article.author}
+                                        category={article.category.name}
                                         createdAt={article.createdAt}
-                                        thumbnail={article.thumbnail}
-                                        views={article.views}
+                                        thumbnail={article.thumbnail || ''}
                                         last={index === manualUnpublishedArticles.length - 1}
                                     />
                                 </div>
