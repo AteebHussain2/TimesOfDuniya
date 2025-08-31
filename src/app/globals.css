@@ -48,7 +48,8 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(97.5% 0 0); /*oklch(1 0 0);*/
+  --background: oklch(97.5% 0 0);
+  /*oklch(1 0 0);*/
   --foreground: oklch(0.147 0.004 49.25);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.147 0.004 49.25);
@@ -245,4 +246,64 @@
 
 .rich-text-editor pre {
   @apply bg-zinc-100 dark:bg-zinc-800 p-4 rounded overflow-x-auto mb-4 text-sm font-mono;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 10s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-25%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 8s linear infinite;
+}
+
+@keyframes fade {
+
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-fade {
+  animation: fade 4s ease-in-out infinite;
+}
+
+.delay-0 {
+  animation-delay: 0s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-600 {
+  animation-delay: 0.6s;
+}
+
+.delay-900 {
+  animation-delay: 0.9s;
 }

@@ -9,13 +9,14 @@ import { PublishArticle } from "@/actions/dashboard/jobs/publishArticle";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Article, Job, STATUS } from "@prisma/client";
+import AIAnimatedLoader from "./ai-animated-loader";
 import { Badge } from "@/components/ui/badge";
+import { forwardRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 
-export function ArticlesSection() {
+export const ArticlesSection = forwardRef<HTMLDivElement>((_, ref) => {
 
   const { data: job, isLoading } = useQuery({
     queryFn: GetLatestManualArticles,
@@ -37,10 +38,6 @@ export function ArticlesSection() {
     }
   }
 
-  if (!job?.id) {
-    return <div>Job ID not found!</div>
-  }
-
   return (
     <Card className="border-0 shadow-lg bg-card/50 backdrop-blur">
       <CardHeader>
@@ -50,15 +47,15 @@ export function ArticlesSection() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {isLoading && (
-            <div className="text-center py-8 text-muted-foreground">
-              <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin opacity-50" />
-              <p>Loading generated articles...</p>
-            </div>
+        <div
+          ref={ref}
+          className="space-y-4"
+        >
+          {articles && articles.length !== 0 && job?.status !== STATUS.COMPLETED && job?.status !== STATUS.FAILED && job?.status !== STATUS.PENDING && (
+            <AIAnimatedLoader status={job?.status!} />
           )}
 
-          {articles && articles.map((article) => (
+          {(articles && articles.length !== 0) ? articles.map((article) => (
             <div key={article.id} className="border rounded-lg p-4 space-y-8 bg-background/50">
               <div className="flex items-start justify-between">
                 <div className="space-y-4 flex-1">
@@ -93,24 +90,31 @@ export function ArticlesSection() {
                   </Link>
                 )}
 
-                <PublishArticleButton article={article} job={job} />
+                <PublishArticleButton article={article} job={job!} />
 
                 <ArticleUploadImageButton id={article.id} thumbnail={article.thumbnail} published={!!(article.publishedAt && article.publishedUrl)} />
               </div>
             </div>
-          ))}
-
-          {articles && articles.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No articles generated yet. Generate topics first to create articles!</p>
-            </div>
+          )) : !isLoading ? (
+            <AIAnimatedLoader status={job?.status!} defaultNode={
+              <div className="text-center py-8 text-muted-foreground">
+                <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No articles generated yet. Generate topics first to create articles!</p>
+              </div>
+            } />
+          ) : (
+            (
+              <div className="text-center py-8 text-muted-foreground">
+                <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin opacity-50" />
+                <p>Loading generated articles...</p>
+              </div>
+            )
           )}
         </div>
       </CardContent>
     </Card>
   )
-}
+})
 
 
 export const PublishArticleButton = ({ article, job }: { article: Article, job: Job }) => {

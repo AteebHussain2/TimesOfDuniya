@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { Role } from "@prisma/client";
+import { getOrCreateGuestId } from "@/lib/guestUser";
 
 export async function POST(request: NextRequest) {
     const body = await request.json()
@@ -8,6 +9,7 @@ export async function POST(request: NextRequest) {
     try {
         switch (body.type) {
             case "user.created":
+                const guestId = await getOrCreateGuestId()
                 await prisma.user.create({
                     data: {
                         id: data.id,
@@ -21,6 +23,15 @@ export async function POST(request: NextRequest) {
                         role: Role.EDITOR,
                     },
                 });
+
+                await prisma.job.updateMany({
+                    where: {
+                        userId: guestId,
+                    },
+                    data: {
+                        userId: data.id,
+                    },
+                })
                 return NextResponse.json('User Successfully Created', { status: 200 });
 
             case 'user.updated':

@@ -27,7 +27,10 @@ export function Topbar() {
             <UserButton />
           </SignedIn>
           <SignedOut>
-            <SignInButton>
+            <SignInButton
+              forceRedirectUrl={`/user-setup?redirectTo=/ai`}
+              signUpFallbackRedirectUrl={`/user-setup?redirectTo=/ai`}
+            >
               <Button
                 variant="ghost"
                 size="sm"

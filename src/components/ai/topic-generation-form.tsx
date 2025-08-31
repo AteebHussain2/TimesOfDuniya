@@ -21,7 +21,7 @@ const timeDurations = [
   { value: "month", label: "Last 30 days" },
 ]
 
-export function TopicGenerationForm({ categories }: { categories: Category[] }) {
+export function TopicGenerationForm({ categories, onGenerate }: { categories: Category[], onGenerate: () => void }) {
   const { remainingRequests, canMakeRequest, decrementRequests } = useAiQuota()
   const [formData, setFormData] = useState({
     category: "",
@@ -32,10 +32,16 @@ export function TopicGenerationForm({ categories }: { categories: Category[] }) 
   })
 
   const mutation = useMutation({
-    mutationFn: async () => await CreateSingleTopic({ categoryId: Number(formData.category), minTopics: formData.minTopics, maxTopics: formData.maxTopics, timeDuration: formData.timeDuration, prompt: formData.prompt }),
+    mutationFn: async () => await CreateSingleTopic({
+      categoryId: Number(formData.category),
+      minTopics: formData.minTopics || 1,
+      maxTopics: formData.maxTopics || 5,
+      timeDuration: formData.timeDuration,
+      prompt: formData.prompt
+    }),
     onSuccess: () => {
       decrementRequests()
-      toast.success(`Generation queued for ${formData.maxTopics} topics successfully!`)
+      toast.success(`Generation queued for ${formData.maxTopics} topics successfully!`);
 
       setFormData({
         category: "",
@@ -43,10 +49,12 @@ export function TopicGenerationForm({ categories }: { categories: Category[] }) 
         maxTopics: 5,
         timeDuration: "",
         prompt: "",
-      })
+      });
+
+      onGenerate();
     },
-    onError: (error) => toast.error(`Failed to generate topics. Please try again. ${error.message}`)
-  })
+    onError: (error) => toast.error(`Failed to generate topics. Please try again. ${error.message}`),
+  });
 
   const handleClick = () => {
     if (!canMakeRequest()) {
@@ -112,9 +120,15 @@ export function TopicGenerationForm({ categories }: { categories: Category[] }) 
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    minTopics: Number.parseInt(e.target.value) || 1,
+                    minTopics: Number.parseInt(e.target.value),
                   }))
                 }
+                onBlur={(e) => {
+                  let num = parseInt(e.target.value, 10)
+                  if (isNaN(num) || num < 1) num = 1
+                  if (num > 5) num = 5
+                  setFormData((prev) => ({ ...prev, minTopics: num }))
+                }}
               />
             </div>
 
@@ -129,9 +143,15 @@ export function TopicGenerationForm({ categories }: { categories: Category[] }) 
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    maxTopics: Number.parseInt(e.target.value) || 5,
+                    maxTopics: Number.parseInt(e.target.value),
                   }))
                 }
+                onBlur={(e) => {
+                  let num = parseInt(e.target.value, 10)
+                  if (isNaN(num) || num < 1) num = 1
+                  if (num > 5) num = 5
+                  setFormData((prev) => ({ ...prev, minTopics: num }))
+                }}
               />
             </div>
 

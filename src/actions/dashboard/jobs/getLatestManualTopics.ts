@@ -16,6 +16,12 @@ export type Job = Prisma.JobGetPayload<{
     },
 }>;
 
+export type TopicWithArticles = Prisma.TopicGetPayload<{
+    include: {
+        articles: true
+    },
+}>;
+
 export async function GetLatestManualTopics(): Promise<Job> {
     const { userId: clerkId } = await auth();
     const guestId = await getOrCreateGuestId();
@@ -29,13 +35,6 @@ export async function GetLatestManualTopics(): Promise<Job> {
         where: {
             userId,
             trigger: TRIGGER.MANUAL,
-            topics: {
-                some: {
-                    id: {
-                        not: undefined
-                    }
-                }
-            },
         },
         orderBy: { createdAt: "desc" },
         include: {
