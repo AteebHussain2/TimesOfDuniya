@@ -45,6 +45,5 @@ export async function GetLatestManualTopics(): Promise<Job> {
             },
             category: true,
         },
-        cacheStrategy: { swr: 10, ttl: 10 },
     }) as Job
 }
