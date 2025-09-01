@@ -17,7 +17,6 @@ export async function GetJobWithTopicsAndArticlesById(jobId: number) {
             topics: true,
             articles: true,
         },
-        cacheStrategy: { swr: 10, ttl: 10 },
     });
 }
 
@@ -34,6 +33,5 @@ export async function GetJobWtihTopicsById(jobId: number) {
         include: {
             topics: true
         },
-        cacheStrategy: { swr: 10, ttl: 10 },
     });
 }

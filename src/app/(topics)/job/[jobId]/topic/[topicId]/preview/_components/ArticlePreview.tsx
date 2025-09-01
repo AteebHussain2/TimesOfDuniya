@@ -1,5 +1,6 @@
 import { GetJobWithTopicsAndArticlesById } from "@/actions/dashboard/jobs/getJobWithTopicsAndArticlesById";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getStatusColor, getStatusIcon } from "@/lib/job";
 import { FileText, LinkIcon, Tag } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import ArticleFileUpload from "./ArticleFileUpload";
@@ -8,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import Markdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { getStatusColor, getStatusIcon } from "@/lib/job";
 
 export async function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType<typeof GetJobWithTopicsAndArticlesById>>, topicId: number }) {
     const currentTopic = job?.topics.find((topic) => topic.id === Number(topicId));
@@ -34,9 +34,9 @@ export async function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType
                 <h1 className="text-2xl font-bold mb-2">Topic: {currentTopic.title}</h1>
                 <Badge
                     variant={'outline'}
-                    className={cn("flex items-center gap-2 text-md mb-2 rounded-sm", getStatusColor(currentArticle?.status ?? job?.status))}
+                    className={cn("flex items-center gap-2 text-md mb-2 rounded-sm", getStatusColor(currentArticle?.status || currentTopic?.status))}
                 >
-                    {getStatusIcon(currentArticle?.status ?? job?.status)} STATUS: {currentArticle?.status ?? job?.status}
+                    {getStatusIcon(currentArticle?.status || currentTopic.status)} STATUS: {currentArticle?.status || currentTopic.status}
                 </Badge>
                 {(currentArticle?.publishedAt || currentArticle?.publishedUrl) && (
                     <span className="text-sm text-blue-400 hover:underline transition-all flex items-center gap-1 mb-2">
@@ -49,7 +49,6 @@ export async function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType
                         </Link>
                     </span>
                 )}
-                <p className="text-muted-foreground">Job ID: {job.id}</p>
             </div>
 
             {/* Article Content */}

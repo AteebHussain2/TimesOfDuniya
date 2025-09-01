@@ -1,9 +1,11 @@
+export const revalidate = 60;
+
 import { GetJobWithTopicsAndArticlesById } from '@/actions/dashboard/jobs/getJobWithTopicsAndArticlesById';
 import { TopicsSidebar } from '@/components/layout/topics-sidebar';
 import { ArticlePreview } from './_components/ArticlePreview';
-import TopBar from '@/components/layout/topbar/TopBar'
-import { Loader2Icon } from 'lucide-react'
-import React, { Suspense } from 'react'
+import TopBar from '@/components/layout/topbar/TopBar';
+import { Loader2Icon } from 'lucide-react';
+import React, { Suspense } from 'react';
 
 const page = async ({ params }: { params: Promise<{ jobId: string, topicId: string }> }) => {
   const { jobId, topicId } = await params;
