@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import { GetPendingJobs } from "@/actions/dashboard/jobs/getPendingJobs";
 import { JobCard } from "@/components/JobCard"
 import { TRIGGER } from "@prisma/client";

@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import { GetQueuedJob } from "@/actions/dashboard/jobs/getQueuedJobs";
 import { JobCard } from "@/components/JobCard"
 import { TRIGGER } from "@prisma/client";

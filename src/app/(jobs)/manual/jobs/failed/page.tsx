@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import { GetFailedJobs } from "@/actions/dashboard/jobs/getFailedJobs";
 import { JobCard } from "@/components/JobCard"
 import { differenceInDays } from "date-fns";
