@@ -15,8 +15,9 @@ interface Props {
 
 const UserProfile = ({ width, border }: Props) => {
     const { data: userData, isPending } = useQuery({
+        queryFn: GetUserDataByUserId,
         queryKey: ['userData'],
-        queryFn: GetUserDataByUserId
+        refetchInterval: 30 * 1000,
     })
 
     if (isPending || !userData) {

@@ -1,8 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
 
 export async function UpdateJobArticle(id: number, filePath: string) {
     const { userId } = await auth();

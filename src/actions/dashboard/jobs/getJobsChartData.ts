@@ -21,7 +21,7 @@ export async function GetJobsChartData() {
             createdAt: true,
             status: true,
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     // Step 2: Prepare blank stats for each day

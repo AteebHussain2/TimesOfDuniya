@@ -22,6 +22,7 @@ export async function GetPostsByAuthor(username: string): Promise<Posts[]> {
             views: true,
             comments: true,
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 },
+        take: 100,
+        cacheStrategy: { swr: 10, ttl: 10 },
     }) as Posts[];
 };

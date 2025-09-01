@@ -28,6 +28,6 @@ export async function GetPostByIdAndSlug(id: number, slug: string): Promise<GetP
             category: true,
             author: true,
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 },
+        cacheStrategy: { swr: 10, ttl: 10 },
     }) as GetPostByIdAndSlug;
 };

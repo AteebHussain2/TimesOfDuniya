@@ -38,5 +38,6 @@ export async function GetLatestManualArticles(): Promise<Job> {
             articles: true,
             category: true,
         },
+        cacheStrategy: { swr: 10, ttl: 10 },
     }) as Job
 }

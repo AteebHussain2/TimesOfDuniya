@@ -17,6 +17,6 @@ export async function GetPostByIdAndSlug(id: number, slug: string): Promise<Post
             likes: true,
             comments: true,
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     }) as Posts;
 };

@@ -14,6 +14,7 @@ export async function GetPendingJobs(trigger: TRIGGER): Promise<TypeJob[]> {
             topics: { select: { id: true, title: true, status: true, createdAt: true, source: true, summary: true } },
         },
         orderBy: { updatedAt: 'desc' },
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     return jobs as TypeJob[];

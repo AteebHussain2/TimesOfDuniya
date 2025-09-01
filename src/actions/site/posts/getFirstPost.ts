@@ -30,6 +30,6 @@ export async function GetFirstPost(): Promise<Posts> {
             views: true,
             comments: true,
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     }) as Posts;
 };

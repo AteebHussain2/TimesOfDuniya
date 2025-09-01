@@ -12,6 +12,6 @@ export async function GetCommentsByPostId(postId: number, sortBy?: "asc" | "desc
         orderBy: {
             createdAt: sortBy ?? "desc"
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 };

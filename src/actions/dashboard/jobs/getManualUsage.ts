@@ -33,7 +33,7 @@ export async function GetManualUsage() {
         select: {
             successfulRequests: true,
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     // Unique user IDs (non-null for guests or signed-in users)
@@ -53,7 +53,7 @@ export async function GetManualUsage() {
                 trigger: TRIGGER.MANUAL,
             },
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     const topicsCreated = await prisma.topic.count({
@@ -66,7 +66,7 @@ export async function GetManualUsage() {
                 trigger: TRIGGER.MANUAL,
             },
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     return {

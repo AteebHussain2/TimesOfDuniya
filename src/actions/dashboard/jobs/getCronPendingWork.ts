@@ -12,7 +12,7 @@ export async function GetCronPendingWork() {
                 },
                 trigger: TRIGGER.CRON,
             },
-            cacheStrategy: { swr: 300, ttl: 60 }
+            cacheStrategy: { swr: 10, ttl: 10 },
         }),
         prisma.topic.count({
             where: {
@@ -25,7 +25,7 @@ export async function GetCronPendingWork() {
                     none: {},
                 },
             },
-            cacheStrategy: { swr: 300, ttl: 60 }
+            cacheStrategy: { swr: 10, ttl: 10 },
         }),
         prisma.article.count({
             where: {
@@ -36,7 +36,7 @@ export async function GetCronPendingWork() {
                     type: TYPE.ARTICLE_GENERATION,
                 },
             },
-            cacheStrategy: { swr: 300, ttl: 60 }
+            cacheStrategy: { swr: 10, ttl: 10 },
         }),
     ]);
 

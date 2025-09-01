@@ -32,6 +32,7 @@ export async function GetAllManualQueueJobs(): Promise<Job[]> {
             status: true,
         },
         orderBy: { updatedAt: 'desc' },
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     return jobs as Job[];

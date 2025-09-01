@@ -31,22 +31,22 @@ export async function GetDasbboardStats() {
         prisma.post.count({
             where: {
                 ...whereCondition, createdAt: { gte: last30Days }
-            }, cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+            }, cacheStrategy: { swr: 10, ttl: 10 },
         }),
         prisma.like.count({
             where: {
                 post: { ...whereCondition }, createdAt: { gte: last30Days }
-            }, cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+            }, cacheStrategy: { swr: 10, ttl: 10 },
         }),
         prisma.comment.count({
             where: {
                 post: { ...whereCondition }, createdAt: { gte: last30Days }
-            }, cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+            }, cacheStrategy: { swr: 10, ttl: 10 },
         }),
         prisma.view.count({
             where: {
                 post: { ...whereCondition }, createdAt: { gte: last30Days }
-            }, cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+            }, cacheStrategy: { swr: 10, ttl: 10 },
         }),
     ])
 
@@ -55,22 +55,22 @@ export async function GetDasbboardStats() {
         prisma.post.count({
             where: {
                 ...whereCondition, createdAt: { gte: prev30Days, lt: last30Days }
-            }, cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+            }, cacheStrategy: { swr: 10, ttl: 10 },
         }),
         prisma.like.count({
             where: {
                 post: { ...whereCondition }, createdAt: { gte: prev30Days, lt: last30Days }
-            }, cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+            }, cacheStrategy: { swr: 10, ttl: 10 },
         }),
         prisma.comment.count({
             where: {
                 post: { ...whereCondition }, createdAt: { gte: prev30Days, lt: last30Days }
-            }, cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+            }, cacheStrategy: { swr: 10, ttl: 10 },
         }),
         prisma.view.count({
             where: {
                 post: { ...whereCondition }, createdAt: { gte: prev30Days, lt: last30Days }
-            }, cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+            }, cacheStrategy: { swr: 10, ttl: 10 },
         }),
     ])
 

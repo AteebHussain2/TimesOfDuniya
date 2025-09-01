@@ -41,7 +41,8 @@ export async function GetManualTopicWithJobById(id: number): Promise<TopicWithJo
             },
             articles: true
         },
-    })
+        cacheStrategy: { swr: 10, ttl: 10 },
+    });
 
     return topics as TopicWithJob
 }

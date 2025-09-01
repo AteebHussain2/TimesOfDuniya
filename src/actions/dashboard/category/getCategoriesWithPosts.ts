@@ -21,7 +21,7 @@ export async function GetCategoriesWithPosts(): Promise<CategoryWithPosts[]> {
         orderBy: {
             createdAt: 'desc',
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60, tags: ['categories', 'posts'] },
+        cacheStrategy: { swr: 10, ttl: 10, tags: ['categories', 'posts'] },
     });
 
     return categories as CategoryWithPosts[];

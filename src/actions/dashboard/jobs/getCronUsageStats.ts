@@ -23,7 +23,7 @@ export async function GetCronUsageStats() {
         select: {
             status: true,
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     const totalJobs = cronJobs.length;
@@ -44,7 +44,7 @@ export async function GetCronUsageStats() {
             totalTokens: true,
             successfulRequests: true,
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     }) as { _sum: { totalTokens: number | null, successfulRequests: number | null } };
 
     return {

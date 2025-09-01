@@ -43,6 +43,7 @@ export async function GetAllManualTopics(): Promise<TopicWithJob[]> {
             },
             articles: true
         },
+        cacheStrategy: { swr: 10, ttl: 10 },
     })
 
     return topics as TopicWithJob[]

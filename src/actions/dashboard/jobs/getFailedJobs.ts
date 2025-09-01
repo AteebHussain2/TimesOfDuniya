@@ -23,6 +23,7 @@ export async function GetFailedJobs(trigger: TRIGGER): Promise<TypeJob[]> {
             },
         },
         orderBy: { updatedAt: 'desc' },
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     return jobs as TypeJob[];

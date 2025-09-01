@@ -40,7 +40,7 @@ export async function GetAllPosts(): Promise<GetAllPosts[]> {
                 author: true,
                 views: true,
             },
-            cacheStrategy: { swr: 30 * 60, ttl: 30 * 60, tags: ['posts', 'author'] },
+            cacheStrategy: { swr: 10, ttl: 10, tags: ['posts', 'author'] },
         }) as GetAllPosts[];
     }
 

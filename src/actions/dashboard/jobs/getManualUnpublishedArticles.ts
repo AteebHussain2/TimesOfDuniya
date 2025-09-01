@@ -23,5 +23,6 @@ export async function GetManualUnpublishedArticles() {
                 },
             },
         },
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 };

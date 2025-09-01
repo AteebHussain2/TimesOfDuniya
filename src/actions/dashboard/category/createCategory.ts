@@ -35,4 +35,5 @@ export async function CreateCategory(name: string, description: string) {
     // })
 
     revalidatePath('/content/create');
+    revalidatePath('/categories');
 };

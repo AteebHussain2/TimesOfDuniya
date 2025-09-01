@@ -13,6 +13,6 @@ export async function GetUserDataByUserId() {
         where: {
             id: userId
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 }

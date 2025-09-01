@@ -28,7 +28,7 @@ export async function GetLatestPosts(): Promise<GetLatestPosts[]> {
             author: true,
             tags: true
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60 },
+        cacheStrategy: { swr: 10, ttl: 10 },
         take: 10,
     }) as GetLatestPosts[];
 };

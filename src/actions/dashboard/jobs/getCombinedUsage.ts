@@ -21,7 +21,7 @@ export async function GetCombinedUsage() {
             id: true,
             status: true,
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     const totalJobs = jobs.length;
@@ -48,7 +48,7 @@ export async function GetCombinedUsage() {
             totalTokens: true,
             successfulRequests: true,
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     });
 
     const tokensUsed = usageMetrics.reduce((sum, u) => sum + u.totalTokens, 0);

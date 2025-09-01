@@ -17,7 +17,7 @@ export async function GetCronRequests() {
                 lte: todayEnd,
             },
         },
-        cacheStrategy: { swr: 300, ttl: 60 }
+        cacheStrategy: { swr: 10, ttl: 10 },
     }) as { _sum: { successfulRequests: number | null } };
 
     return usage._sum?.successfulRequests || 0

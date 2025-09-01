@@ -7,9 +7,10 @@ import { revalidatePath } from "next/cache";
 
 export async function PublishArticle(jobId: number, topicId: number) {
     const { userId } = await auth();
-    if (!userId) {
-        throw new Error("Unauthorized!");
-    }
+    const guestAuthorId = process.env.GUEST_AUTHOR_ID;
+    if (!guestAuthorId) throw new Error('Guest Author Id not found!');
+
+    const authorId = userId || guestAuthorId;
 
     const job = await prisma.job.findUnique({
         where: { id: jobId },
@@ -40,9 +41,6 @@ export async function PublishArticle(jobId: number, topicId: number) {
     if (!article.thumbnail) {
         throw new Error("Article has no thumbnail — cannot publish!");
     }
-
-    const authorId = process.env.GUEST_AUTHOR_ID;
-    if (!authorId) throw new Error('Author Id not found!');
 
     const postSlug = article.title
         .toLowerCase()

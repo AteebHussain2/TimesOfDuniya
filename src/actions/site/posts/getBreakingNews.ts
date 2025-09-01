@@ -13,7 +13,7 @@ export async function GetBreakingNews() {
         orderBy: {
             publishedAt: 'desc'
         },
-        cacheStrategy: { swr: 30 * 60, ttl: 30 * 60, tags: ['breakingnews'] },
+        cacheStrategy: { swr: 10, ttl: 10, tags: ['breakingnews'] },
         take: 10,
     });
 };
