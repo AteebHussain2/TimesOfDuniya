@@ -28,7 +28,7 @@ export default async function TopicsPage() {
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
                   <CardTitle className="text-lg">{topic.title}</CardTitle>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="outline">{topic.job.category.name}</Badge>
                     <Badge variant={topic.status === STATUS.COMPLETED ? "default" : "secondary"}>{topic.status}</Badge>
                     {topic.articles.length !== 0 && (
@@ -39,7 +39,7 @@ export default async function TopicsPage() {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-2">
                   <Button variant="outline" size="sm" asChild>
                     <Link href={`/ai/topics/${topic.id}`}>
                       <Eye className="w-4 h-4 mr-1" />
@@ -49,10 +49,19 @@ export default async function TopicsPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex items-start flex-col gap-2">
               <div className="flex items-center text-sm text-muted-foreground">
                 <Clock className="w-4 h-4 mr-1" />
                 Created {topic.createdAt.toLocaleDateString()}
+              </div>
+
+              <div className="w-full flex sm:hidden items-center gap-2">
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link href={`/ai/topics/${topic.id}`}>
+                    <Eye className="w-4 h-4 mr-1" />
+                    View
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

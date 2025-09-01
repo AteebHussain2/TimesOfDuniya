@@ -1,12 +1,12 @@
 "use server";
 
-import { UserRoles } from "@/lib/users/userRole";
 import { GetQueuedJobsWithRequestsCount } from "./getQueuedJobsWithRequestsCount";
+import { UserRoles } from "@/lib/users/userRole";
 
 export async function StartCronTasks(role: string) {
     const data = await GetQueuedJobsWithRequestsCount();
 
-    if (data?.requests >= 150) {
+    if (data?.requests >= 800) {
         throw new Error("You have exceeded per day limit!");
     } else if (data?.queuedJobs > 0) {
         throw new Error("Jobs have already been queued!");
