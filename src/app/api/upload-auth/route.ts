@@ -1,12 +1,6 @@
-import { auth } from "@clerk/nextjs/server"
 import { getUploadAuthParams } from "@imagekit/next/server"
 
 export async function GET() {
-    const { userId } = await auth();
-    if (!userId) {
-        throw new Error("Unathenticated");
-    };
-
     const privateKey = process.env.IMAGEKIT_PRIVATE_KEY
     const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY
 

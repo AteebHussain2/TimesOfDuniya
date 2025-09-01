@@ -180,7 +180,7 @@ export function MobileAISidebar() {
             </div>
 
             <div className="space-y-2">
-              <div className="text-xs font-medium text-muted-foreground">Your Jobs</div>
+              <div className="text-xs font-medium text-muted-foreground">All Jobs</div>
               {(queueJobs && queueJobs?.length > 0) ? (
                 queueJobs.map((job) => (
                   <div key={job.id} className="flex items-center justify-between text-xs">
