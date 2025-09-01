@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import AppProvider from "@/components/AppProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Poppins } from "next/font/google";
+import { shadcn } from '@clerk/themes';
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   title: "ITLAA - Insights And Trends All Around",
   description:
     "Stay updated with the latest news from around the world. Breaking news, politics, technology, sports, and more.",
-  keywords: ["news", "breaking news", "world news", "politics", "technology", "sports"],
+  keywords: ["news", "breaking news", "world news", "politics", "technology", "sports", "anime", "health", "pakistan"],
   authors: [{ name: "ITLAA" }],
   creator: "ITLAA",
   publisher: "ITLAA",
@@ -25,13 +26,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://itlaa.vercel.app",
-    title: "ITLAA - Latest News & Updates",
+    title: "ITLAA - Insights and Trends All Around",
     description: "Stay updated with the latest news from around the world.",
     siteName: "ITLAA",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ITLAA - Latest News & Updates",
+    title: "ITLAA - Insights and Trends All Around",
     description: "Stay updated with the latest news from around the world.",
     creator: "@itlaa",
   },
@@ -49,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{ baseTheme: shadcn }}>
       <html lang="en" suppressHydrationWarning>
         <body className={`${poppins.variable} antialiased`}>
           <AppProvider>

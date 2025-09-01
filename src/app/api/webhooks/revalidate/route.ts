@@ -51,9 +51,10 @@ export async function POST(req: NextRequest) {
 
             // Always revalidate ai-related views
             revalidatePath("/ai");
-            revalidatePath("/ai/dashboard");
             revalidatePath("/ai/topics");
+            revalidatePath("/ai/topics/[id]", "page");
             revalidatePath("/ai/articles");
+            revalidatePath("/ai/articles/[id]", "page");
         }
 
         return NextResponse.json({
