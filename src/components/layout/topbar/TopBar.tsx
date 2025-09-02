@@ -64,16 +64,10 @@ const TopBar = ({
             {/* <NavigationTabs jobId={jobId} topicId={topicId} /> */}
 
             <div className="flex flex-1 gap-1 justify-end">
-                {!hideButtons && (
+                {hideButtons || !isPublished && (
                     <>
-                        {!isPublished &&
-                            (
-                                <>
-                                    <ExecuteButton jobId={jobId} topicId={topicId} />
-                                    <PublishButton jobId={jobId} topicId={topicId} />
-                                </>
-                            )
-                        }
+                        <ExecuteButton jobId={jobId} topicId={topicId} />
+                        <PublishButton jobId={jobId} topicId={topicId} />
                     </>
                 )}
             </div>

@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import { GetAllPublishedPosts } from "@/actions/site/posts/getAllPublishedPosts";
 import BreakingNewsTicker from "@/components/posts/BreakingNewsTicker";
 import TrendingSidebar from "@/components/posts/TrendingSidebar";

@@ -3,6 +3,7 @@
 import { GenerateArticleRequest } from "./executeJob";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { STATUS } from "@prisma/client";
 
 export async function GenerateArticle(jobId: number, topicId: number) {
     const { userId } = await auth();
@@ -30,8 +31,8 @@ export async function GenerateArticle(jobId: number, topicId: number) {
         throw new Error("Topic not found in this job!");
     }
 
-    if (job.articles.some(article => article.topicId === topicId)) {
-        throw new Error("Article for this topic is already generated!");
+    if (job.articles.some(article => article.status === STATUS.PROCESSING || article.status === STATUS.QUEUED)) {
+        throw new Error("Cannot generate article!");
     }
 
     const SECRET_KEY = process.env.BACKEND_SECRET_KEY;

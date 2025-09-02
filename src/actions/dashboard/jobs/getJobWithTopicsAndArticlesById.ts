@@ -2,8 +2,20 @@
 
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
-export async function GetJobWithTopicsAndArticlesById(jobId: number) {
+type Job = Prisma.JobGetPayload<{
+    include: {
+        topics: {
+            orderBy: {
+                id: 'asc',
+            },
+        },
+        articles: true,
+    },
+}>;
+
+export async function GetJobWithTopicsAndArticlesById(jobId: number): Promise<Job> {
     const userId = await auth();
     if (!userId) {
         throw new Error("Unauthorized!");
@@ -14,10 +26,14 @@ export async function GetJobWithTopicsAndArticlesById(jobId: number) {
             id: jobId,
         },
         include: {
-            topics: true,
+            topics: {
+                orderBy: {
+                    id: 'asc',
+                },
+            },
             articles: true,
         },
-    });
+    }) as Job;
 }
 
 export async function GetJobWtihTopicsById(jobId: number) {

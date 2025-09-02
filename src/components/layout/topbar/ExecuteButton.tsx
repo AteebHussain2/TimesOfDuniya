@@ -10,7 +10,7 @@ const ExecuteButton = ({ jobId, topicId }: { jobId: number, topicId: number }) =
     const ExecuteMutation = useMutation({
         mutationFn: () => GenerateArticle(jobId, topicId),
         onSuccess: () => toast.success("Added to queue successfully!", { id: "generate-article" }),
-        onError: (error: Error) => toast.error(error?.message || "An error occurred while adding to queue!", { id: "generate-article" }),
+        onError: () => toast.error("An error occurred while adding to queue!", { id: "generate-article" }),
     });
 
     return (

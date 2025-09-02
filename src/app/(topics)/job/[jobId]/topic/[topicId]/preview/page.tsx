@@ -1,4 +1,4 @@
-export const revalidate = 60;
+export const revalidate = 5;
 
 import { GetJobWithTopicsAndArticlesById } from '@/actions/dashboard/jobs/getJobWithTopicsAndArticlesById';
 import { TopicsSidebar } from '@/components/layout/topics-sidebar';
@@ -28,7 +28,7 @@ const page = async ({ params }: { params: Promise<{ jobId: string, topicId: stri
 
         {/* Main content */}
         <div className="flex-1 min-h-0 p-6 overflow-y-auto">
-          <Suspense
+          {/* <Suspense
             fallback={
               <div className="w-full h-full flex items-center justify-center">
                 <Loader2Icon
@@ -38,8 +38,8 @@ const page = async ({ params }: { params: Promise<{ jobId: string, topicId: stri
               </div>
             }
           >
-            <ArticlePreview job={job} topicId={Number(topicId)} />
-          </Suspense>
+          </Suspense> */}
+          <ArticlePreview job={job} topicId={Number(topicId)} />
         </div>
       </div>
 

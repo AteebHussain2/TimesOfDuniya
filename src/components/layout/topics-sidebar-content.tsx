@@ -24,11 +24,11 @@ export function TopicsSidebarContent({ job }: { job: Awaited<ReturnType<typeof G
   const progress = job.totalItems > 0 ? Math.round((job.completedItems / job.totalItems) * 100) : 0
 
   return (
-    <div className="flex flex-col">
-      <Card className="w-full shadow-md rounded-2xl">
-        <CardContent className="p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold truncate">Job {job.id}</h2>
+    <div className="flex flex-col space-y-4">
+      <Card className="w-full shadow-md rounded-sm">
+        <CardContent className="!p-4 space-y-3">
+          <div className="flex flex-col items-start space-y-2 justify-between">
+            <h2 className="text-lg text-muted-foreground font-400 truncate">Job ID: {job.id}</h2>
             <Badge
               variant={'outline'}
               className={cn("flex items-center gap-2 text-md mb-2 rounded-sm", getStatusColor(job.status))}
