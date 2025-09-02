@@ -10,7 +10,7 @@ import Markdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export async function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType<typeof GetJobWithTopicsAndArticlesById>>, topicId: number }) {
+export function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType<typeof GetJobWithTopicsAndArticlesById>>, topicId: number }) {
     const currentTopic = job?.topics.find((topic) => topic.id === Number(topicId));
     const currentArticle = job?.articles.find((article) => article.topicId === Number(topicId));
 

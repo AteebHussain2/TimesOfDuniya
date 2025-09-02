@@ -43,7 +43,7 @@ export function TopicsSidebarContent({ job }: { job: Awaited<ReturnType<typeof G
           </div>
 
           {job.error && (
-            <ScrollArea className="h-12 rounded-md border p-1 text-xs text-red-600">
+            <ScrollArea className="h-12 rounded-md border overflow-ellipsis p-1 text-xs text-red-600">
               {job.error}
             </ScrollArea>
           )}
