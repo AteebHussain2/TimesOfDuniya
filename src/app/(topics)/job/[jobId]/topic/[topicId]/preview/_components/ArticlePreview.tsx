@@ -34,9 +34,9 @@ export function ArticlePreview({ job, topicId }: { job: Awaited<ReturnType<typeo
                 <h1 className="text-2xl font-bold mb-2">Topic: {currentTopic.title}</h1>
                 <Badge
                     variant={'outline'}
-                    className={cn("flex items-center gap-2 text-md mb-2 rounded-sm", getStatusColor(currentArticle?.status || currentTopic?.status))}
+                    className={cn("flex items-center gap-2 text-md mb-2 rounded-sm", getStatusColor(currentTopic?.status))}
                 >
-                    {getStatusIcon(currentArticle?.status || currentTopic.status)} STATUS: {currentArticle?.status || currentTopic.status}
+                    {getStatusIcon(currentTopic.status)} STATUS: {currentTopic.status}
                 </Badge>
                 {(currentArticle?.publishedAt || currentArticle?.publishedUrl) && (
                     <span className="text-sm text-blue-400 hover:underline transition-all flex items-center gap-1 mb-2">
