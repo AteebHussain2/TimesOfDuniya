@@ -21,7 +21,7 @@ const ArticleListItem = ({ id, title, createdAt, thumbnail, last, category }: Ar
         <div className="flex-shrink-0">
           <Image
             src={thumbnail || "/placeholder.svg"}
-            alt={title}
+            alt={'image'}
             width={60}
             height={45}
             className="w-[60px] h-[45px] rounded object-cover"
