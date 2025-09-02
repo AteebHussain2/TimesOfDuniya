@@ -188,8 +188,6 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
                                         onClick={() => {
                                             setFiles(files.filter((f) => f.name !== file.name));
                                             setProgress(0);
-                                            // setUploaded(false);
-                                            // setUploading(false);
                                         }}
                                     >
                                         <Trash2Icon className="stroke-destructive" />
@@ -201,8 +199,8 @@ const FileUpload = ({ setFilePath, files, setFiles }: Props) => {
                                         className="aspect-video rounded-md object-cover"
                                         src={URL.createObjectURL(file)}
                                         alt={file.name}
-                                        height={480}
-                                        width={640}
+                                        height={1920}
+                                        width={1080}
                                     />
                                 </CardContent>
 

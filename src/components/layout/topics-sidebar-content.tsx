@@ -2,13 +2,14 @@
 
 import { GetJobWithTopicsAndArticlesById } from "@/actions/dashboard/jobs/getJobWithTopicsAndArticlesById";
 import { getStatusColor, getStatusIcon } from "@/lib/job";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+
 import { Card, CardContent } from "../ui/card";
 import { usePathname } from "next/navigation";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { ScrollArea } from "../ui/scroll-area";
 
 export function TopicsSidebarContent({ job }: { job: Awaited<ReturnType<typeof GetJobWithTopicsAndArticlesById>> }) {
   const pathname = usePathname();
@@ -25,7 +26,7 @@ export function TopicsSidebarContent({ job }: { job: Awaited<ReturnType<typeof G
 
   return (
     <div className="flex flex-col space-y-4">
-      <Card className="w-full shadow-md rounded-sm">
+      <Card className="!p-0 w-full shadow-md rounded-sm">
         <CardContent className="!p-4 space-y-3">
           <div className="flex flex-col items-start space-y-2 justify-between">
             <h2 className="text-lg text-muted-foreground font-400 truncate">Job ID: {job.id}</h2>
@@ -43,7 +44,7 @@ export function TopicsSidebarContent({ job }: { job: Awaited<ReturnType<typeof G
           </div>
 
           {job.error && (
-            <ScrollArea className="h-12 rounded-md border overflow-ellipsis p-1 text-xs text-red-600">
+            <ScrollArea className="h-24 rounded-sm border p-1 text-xs text-red-600">
               {job.error}
             </ScrollArea>
           )}
