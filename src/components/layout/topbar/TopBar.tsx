@@ -3,7 +3,7 @@
 import TooltipWrapper from "@/components/TooltipWrapper";
 import { ChevronLeftIcon, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import UnPublishButton from "./UnPublishButton";
+import UnPublishButton from "./UnPublishButton";
 // import NavigationTabs from "./NavigationTabs";
 import { useLayout } from "../layout-context";
 import ExecuteButton from "./ExecuteButton";
@@ -64,10 +64,16 @@ const TopBar = ({
             {/* <NavigationTabs jobId={jobId} topicId={topicId} /> */}
 
             <div className="flex flex-1 gap-1 justify-end">
-                {hideButtons || !isPublished && (
+                {!hideButtons && (
                     <>
-                        <ExecuteButton jobId={jobId} topicId={topicId} />
-                        <PublishButton jobId={jobId} topicId={topicId} />
+                        {!isPublished ? (
+                            <>
+                                <ExecuteButton jobId={jobId} topicId={topicId} />
+                                <PublishButton jobId={jobId} topicId={topicId} />
+                            </>
+                        ): (
+                        <UnPublishButton jobId={jobId} topicId={topicId} />
+                        )}
                     </>
                 )}
             </div>

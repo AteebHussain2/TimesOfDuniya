@@ -1,11 +1,17 @@
 "use server";
 
-import { GenerateArticleRequest } from "./executeJob";
+import { GenerateArticleRequest, ReGenerateArticleRequest } from "./executeJob";
 import { auth } from "@clerk/nextjs/server";
-import prisma from "@/lib/prisma";
 import { STATUS } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 export async function GenerateArticle(jobId: number, topicId: number) {
+    const SECRET_KEY = process.env.BACKEND_SECRET_KEY;
+    if (!SECRET_KEY) throw new Error("Missing validation credentials!");
+
+    const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
+    if (!BACKEND_BASE_URL) throw new Error("Missing Backend Base URL");
+
     const { userId } = await auth();
     if (!userId) {
         throw new Error("Unauthorized!");
@@ -31,23 +37,44 @@ export async function GenerateArticle(jobId: number, topicId: number) {
         throw new Error("Topic not found in this job!");
     }
 
-    if (job.articles.some(article => article.status === STATUS.PROCESSING || article.status === STATUS.QUEUED)) {
-        throw new Error("Cannot generate article!");
+    if (job.topics.some(topic => topic.status === STATUS.PROCESSING || topic.status === STATUS.QUEUED)) {
+        throw new Error("Article generation in process!");
     }
 
-    const SECRET_KEY = process.env.BACKEND_SECRET_KEY;
-    if (!SECRET_KEY) throw new Error("Missing validation credentials!");
+    if (job.articles.some(article => article.topicId === topicId)) {
+        const existingArticle = job.articles.find(a => a.topicId === topicId);
+        if (!existingArticle) throw new Error("Article not found for regeneration!");
 
-    const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL;
-    if (!BACKEND_BASE_URL) throw new Error("Missing Backend Base URL");
+        return await ReGenerateArticleRequest({
+            jobId,
+            jobTrigger: job.trigger,
+            articleId: existingArticle.id,
+            topics: job.topics,
+            BACKEND_BASE_URL,
+            SECRET_KEY,
+        });
+    }
 
-    const result = await GenerateArticleRequest({
+    return await GenerateArticleRequest({
         jobId,
         jobTrigger: job.trigger,
         topics: job.topics,
         BACKEND_BASE_URL,
         SECRET_KEY,
     });
-
-    return result;
 };
+
+
+export async function GetJobByTopicIdAndJobId(jobId: number, topicId: number) {
+    return await prisma.job.findUnique({
+        where: { id: jobId },
+        include: {
+            topics: {
+                where: { id: topicId },
+            },
+            articles: {
+                where: { topicId },
+            },
+        },
+    });
+}

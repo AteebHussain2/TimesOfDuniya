@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 import { ARTICLESTATUS, STATUS } from "@prisma/client";
+import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import prisma from "@/lib/prisma";
 
 export async function PublishArticle(jobId: number, topicId: number) {
     const { userId } = await auth();

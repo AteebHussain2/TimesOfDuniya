@@ -168,6 +168,71 @@ export async function GenerateArticleRequest({
     return { ok: true, results };
 }
 
+export async function ReGenerateArticleRequest({
+    topics,
+    jobId,
+    jobTrigger,
+    articleId,
+    BACKEND_BASE_URL,
+    SECRET_KEY,
+}: {
+    topics: Topic[];
+    jobId: number;
+    jobTrigger: string;
+    articleId: number;
+    BACKEND_BASE_URL: string;
+    SECRET_KEY: string;
+}) {
+    const results: { topic: string; ok: boolean }[] = [];
+    for (const topic of topics) {
+        try {
+            const response = await fetch(`${BACKEND_BASE_URL}/api/posts/regenerate-article`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${SECRET_KEY}`,
+                },
+                body: JSON.stringify({
+                    title: topic?.title,
+                    summary: topic?.summary,
+                    published: topic?.published,
+                    sources: topic?.source,
+                    categoryId: topic?.categoryId,
+                    jobId,
+                    trigger: jobTrigger,
+                    topicId: topic.id,
+                    articleId: articleId,
+                }),
+            });
+
+
+            if (!response.ok) {
+                throw new Error(`Server error for topic: ${topic?.title}`);
+            }
+
+
+            results.push({ topic: topic?.title, ok: true });
+
+
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+
+            await prisma.job.update({
+                where: { id: jobId },
+                data: {
+                    status: STATUS.FAILED,
+                    error: errorMessage,
+                    type: TYPE.ARTICLE_GENERATION,
+                },
+            });
+
+            throw new Error(errorMessage);
+        };
+    };
+
+    return { ok: true, results };
+}
+
 
 export async function GenerateTopicRequest({
     min_topics,

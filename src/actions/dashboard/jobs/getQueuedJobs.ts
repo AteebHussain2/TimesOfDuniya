@@ -20,6 +20,7 @@ export async function GetQueuedJob(trigger: TRIGGER): Promise<TypeJob[]> {
                     source: true,
                     summary: true,
                 },
+                orderBy: { id: 'asc' }
             },
         },
         orderBy: { updatedAt: 'desc' },

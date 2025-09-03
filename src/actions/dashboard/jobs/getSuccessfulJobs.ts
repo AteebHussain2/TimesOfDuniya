@@ -21,6 +21,7 @@ export async function GetSuccessfulJobs(trigger: TRIGGER): Promise<TypeJob[]> {
                     source: true,
                     summary: true,
                 },
+                orderBy: { id: 'asc' }
             },
         },
         orderBy: { updatedAt: 'desc' },
