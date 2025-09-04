@@ -48,7 +48,7 @@ export default async function ArticlesPage() {
                     <>
                       <Link
                         className={cn("w-full sm:w-[120px]", buttonVariants({ variant: 'outline', size: 'sm' }))}
-                        href={article.publishedUrl}
+                        href={`/ai/articles/${article?.topicId}`}
                       >
                         <Eye className="mr-2 h-3 w-3" />
                         View
@@ -87,7 +87,7 @@ export default async function ArticlesPage() {
                   <>
                     <Link
                       className={cn("w-full sm:w-[120px]", buttonVariants({ variant: 'outline', size: 'sm' }))}
-                      href={article.publishedUrl}
+                      href={`/ai/articles/${article?.topicId}`}
                     >
                       <Eye className="mr-2 h-3 w-3" />
                       View

@@ -1,6 +1,6 @@
 'use client'
 
-import { ArchiveIcon, ChartColumnIcon, GalleryHorizontalIcon, LibrarySquareIcon, LucideLayoutDashboard, MenuIcon, MessageSquareMoreIcon, UsersRoundIcon } from "lucide-react";
+import { ArchiveIcon, ChartColumnIcon, GalleryHorizontalIcon, LibrarySquareIcon, LucideLayoutDashboard, MenuIcon, MessageSquareMoreIcon, Sparkles, UsersRoundIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button, buttonVariants } from "./ui/button";
 import { DialogTitle } from "@radix-ui/react-dialog";
@@ -24,14 +24,14 @@ const routes = [
         icon: GalleryHorizontalIcon,
     },
     {
-        href: "/categories",
-        label: "Categories",
-        icon: LibrarySquareIcon,
-    },
-    {
         href: "/analytics",
         label: "Analytics",
         icon: ChartColumnIcon,
+    },
+    {
+        href: "/categories",
+        label: "Categories",
+        icon: LibrarySquareIcon,
     },
     {
         href: "/comments",
@@ -47,6 +47,11 @@ const routes = [
         href: "/archived",
         label: "Archived Posts",
         icon: ArchiveIcon,
+    },
+    {
+        href: "/ai",
+        label: "Our AI",
+        icon: Sparkles,
     },
 ];
 

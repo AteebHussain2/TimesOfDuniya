@@ -9,9 +9,9 @@ import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import Logo from '@/components/Logo';
 
-const page = ({ params }: { params: Promise<{ jobId: string, topicId: string }> }) => {
-  const [jobId, setJobId] = useState<Number>()
-  const [topicId, setTopicId] = useState<Number>()
+const PreviewPage = ({ params }: { params: Promise<{ jobId: string, topicId: string }> }) => {
+  const [jobId, setJobId] = useState<number>()
+  const [topicId, setTopicId] = useState<number>()
   const { data: job, isLoading } = useQuery({
     queryFn: async () => {
       const { jobId, topicId } = await params;
@@ -70,4 +70,4 @@ const page = ({ params }: { params: Promise<{ jobId: string, topicId: string }> 
   )
 }
 
-export default page
+export default PreviewPage

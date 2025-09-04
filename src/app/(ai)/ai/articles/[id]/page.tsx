@@ -1,15 +1,16 @@
-import ArticleFileUpload from "@/app/(topics)/job/[jobId]/topic/[topicId]/preview/_components/ArticleFileUpload"
-import { GetManualTopicWithJobById } from "@/actions/dashboard/jobs/getManualTopicWithJobById"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, FileText, LinkIcon, Tag } from "lucide-react"
-import { getStatusColor, getStatusIcon } from "@/lib/job"
-import { Separator } from "@/components/ui/separator"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import Markdown from "react-markdown"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
-import { PublishArticleButton } from "@/components/ai/articles-section"
+import ArticleFileUpload from "@/app/(topics)/job/[jobId]/topic/[topicId]/preview/_components/ArticleFileUpload";
+import { PublishArticleButton, UnPublishArticleButton } from "@/components/ai/articles-section";
+import { GetManualTopicWithJobById } from "@/actions/dashboard/jobs/getManualTopicWithJobById";
+import { ArticleReGenerationButton } from "@/components/ai/generated-topics-section";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, FileText, LinkIcon, Tag } from "lucide-react";
+import { getStatusColor, getStatusIcon } from "@/lib/job";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import Markdown from "react-markdown";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface PageProps {
   params: Promise<{
@@ -42,18 +43,27 @@ export default async function TopicDetailPage({ params }: PageProps) {
             >
               {getStatusIcon(article?.status ?? topic?.status)} STATUS: {article?.status ?? topic?.status}
             </Badge>
-            {article && (article.publishedAt && article.publishedUrl) && (
-              <span className="text-sm text-blue-400 hover:underline transition-all flex items-center gap-1 mb-2">
-                <LinkIcon className="h-4 w-4" />
-                <Link
-                  target="_blank"
-                  href={article.publishedUrl || ''}
-                >
-                  {article.publishedUrl}
-                </Link>
+            {(article.publishedAt && article.publishedUrl) ? (
+              <>
+                <span className="text-sm text-blue-400 hover:underline transition-all flex items-center gap-1 mb-2">
+                  <LinkIcon className="h-4 w-4" />
+                  <Link
+                    target="_blank"
+                    href={article.publishedUrl || ''}
+                  >
+                    {article.publishedUrl}
+                  </Link>
+                </span>
+                <UnPublishArticleButton article={article} job={topic.job} />
+              </>
+            ) : (
+              <span className="flex flex-wrap gap-3">
+                <PublishArticleButton article={article} job={topic.job} />
+                <p className="border border-separate rounded-md w-full sm:w-[150px]">
+                  <ArticleReGenerationButton articleId={article.id} jobId={article.jobId} topic={topic} />
+                </p>
               </span>
             )}
-            <PublishArticleButton article={article} job={topic.job} />
             <p className="text-muted-foreground">Job ID: {topic.job.id}</p>
           </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, FileText, Lightbulb, Clock, Users, Loader2, ClockAlert, Menu } from "lucide-react";
+import { LayoutDashboard, FileText, Lightbulb, Clock, Users, Loader2, ClockAlert, Menu, LucideLayoutDashboard, GalleryHorizontalIcon, ChartColumnIcon, Home } from "lucide-react";
 import { GetAllManualQueueJobs } from "@/actions/dashboard/jobs/getAllManualQueueJobs";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { useQuery } from "@tanstack/react-query";
@@ -10,10 +10,11 @@ import { Badge } from "@/components/ui/badge";
 import { DialogTitle } from "../ui/dialog";
 import { STATUS } from "@prisma/client";
 import Link from "next/link";
+import { Separator } from "../ui/separator";
 
 const sidebarItems = [
   {
-    title: "Dashboard",
+    title: "Our AI",
     href: "/ai",
     icon: LayoutDashboard,
   },
@@ -29,6 +30,29 @@ const sidebarItems = [
   },
 ]
 
+const adminPanel = [
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: LucideLayoutDashboard,
+  },
+  {
+    title: "Content",
+    href: "/content",
+    icon: GalleryHorizontalIcon,
+  },
+  {
+    title: "Analytics",
+    href: "/analytics",
+    icon: ChartColumnIcon,
+  },
+  {
+    title: "Home",
+    href: "/",
+    icon: Home,
+  },
+]
+
 export function Sidebar() {
   const pathname = usePathname()
 
@@ -41,9 +65,29 @@ export function Sidebar() {
   return (
     <div className="w-64 border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
+        <div className="px-3 py-2 space-y-4">
           <div className="space-y-1">
+            <p className="text-muted-foreground text-xs">AI Studio</p>
             {sidebarItems.map((item) => (
+              <Button
+                key={item.href}
+                variant={pathname === item.href ? "secondary" : "ghost"}
+                className="w-full justify-start"
+                asChild
+              >
+                <Link href={item.href}>
+                  <item.icon className="mr-2 h-4 w-4" />
+                  {item.title}
+                </Link>
+              </Button>
+            ))}
+          </div>
+
+          <Separator />
+
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-xs">Admin Panel</p>
+            {adminPanel.map((item) => (
               <Button
                 key={item.href}
                 variant={pathname === item.href ? "secondary" : "ghost"}
@@ -144,7 +188,27 @@ export function MobileAISidebar() {
 
           {/* Navigation items */}
           <div className="space-y-2">
+            <p className="text-muted-foreground text-xs">AI Studio</p>
             {sidebarItems.map((item) => (
+              <Button
+                key={item.href}
+                asChild
+                variant={pathname === item.href ? "secondary" : "ghost"}
+                className="w-full justify-start"
+              >
+                <Link href={item.href}>
+                  <item.icon className="mr-2 h-4 w-4" />
+                  {item.title}
+                </Link>
+              </Button>
+            ))}
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <p className="text-muted-foreground text-xs">Admin Panel</p>
+            {adminPanel.map((item) => (
               <Button
                 key={item.href}
                 asChild

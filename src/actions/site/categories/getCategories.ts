@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 export async function GetCategories() {
     return await prisma.category.findMany({
         orderBy: {
-            createdAt: 'desc',
+            createdAt: 'asc',
         },
         cacheStrategy: { swr: 10, ttl: 10, tags: ['categories'] },
     });

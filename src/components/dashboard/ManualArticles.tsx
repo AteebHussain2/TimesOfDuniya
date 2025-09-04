@@ -3,15 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import ArticleListItem from "../ui/article-list-item"
 import { FileText } from "lucide-react";
 
-type Article = {
-    id: number,
-    title: string,
-    author: string,
-    createdAt: Date,
-    thumbnail: string,
-    views: number,
-}
-
 const ManualArticles = async () => {
     const manualUnpublishedArticles: Awaited<ReturnType<typeof GetManualUnpublishedArticles>> = await GetManualUnpublishedArticles();
 

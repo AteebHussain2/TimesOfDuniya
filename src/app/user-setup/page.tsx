@@ -1,11 +1,12 @@
 "use client"
 
-import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserSetup } from "@/actions/dashboard/userSetup";
 import { useMutation } from "@tanstack/react-query";
 import { Suspense, useEffect } from "react";
 import { motion } from "framer-motion";
+import { AnimatedSetupLoader } from "./_components/AnimatedSetupLoader";
 
 function SetupContent() {
     const router = useRouter();
@@ -23,10 +24,10 @@ function SetupContent() {
 
     useEffect(() => {
         setupMutation.mutate();
-    }, []);
+    }, [setupMutation]);
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="flex min-h-screen items-center justify-center bg-background">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -34,16 +35,7 @@ function SetupContent() {
                 className="text-center space-y-4"
             >
                 {setupMutation.isPending && (
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                        className="flex flex-col items-center space-y-3"
-                    >
-                        <Loader2 className="h-12 w-12 text-blue-600" />
-                        <p className="text-gray-700 text-lg font-medium">
-                            Please wait, setting up your account...
-                        </p>
-                    </motion.div>
+                    <AnimatedSetupLoader />
                 )}
 
                 {setupMutation.isSuccess && (

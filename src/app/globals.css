@@ -307,3 +307,143 @@
 .delay-900 {
   animation-delay: 0.9s;
 }
+
+/* CSS Variables (add to your :root) */
+:root {
+  --primary: 245 58% 51%;
+  --primary-foreground: 210 40% 98%;
+  --primary-glow: 245 68% 65%;
+  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+  --gradient-loading: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary-glow)), hsl(var(--primary)));
+  --gradient-success: linear-gradient(135deg, 142 76% 36%, 142 69% 58%);
+  --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
+}
+
+/* Keyframes */
+@keyframes progress-loading {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.5);
+  }
+
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.8);
+  }
+}
+
+@keyframes bounce-subtle {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+
+  50% {
+    transform: translateY(-4px);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-scale {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes float-particles {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.5);
+    opacity: 0.3;
+  }
+}
+
+/* Animation Classes */
+.animate-progress-loading {
+  animation: progress-loading 2s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 1s infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+.animate-spin-reverse {
+  animation: spin 2s linear infinite reverse;
+}
+
+.animate-pulse-scale {
+  animation: pulse-scale 2s ease-in-out infinite;
+}
+
+.animate-float-particles {
+  animation: float-particles 2s ease-in-out infinite;
+}
+
+/* Utility Classes */
+.bg-gradient-primary {
+  background-image: var(--gradient-primary);
+}
+
+.bg-gradient-loading {
+  background-image: var(--gradient-loading);
+  background-size: 200% 100%;
+}
+
+.bg-gradient-success {
+  background-image: var(--gradient-success);
+}
+
+.shadow-glow {
+  box-shadow: var(--shadow-glow);
+}

@@ -1,5 +1,4 @@
 import { endOfDay, startOfDay } from "date-fns";
-import { TRIGGER } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
 export async function GetCronRequests() {

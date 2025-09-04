@@ -3,7 +3,7 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter, usePathname } from "next/navigation";
-import { Search, User, Menu } from "lucide-react";
+import { Search, User, Menu, ArrowUpLeftFromSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "./ThemeToggle";
@@ -88,8 +88,41 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Categories Bar - Desktop */}
+            <div className="md:hidden block bg-rose-700 max-w-full mx-auto py-2 px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-wrap gap-x-8 gap-y-2 items-center justify-center space-x-1 overflow-x-auto hide-scrollbar">
+                    <p>Check Out: Our FREE, new AI based article genration</p>
+                    <Link href={'/ai'} className="cursor-pointer flex flex-wrap items-center gap-6">
+                        <Button
+                            className="flex items-center gap-2 cursor-pointer text-sm"
+                            variant={"default"}
+                            size={'sm'}
+                        >
+                            <ArrowUpLeftFromSquare size={14} className="size-[14px]" />
+                            <p>Visit AI</p>
+                        </Button>
+                    </Link>
+                </div>
+            </div>
+
             <div className="hidden md:block sticky top-0 z-50 bg-background/80">
+                {/* Promotion Bar - Desktop */}
+                <div className="bg-rose-700 max-w-full mx-auto py-2 px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-wrap gap-8 items-center justify-center space-x-1 overflow-x-auto hide-scrollbar">
+                        <p>Check Out: Our FREE, new AI based article genration</p>
+                        <Link href={'/ai'} className="cursor-pointer flex flex-wrap items-center gap-6">
+                            <Button
+                                className="flex items-center gap-2 cursor-pointer text-sm"
+                                variant={"default"}
+                                size={'sm'}
+                            >
+                                <ArrowUpLeftFromSquare size={14} className="size-[14px]" />
+                                <p>Visit AI</p>
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Categories Bar - Desktop */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-center space-x-1 overflow-x-auto hide-scrollbar">
                         {categories.map((category) => (
@@ -109,7 +142,7 @@ export default function Navbar() {
                     </div>
                 </div>
             </div>
-        </nav>
+        </nav >
     )
 }
 

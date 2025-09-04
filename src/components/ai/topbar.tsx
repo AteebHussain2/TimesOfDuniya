@@ -1,9 +1,10 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "../ThemeToggle";
 import { MobileAISidebar } from "./sidebar";
 import { User } from "lucide-react";
+import Link from "next/link";
 
 export function Topbar() {
   return (
@@ -27,9 +28,8 @@ export function Topbar() {
             <UserButton />
           </SignedIn>
           <SignedOut>
-            <SignInButton
-              forceRedirectUrl={`/user-setup?redirectTo=/ai`}
-              signUpFallbackRedirectUrl={`/user-setup?redirectTo=/ai`}
+            <Link
+              href={`sign-in?redirect_url=/user-setup?redirectTo=/ai`}
             >
               <Button
                 variant="ghost"
@@ -39,10 +39,10 @@ export function Topbar() {
                 <User className="h-4 w-4" />
                 <span className="hidden sm:block">Sign In</span>
               </Button>
-            </SignInButton>
+            </Link>
           </SignedOut>
         </div>
       </div>
-    </header>
+    </header >
   )
 }
