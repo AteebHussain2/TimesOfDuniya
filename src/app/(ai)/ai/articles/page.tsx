@@ -1,9 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PublishArticleButton, UnPublishArticleButton } from "@/components/ai/articles-section";
 import { GetAllManualArticles } from "@/actions/dashboard/jobs/getAllManualArticles";
-import { PublishArticleButton } from "@/components/ai/articles-section";
+import { ArticleReGenerationButton } from "@/components/ai/generated-topics-section";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Eye, ImageIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -44,13 +45,16 @@ export default async function ArticlesPage() {
                 </div>
                 <div className="hidden sm:flex flex-col items-center gap-2">
                   {article.publishedAt && article.publishedUrl ? (
-                    <Link
-                      className={cn("w-full sm:w-[120px]", buttonVariants({ variant: 'outline', size: 'sm' }))}
-                      href={article.publishedUrl}
-                    >
-                      <Eye className="mr-2 h-3 w-3" />
-                      View
-                    </Link>
+                    <>
+                      <Link
+                        className={cn("w-full sm:w-[120px]", buttonVariants({ variant: 'outline', size: 'sm' }))}
+                        href={article.publishedUrl}
+                      >
+                        <Eye className="mr-2 h-3 w-3" />
+                        View
+                      </Link>
+                      <UnPublishArticleButton job={article.job} article={article} />
+                    </>
                   ) : (
                     <>
                       <Link
@@ -61,6 +65,7 @@ export default async function ArticlesPage() {
                         Preview
                       </Link>
                       <PublishArticleButton article={article} job={article.job} />
+                      <ArticleReGenerationButton jobId={article.jobId} topic={article.topic} articleId={article.id} triggerText="Regenerate" width={150} />
                     </>
                   )}
                 </div>
@@ -79,13 +84,16 @@ export default async function ArticlesPage() {
 
               <div className="flex sm:hidden flex-col items-center gap-2">
                 {article.publishedAt && article.publishedUrl ? (
-                  <Link
-                    className={cn("w-full sm:w-[120px]", buttonVariants({ variant: 'outline', size: 'sm' }))}
-                    href={article.publishedUrl}
-                  >
-                    <Eye className="mr-2 h-3 w-3" />
-                    View
-                  </Link>
+                  <>
+                    <Link
+                      className={cn("w-full sm:w-[120px]", buttonVariants({ variant: 'outline', size: 'sm' }))}
+                      href={article.publishedUrl}
+                    >
+                      <Eye className="mr-2 h-3 w-3" />
+                      View
+                    </Link>
+                    <UnPublishArticleButton job={article.job} article={article} />
+                  </>
                 ) : (
                   <>
                     <Link
@@ -96,6 +104,7 @@ export default async function ArticlesPage() {
                       Preview
                     </Link>
                     <PublishArticleButton article={article} job={article.job} />
+                    <ArticleReGenerationButton jobId={article.jobId} topic={article.topic} articleId={article.id} triggerText="Regenerate" />
                   </>
                 )}
               </div>

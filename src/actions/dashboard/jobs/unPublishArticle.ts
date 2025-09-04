@@ -1,17 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@clerk/nextjs/server";
 import { STATUS } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
 export async function UnPublishArticle(jobId: number, topicId: number) {
-    const { userId } = await auth();
-    const guestAuthorId = process.env.GUEST_AUTHOR_ID;
-    if (!guestAuthorId) throw new Error('Guest Author Id not found!');
-
-    const authorId = userId || guestAuthorId;
-
     const job = await prisma.job.findUnique({
         where: { id: jobId },
         include: {

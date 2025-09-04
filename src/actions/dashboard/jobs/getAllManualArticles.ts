@@ -12,6 +12,7 @@ export type TopicWithJob = Prisma.ArticleGetPayload<{
                 category: true
             }
         },
+        topic: true
     }
 }>
 
@@ -40,6 +41,7 @@ export async function GetAllManualArticles(): Promise<TopicWithJob[]> {
                     category: true,
                 },
             },
+            topic: true
         },
         cacheStrategy: { swr: 10, ttl: 10 }
     })

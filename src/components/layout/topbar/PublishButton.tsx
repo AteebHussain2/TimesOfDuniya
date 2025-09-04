@@ -9,8 +9,8 @@ import { toast } from "sonner";
 const PublishButton = ({ jobId, topicId }: { jobId: number, topicId: number }) => {
     const PublishMutation = useMutation({
         mutationFn: () => PublishArticle(jobId, topicId),
-        onSuccess: () => toast.success("Added to queue successfully!", { id: "publish-article" }),
-        onError: (error: Error) => toast.error(error?.message || "An error occurred while adding to queue!", { id: "publish-article" }),
+        onSuccess: () => toast.success("Article published successfully!", { id: "publish-article" }),
+        onError: () => toast.error("An error occurred while publishing artilce!", { id: "publish-article" }),
     });
 
     return (

@@ -1,17 +1,18 @@
 "use client";
 
 import { GetLatestManualTopics, TopicWithArticles } from "@/actions/dashboard/jobs/getLatestManualTopics";
-import { GenerateManualArticle } from "@/actions/dashboard/jobs/generateManualArticle";
+import { GenerateManualArticle, ReGenerateManualArticle } from "@/actions/dashboard/jobs/generateManualArticle";
+import { Lightbulb, Calendar, FileText, Loader2, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Lightbulb, Calendar, FileText, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import AIAnimatedLoader from "./ai-animated-loader";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Job, STATUS, Topic } from "@prisma/client";
+import { STATUS, Topic } from "@prisma/client";
 import { useState } from "react";
 import { toast } from "sonner";
-import AIAnimatedLoader from "./ai-animated-loader";
+import { cn } from "@/lib/utils";
 
 
 export function GeneratedTopicsSection() {
@@ -90,16 +91,20 @@ export function GeneratedTopicsSection() {
 export const ArticleGenerationButton = ({
   jobId,
   topic,
+  width,
+  triggerText,
   articlePrompts,
   setArticlePrompts,
 }: {
   jobId: number,
   topic: TopicWithArticles,
-  articlePrompts: Record<string, string>,
-  setArticlePrompts: React.Dispatch<React.SetStateAction<Record<string, string>>>,
+  width?: number,
+  triggerText?: string,
+  articlePrompts?: Record<string, string>,
+  setArticlePrompts?: React.Dispatch<React.SetStateAction<Record<string, string>>>,
 }) => {
   const mutation = useMutation({
-    mutationFn: ({ topicId, prompt }: { topicId: number, prompt: string }) => GenerateManualArticle({ topicId, jobId: jobId, prompt }),
+    mutationFn: ({ topicId, prompt }: { topicId: number, prompt: string }) => GenerateManualArticle({ topicId, jobId, prompt }),
     onSuccess: () => {
       toast.success("Article generation started! Check the Articles section.", { id: 'queue-manual-article' })
     },
@@ -110,31 +115,91 @@ export const ArticleGenerationButton = ({
     <Button
       onClick={() => {
         toast.loading("Queueing article generation...", { id: 'queue-manual-article' })
-        setArticlePrompts((prev) => {
-          const { [topic.id]: removed, ...rest } = prev;
-          return rest;
-        })
-        mutation.mutate({ topicId: topic.id, prompt: articlePrompts[topic.id] || "" })
+        if (setArticlePrompts) {
+          setArticlePrompts((prev) => {
+            const { [topic.id]: removed, ...rest } = prev;
+            return rest;
+          })
+        }
+        mutation.mutate({ topicId: topic.id, prompt: articlePrompts?.[topic.id] || "" })
       }}
       disabled={mutation.isPending || (topic.status !== STATUS.FAILED && topic.status !== STATUS.COMPLETED) || (topic.articles && topic.articles.length !== 0)}
       size="sm"
       variant={'secondary'}
-      className="w-full"
+      className={cn(width ? `w-[${width}px]` : "w-full")}
     >
       {mutation.isPending ? (
         <>
           <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-          Generating Article...
+          {triggerText ? `${triggerText.slice(0, -1)}ing...` : "Generating Article..."}
         </>
       ) : !(topic.articles && topic.articles.length !== 0) ? (
         <>
           <FileText className="mr-2 h-3 w-3" />
-          Generate Article
+          {triggerText ? triggerText : "Generate Article"}
         </>
       ) : (
         <>
           <CheckCircle className="text-green-400 mr-2 h-3 w-3" />
-          Article Generated
+          {triggerText ? `${triggerText}d` : "Article Generated"}
+        </>
+      )}
+    </Button>
+  )
+}
+
+
+export const ArticleReGenerationButton = ({
+  articleId,
+  jobId,
+  topic,
+  width,
+  triggerText,
+  articlePrompts,
+  setArticlePrompts,
+}: {
+  jobId: number,
+  articleId: number,
+  topic: Topic,
+  width?: number,
+  triggerText?: string,
+  articlePrompts?: Record<string, string>,
+  setArticlePrompts?: React.Dispatch<React.SetStateAction<Record<string, string>>>,
+}) => {
+  const mutation = useMutation({
+    mutationFn: ({ topicId, prompt }: { topicId: number, prompt: string }) => ReGenerateManualArticle({ articleId, topicId, jobId, prompt }),
+    onSuccess: () => {
+      toast.success("Article regeneration started! Check the Articles section.", { id: 'queue-manual-article' })
+    },
+    onError: () => toast.error("Failed to regenerate article. Please try again.", { id: 'queue-manual-article' })
+  });
+
+  return (
+    <Button
+      onClick={() => {
+        toast.loading("Queueing article regeneration...", { id: 'queue-manual-article' })
+        if (setArticlePrompts) {
+          setArticlePrompts((prev) => {
+            const { [topic.id]: removed, ...rest } = prev;
+            return rest;
+          })
+        }
+        mutation.mutate({ topicId: topic.id, prompt: articlePrompts?.[topic.id] || "" })
+      }}
+      disabled={mutation.isPending || (topic.status !== STATUS.FAILED && topic.status !== STATUS.COMPLETED)}
+      size="sm"
+      variant={'ghost'}
+      className={cn(width ? `w-[${width}px]` : "w-full")}
+    >
+      {mutation.isPending ? (
+        <>
+          <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+          {triggerText ? `${triggerText.slice(0, -1)}ing...` : "Generating Article..."}
+        </>
+      ) : (
+        <>
+          <FileText className="mr-2 h-3 w-3" />
+          {triggerText ? triggerText : "Generate Article"}
         </>
       )}
     </Button>

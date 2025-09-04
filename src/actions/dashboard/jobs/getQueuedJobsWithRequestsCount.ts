@@ -1,6 +1,6 @@
 import { STATUS, TRIGGER, TYPE } from "@prisma/client";
-import prisma from "@/lib/prisma";
 import { endOfDay, startOfDay } from "date-fns";
+import prisma from "@/lib/prisma";
 
 export async function GetQueuedJobsWithRequestsCount() {
     const todayStart = startOfDay(new Date());

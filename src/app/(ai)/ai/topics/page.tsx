@@ -1,10 +1,12 @@
-import { GetAllManualTopics } from "@/actions/dashboard/jobs/GetAllManualTopics"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, Eye, FileText } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { STATUS } from "@prisma/client"
-import Link from "next/link"
+import { ArticleGenerationButton, ArticleReGenerationButton } from "@/components/ai/generated-topics-section";
+import { GetAllManualTopics } from "@/actions/dashboard/jobs/GetAllManualTopics";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Clock, Eye, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { STATUS } from "@prisma/client";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default async function TopicsPage() {
   const topics = await GetAllManualTopics();
@@ -39,13 +41,19 @@ export default async function TopicsPage() {
                     )}
                   </div>
                 </div>
-                <div className="hidden sm:flex items-center gap-2">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={`/ai/topics/${topic.id}`}>
-                      <Eye className="w-4 h-4 mr-1" />
-                      View
-                    </Link>
-                  </Button>
+                <div className="hidden sm:flex flex-col items-center gap-2">
+                  <Link
+                    className={cn("w-full sm:w-[120px]", buttonVariants({ variant: 'outline', size: 'sm' }))}
+                    href={`/ai/topics/${topic.id}`}
+                  >
+                    <Eye className="mr-2 h-3 w-3" />
+                    View
+                  </Link>
+                  {topic.articles.length === 0 ? (
+                    <ArticleGenerationButton jobId={topic.jobId} topic={topic} width={120} triggerText="Generate" />
+                  ) : (
+                    <ArticleReGenerationButton jobId={topic.jobId} topic={topic} articleId={topic.articles[0].id} triggerText="Regenerate" width={120} />
+                  )}
                 </div>
               </div>
             </CardHeader>
@@ -55,13 +63,19 @@ export default async function TopicsPage() {
                 Created {topic.createdAt.toLocaleDateString()}
               </div>
 
-              <div className="w-full flex sm:hidden items-center gap-2">
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <Link href={`/ai/topics/${topic.id}`}>
-                    <Eye className="w-4 h-4 mr-1" />
-                    View
-                  </Link>
-                </Button>
+              <div className="w-full flex flex-col sm:hidden items-center gap-2">
+                <Link
+                  className={cn("w-full sm:w-[120px]", buttonVariants({ variant: 'outline', size: 'sm' }))}
+                  href={`/ai/topics/${topic.id}`}
+                >
+                  <Eye className="mr-2 h-3 w-3" />
+                  View
+                </Link>
+                {topic.articles.length === 0 ? (
+                  <ArticleGenerationButton jobId={topic.jobId} topic={topic} triggerText="Generate" />
+                ) : (
+                  <ArticleReGenerationButton jobId={topic.jobId} topic={topic} articleId={topic.articles[0].id} triggerText="Regenerate" />
+                )}
               </div>
             </CardContent>
           </Card>

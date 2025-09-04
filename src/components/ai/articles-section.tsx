@@ -3,7 +3,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 import ArticleFileUpload, { ArticleUploadImageButton } from "@/app/(topics)/job/[jobId]/topic/[topicId]/preview/_components/ArticleFileUpload";
 import { GetLatestManualArticles } from "@/actions/dashboard/jobs/getLatestManualArticles";
-import { FileText, Calendar, Eye, Upload, Loader2, CheckCircle } from "lucide-react";
+import { FileText, Calendar, Eye, Upload, Loader2, CheckCircle, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PublishArticle } from "@/actions/dashboard/jobs/publishArticle";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import { forwardRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import Link from "next/link";
+import { UnPublishArticle } from "@/actions/dashboard/jobs/unPublishArticle";
 
 export const ArticlesSection = forwardRef<HTMLDivElement>((_, ref) => {
 
@@ -214,5 +215,45 @@ export const PublishArticleButton = ({ article, job }: { article: Article, job: 
         )}
       </Button>
     </>
+  )
+}
+
+
+export const UnPublishArticleButton = ({ article, job }: { article: Article, job: Job }) => {
+  const mutation = useMutation({
+    mutationFn: ({ jobId, topicId }: { jobId: number, topicId: number }) => UnPublishArticle(jobId, topicId),
+    onSuccess: () => toast.success("Artical successfully published!", { id: 'publish-article' }),
+    onError: () => toast.error("Something went wrong, Please try again.", { id: 'publish-article' }),
+  })
+
+  const handlePublish = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    article: Article
+  ) => {
+    e.preventDefault();
+    toast.loading("Publishing article...", { id: "publish-article" });
+    mutation.mutate({ jobId: job!.id, topicId: article.topicId });
+  };
+
+  return (
+    <Button
+      onClick={(e) => handlePublish(e, article)}
+      disabled={mutation.isPending || article.status === STATUS.FAILED || article.status === STATUS.PROCESSING || (!article.publishedAt && !article.publishedUrl)}
+      variant={'secondary'}
+      size="sm"
+      className="w-full sm:w-[120px]"
+    >
+      {mutation.isPending ? (
+        <>
+          <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+          Publishing...
+        </>
+      ) : (
+        <>
+          <Download className="mr-2 h-3 w-3" />
+          Unpublish
+        </>
+      )}
+    </Button>
   )
 }

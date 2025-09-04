@@ -9,8 +9,8 @@ import { toast } from "sonner";
 const UnPublishButton = ({ jobId, topicId }: { jobId: number, topicId: number }) => {
     const UnPublishMutation = useMutation({
         mutationFn: () => UnPublishArticle(jobId, topicId),
-        onSuccess: () => toast.success("Added to queue successfully!", { id: "publish-article" }),
-        onError: (error: Error) => toast.error(error?.message || "An error occurred while adding to queue!", { id: "publish-article" }),
+        onSuccess: () => toast.success("Article unpublished successfully!", { id: "publish-article" }),
+        onError: () => toast.error("An error occurred while unpublishing!", { id: "publish-article" }),
     });
 
     return (
