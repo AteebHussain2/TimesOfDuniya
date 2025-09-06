@@ -101,5 +101,7 @@ export async function PublishArticle(jobId: number, topicId: number) {
     };
 
     revalidatePath('/job/[jobId]/topic/[topicId]/preview', 'page');
+    revalidatePath('/ai/topics/[id]', 'page');
+    revalidatePath('/ai/articles/[id]', 'page');
     return post;
 };

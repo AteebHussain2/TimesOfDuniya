@@ -124,7 +124,7 @@ export const PublishArticleButton = ({ article, job }: { article: Article, job: 
 
   const mutation = useMutation({
     mutationFn: ({ jobId, topicId }: { jobId: number, topicId: number }) => PublishArticle(jobId, topicId),
-    onSuccess: () => toast.success("Artical successfully published!", { id: 'publish-article' }),
+    onSuccess: () => toast.success("Article successfully published!", { id: 'publish-article' }),
     onError: () => toast.error("Something went wrong, Please try again.", { id: 'publish-article' }),
   })
 
